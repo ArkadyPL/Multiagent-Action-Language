@@ -12,18 +12,18 @@ after(Result, []):-
 
 
 impossible_by_if(Action, Group, []):-
-	impossible_by(Action, Group).
+	impossible_by(Action, Group), !.
 	
 impossible_by_if(Action, [], State):-
-	impossible_if(Action, State).
+	impossible_if(Action, State), !.
 
 
 
 by_causes_if(Action, Group, Result, []):-
-	by_causes(Action, Group, Result).
+	by_causes(Action, Group, Result), !.
 	
 by_causes_if(Action, [], Result, State):-
-	causes_if(Action, Result, State).
+	causes_if(Action, Result, State), !.
 
 
 
@@ -33,7 +33,7 @@ necessary_engaged_from(Group, [Action|List], State):-
 	contains_exactly_one(Group, AllGroups), !;
 	necessary_engaged_from(Group, List, State).
 
-necessary_engaged_from(Group, [], State), !.
+necessary_engaged_from(_, [], _):- !.
 
 necessary_engaged(Group, Actions):-
 	necessary_engaged_from(Group, Actions, []).	
@@ -45,7 +45,7 @@ possibly_engaged_from(Group, [Action|List], State):-
 	by_causes_if(Action, Group, _, State),
 	possibly_engaged_from(Group, List, State), !.
 	
-possibly_engaged_from(Group, [], State).
+possibly_engaged_from(_, [], _).
 	
 possibly_engaged(Group, [Action|List]):-
 	possibly_engaged_from(Group, [Action|List], []), !.
