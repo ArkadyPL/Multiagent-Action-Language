@@ -1,12 +1,11 @@
+:- dynamic impossible_by/2.
+:- dynamic impossible_if/2.
+:- dynamic by_causes/3.
+:- dynamic causes_if/3.
+
 % Make sure, "initially" also propagates to after(Result, []).
 after(Result, []):-
 	initially(Result).
-
-% Below is instead of "dynamic"
-impossible_by(_, _):- fail.
-impossible_if(_, _):- fail.
-by_causes(_, _, _):- fail.
-causes_if(_, _, _):- fail.
 
 impossible_by_if(Action, Group, []):-
 	impossible_by(Action, Group), !.
@@ -37,7 +36,7 @@ necessary_engaged_from(Group, [Action|List], State, Engaged):-
 
 necessary_engaged_from(_, [], _, []):- fail.
 necessary_engaged_from(Group, [], _, [Item|[]]):- Group = Item, !.
-necessary_engaged_from(_, [], _, [Item|_]):- fail.
+necessary_engaged_from(_, [], _, [_|_]):- fail.
 
 necessary_engaged(Group, Actions):-
 	necessary_engaged_from(Group, Actions, []).	
