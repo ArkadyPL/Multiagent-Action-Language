@@ -1,13 +1,12 @@
-:- dynamic after/2, observable_after/2, initially/1,
-	by_causes_if/4, by_causes/3, causes_if/3,
-	impossible_by_if/3, impossible_by/2, impossible_if/2.
-
-
 % Make sure, "initially" also propagates to after(Result, []).
 after(Result, []):-
 	initially(Result).
 
-
+% Below is instead of "dynamic"
+impossible_by(_, _):- fail.
+impossible_if(_, _):- fail.
+by_causes(_, _, _):- fail.
+causes_if(_, _, _):- fail.
 
 impossible_by_if(Action, Group, []):-
 	impossible_by(Action, Group), !.
