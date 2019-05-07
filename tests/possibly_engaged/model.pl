@@ -6,7 +6,7 @@ by_causes(run, [a], []).
 by_causes(run, [b], []).
 
 % Test case 2
-by_causes(push, [c], []).
-by_causes(push, [d], []).
+by_causes(sing, [c], []).
+by_causes(sing, [d], []).
 
-by_causes(run, [c], []).
+by_causes(fly, [c], []).
