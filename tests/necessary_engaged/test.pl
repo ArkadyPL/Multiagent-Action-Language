@@ -37,7 +37,7 @@ not(necessary_engaged([d], [sing, fly])), passed; failed), nl,
 
 
 
-write('Test case 2\n'),
+write('Test case 3\n'),
 (write('not(necessary_engaged([x], [swim])) => '),
 not(necessary_engaged([x], [swim])), passed; failed), nl,
 
