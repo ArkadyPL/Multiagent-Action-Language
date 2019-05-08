@@ -1,7 +1,7 @@
 passed:- ansi_format([bold,fg(green)], 'Passed', []).
 failed:- ansi_format([bold,fg(red)], 'Failed', []).
 
-:- consult('../../program.pl'), consult('model.pl'),
+:- consult('../../logic.pl'), consult('model.pl'),
 
 write('Possibly Engaged - TESTS STARTED'),nl,
 

@@ -1,1 +1,1 @@
-:- consult('program.pl'), consult('tests/necessary_engaged/model.pl').
+:- consult('logic.pl'), consult('tests/necessary_engaged/model.pl').
