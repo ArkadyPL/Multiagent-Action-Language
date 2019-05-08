@@ -3,7 +3,7 @@ failed:- ansi_format([bold,fg(red)], 'Failed', []).
 
 :- consult('../../program.pl'), consult('model.pl'),
 
-write('TESTS STARTED'),nl,
+write('Possibly Engaged - TESTS STARTED'),nl,
 
 
 write('Test case 1\n'),
@@ -34,4 +34,4 @@ not(possibly_engaged([d], [fly, sing])), passed; failed), nl,
 not(possibly_engaged([d], [sing, fly])), passed; failed), nl,
 
 
-write('TESTS FINISHED'),nl.
+write('Possibly Engaged - TESTS FINISHED'),nl.
