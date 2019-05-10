@@ -35,7 +35,7 @@ necessary_engaged_from(Group, [Action|List], State, Engaged):-
 	necessary_engaged_from(Group, List, State, EngagedInBoth), !.
 
 necessary_engaged_from(_, [], _, []):- fail.
-necessary_engaged_from(Group, [], _, [Item|[]]):- Group = Item, !.
+necessary_engaged_from(Group, [], _, [Item|[]]):- subset(Item, Group), !.
 necessary_engaged_from(_, [], _, [_|_]):- fail.
 
 necessary_engaged(Group, Actions):-
