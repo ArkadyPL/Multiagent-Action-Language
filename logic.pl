@@ -23,6 +23,46 @@ by_causes_if(Action, [], Result, State):-
 
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Executability queries - TODO
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+necessary_executable_from(Program, InitialState):- true.
+
+necessary_executable(Program):-
+	necessary_executable_from(Program, []).
+
+
+
+possibly_executable_from(Program, InitialState):- true.
+
+possibly_executable(Program):-
+	possibly_executable_from(Program, []).
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Value queries - TODO
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+necessary_after_from(State, Program, InitialState):- true.
+
+necessary_after(State, Program):-
+	necessary_after_from(State, Program, []).
+
+
+
+possibly_after_from(State, Program, InitialState):- true.
+
+possibly_after(State, Program):-
+	possibly_after_from(State, Program, []).
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Engagement queries
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 necessary_engaged_from(Group, [Action|List], State):-
 	not(impossible_by_if(Action, Group, State)),
 	findall(X, by_causes_if(Action, X, _, State), Engaged),
