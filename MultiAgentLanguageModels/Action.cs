@@ -17,7 +17,7 @@ namespace MultiAgentLanguageModels
         }
     }
 
-    public static class ActionsList
+    public static class ActionsList 
     {
         public static string ToProlog(this List<Action> list)
         {

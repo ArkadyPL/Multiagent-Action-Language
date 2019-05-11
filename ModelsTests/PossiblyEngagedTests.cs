@@ -30,21 +30,21 @@ namespace Tests
             fly = new Action("fly");
             run = new Action("run");
             swim = new Action("swim");
-            story1 = new Story(new List<Expression>
+            story1 = new Story()
             {
-                new ByCauses(push, new List<Agent>{ a }, LogicExpression.Empty),
-                new ByCauses(push, new List<Agent>{ b }, LogicExpression.Empty)
-            });
-            story2 = new Story(new List<Expression>
+                new ByCauses(push, new AgentsList{ a }, LogicExpression.Empty),
+                new ByCauses(push, new AgentsList{ b }, LogicExpression.Empty)
+            };
+            story2 = new Story()
             {
-                new ByCauses(sing, new List<Agent>{c}, LogicExpression.Empty),
-                new ByCauses(sing, new List<Agent>{d}, LogicExpression.Empty),
-                new ByCauses(fly, new List<Agent>{c}, LogicExpression.Empty)
-            });
-            story3 = new Story(new List<Expression>
+                new ByCauses(sing, new AgentsList{c}, LogicExpression.Empty),
+                new ByCauses(sing, new AgentsList{d}, LogicExpression.Empty),
+                new ByCauses(fly, new AgentsList{c}, LogicExpression.Empty)
+            };
+            story3 = new Story()
             {
-                new ByCauses(swim, new List<Agent>{x,y}, LogicExpression.Empty)
-            });
+                new ByCauses(swim, new AgentsList{x,y}, LogicExpression.Empty)
+            };
         }
 
         [Test]
@@ -53,7 +53,7 @@ namespace Tests
             StandardKernel kernel = new StandardKernel();
             kernel.Load(Assembly.GetExecutingAssembly());
             var prologService = kernel.Get<IPrologService>();
-            var query = new PossiblyEngaged(new List<Agent> { a }, new List<Action> { push });
+            var query = new PossiblyEngaged(new AgentsList { a }, new List<Action> { push });
             var solution = await prologService.GetSolution(story1, query);
             Assert.AreEqual(true, solution);
         }
@@ -64,7 +64,7 @@ namespace Tests
             StandardKernel kernel = new StandardKernel();
             kernel.Load(Assembly.GetExecutingAssembly());
             var prologService = kernel.Get<IPrologService>();
-            var query = new PossiblyEngaged(new List<Agent> { b }, new List<Action> { push });
+            var query = new PossiblyEngaged(new AgentsList { b }, new List<Action> { push });
             var solution = await prologService.GetSolution(story1, query);
             Assert.AreEqual(true, solution);
         }
@@ -75,7 +75,7 @@ namespace Tests
             StandardKernel kernel = new StandardKernel();
             kernel.Load(Assembly.GetExecutingAssembly());
             var prologService = kernel.Get<IPrologService>();
-            var query = new PossiblyEngaged(new List<Agent> { a }, new List<Action> { run, push });
+            var query = new PossiblyEngaged(new AgentsList { a }, new List<Action> { run, push });
             var solution = await prologService.GetSolution(story1, query);
             Assert.AreEqual(false, solution);
         }
@@ -86,7 +86,7 @@ namespace Tests
             StandardKernel kernel = new StandardKernel();
             kernel.Load(Assembly.GetExecutingAssembly());
             var prologService = kernel.Get<IPrologService>();
-            var query = new PossiblyEngaged(new List<Agent> { b }, new List<Action> { push, run });
+            var query = new PossiblyEngaged(new AgentsList { b }, new List<Action> { push, run });
             var solution = await prologService.GetSolution(story1, query);
             Assert.AreEqual(false, solution);
         }
@@ -97,7 +97,7 @@ namespace Tests
             StandardKernel kernel = new StandardKernel();
             kernel.Load(Assembly.GetExecutingAssembly());
             var prologService = kernel.Get<IPrologService>();
-            var query = new PossiblyEngaged(new List<Agent> { c }, new List<Action> { fly, sing });
+            var query = new PossiblyEngaged(new AgentsList { c }, new List<Action> { fly, sing });
             var solution = await prologService.GetSolution(story2, query);
             Assert.AreEqual(true, solution);
         }
@@ -108,7 +108,7 @@ namespace Tests
             StandardKernel kernel = new StandardKernel();
             kernel.Load(Assembly.GetExecutingAssembly());
             var prologService = kernel.Get<IPrologService>();
-            var query = new PossiblyEngaged(new List<Agent> { c }, new List<Action> { sing, fly });
+            var query = new PossiblyEngaged(new AgentsList { c }, new List<Action> { sing, fly });
             var solution = await prologService.GetSolution(story2, query);
             Assert.AreEqual(true, solution);
         }
@@ -119,7 +119,7 @@ namespace Tests
             StandardKernel kernel = new StandardKernel();
             kernel.Load(Assembly.GetExecutingAssembly());
             var prologService = kernel.Get<IPrologService>();
-            var query = new PossiblyEngaged(new List<Agent> { d }, new List<Action> { fly, sing });
+            var query = new PossiblyEngaged(new AgentsList { d }, new List<Action> { fly, sing });
             var solution = await prologService.GetSolution(story2, query);
             Assert.AreEqual(false, solution);
         }
@@ -130,7 +130,7 @@ namespace Tests
             StandardKernel kernel = new StandardKernel();
             kernel.Load(Assembly.GetExecutingAssembly());
             var prologService = kernel.Get<IPrologService>();
-            var query = new PossiblyEngaged(new List<Agent> { d }, new List<Action> { sing, fly });
+            var query = new PossiblyEngaged(new AgentsList { d }, new List<Action> { sing, fly });
             var solution = await prologService.GetSolution(story2, query);
             Assert.AreEqual(false, solution);
         }
@@ -141,7 +141,7 @@ namespace Tests
             StandardKernel kernel = new StandardKernel();
             kernel.Load(Assembly.GetExecutingAssembly());
             var prologService = kernel.Get<IPrologService>();
-            var query = new PossiblyEngaged(new List<Agent> { x }, new List<Action> { swim });
+            var query = new PossiblyEngaged(new AgentsList { x }, new List<Action> { swim });
             var solution = await prologService.GetSolution(story3, query);
             Assert.AreEqual(false, solution);
         }
@@ -152,7 +152,7 @@ namespace Tests
             StandardKernel kernel = new StandardKernel();
             kernel.Load(Assembly.GetExecutingAssembly());
             var prologService = kernel.Get<IPrologService>();
-            var query = new PossiblyEngaged(new List<Agent> { x, y }, new List<Action> { swim });
+            var query = new PossiblyEngaged(new AgentsList { x, y }, new List<Action> { swim });
             var solution = await prologService.GetSolution(story3, query);
             Assert.AreEqual(true, solution);
         }
@@ -163,7 +163,7 @@ namespace Tests
             StandardKernel kernel = new StandardKernel();
             kernel.Load(Assembly.GetExecutingAssembly());
             var prologService = kernel.Get<IPrologService>();
-            var query = new PossiblyEngaged(new List<Agent> { x, y, z }, new List<Action> { swim });
+            var query = new PossiblyEngaged(new AgentsList { x, y, z }, new List<Action> { swim });
             var solution = await prologService.GetSolution(story3, query);
             Assert.AreEqual(true, solution);
         }

@@ -26,7 +26,7 @@
 
         public string ToProlog()
         {
-            return empty ? "[]" : Element.ToString();
+            return empty ? "[]" : $"[{Element.ToString()}]";
         }
     }
 }

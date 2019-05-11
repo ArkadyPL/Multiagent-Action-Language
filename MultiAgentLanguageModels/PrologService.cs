@@ -66,7 +66,8 @@ namespace MultiAgentLanguageModels
 
         private void AskQuery(Query query)
         {
-            streamWriter?.WriteLine(query.ToProlog());
+            var q = query.ToProlog();
+            streamWriter?.WriteLine(q);
         }
 
         private ProcessStartInfo CreatePrologStartInfoInstance()

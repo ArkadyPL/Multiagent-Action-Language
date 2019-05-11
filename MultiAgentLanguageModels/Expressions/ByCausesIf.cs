@@ -7,13 +7,13 @@ namespace MultiAgentLanguageModels.Expressions
     {
         public Action A { get; }
 
-        public List<Agent> G { get; }
+        public AgentsList G { get; }
 
         public LogicExpression Pi { get; }
 
         public LogicExpression Alpha { get; }
 
-        public ByCausesIf(Action action, List<Agent> agents, LogicExpression result, LogicExpression condition)
+        public ByCausesIf(Action action, AgentsList agents, LogicExpression result, LogicExpression condition)
         {
             A = action;
             G = agents;
@@ -29,7 +29,7 @@ namespace MultiAgentLanguageModels.Expressions
 
     public class ByCauses : ByCausesIf
     {
-        public ByCauses(Action action, List<Agent> agents, LogicExpression result)
+        public ByCauses(Action action, AgentsList agents, LogicExpression result)
             :base(action, agents, result, null)
         {  
         }
@@ -42,7 +42,7 @@ namespace MultiAgentLanguageModels.Expressions
 
     public class CausesIf : ByCausesIf
     {
-        public CausesIf(Action action, List<Agent> agents, LogicExpression result, LogicExpression condition) : base(action, agents, result, condition)
+        public CausesIf(Action action, AgentsList agents, LogicExpression result, LogicExpression condition) : base(action, agents, result, condition)
         {
         }
 
@@ -54,21 +54,21 @@ namespace MultiAgentLanguageModels.Expressions
 
     public class ImpossibleByIf : ByCausesIf
     {
-        public ImpossibleByIf(Action action, List<Agent> agents, LogicExpression result, LogicExpression condition) : base(action, agents, result, condition)
+        public ImpossibleByIf(Action action, AgentsList agents, LogicExpression result, LogicExpression condition) : base(action, agents, result, condition)
         {
         }
     }
 
     public class ImpossibleBy : ByCausesIf
     {
-        public ImpossibleBy(Action action, List<Agent> agents, LogicExpression result, LogicExpression condition) : base(action, agents, result, condition)
+        public ImpossibleBy(Action action, AgentsList agents, LogicExpression result, LogicExpression condition) : base(action, agents, result, condition)
         {
         }
     }
 
     public class ImpossibleIf : ByCausesIf
     {
-        public ImpossibleIf(Action action, List<Agent> agents, LogicExpression result, LogicExpression condition) : base(action, agents, result, condition)
+        public ImpossibleIf(Action action, AgentsList agents, LogicExpression result, LogicExpression condition) : base(action, agents, result, condition)
         {
         }
     }
