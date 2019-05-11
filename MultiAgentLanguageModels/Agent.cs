@@ -13,11 +13,21 @@ namespace MultiAgentLanguageModels
         }
     }
 
-    public static class AgentsList
+    public class AgentsList : List<Agent>, IProlog
     {
-        public static string ToProlog(this List<Agent> list)
+        public AgentsList() : base()
         {
-            return $"[{list.OrderBy(x => x.Name).Select(x => x.Name).Aggregate((a,b) =>a+ ", " +b )}]";
+        }
+
+        public AgentsList(List<Agent> agents) : base()
+        {
+            this.Clear();
+            agents.ForEach(x => this.Add(x));
+        }
+
+        public string ToProlog()
+        {
+            return $"[{this.OrderBy(x => x.Name).Select(x => x.Name).Aggregate((a,b) =>a+ ", " +b )}]";
         }
     }
 }

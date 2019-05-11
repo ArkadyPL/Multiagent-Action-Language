@@ -4,11 +4,11 @@ namespace MultiAgentLanguageModels.Queries
 {
     public class NecessaryEngagedFrom : Query, IProlog
     {
-        public List<Agent> Agents { get; }
+        public AgentsList Agents { get; }
         public List<Action> Actions { get; }
         public LogicExpression Condition { get; }
 
-        public NecessaryEngagedFrom(List<Agent> agents, List<Action> actions, LogicExpression condition)
+        public NecessaryEngagedFrom(AgentsList agents, List<Action> actions, LogicExpression condition)
         {
             Agents = agents;
             Actions = actions;
@@ -23,7 +23,7 @@ namespace MultiAgentLanguageModels.Queries
 
     public class NecessaryEngaged : NecessaryEngagedFrom
     {
-        public NecessaryEngaged(List<Agent> agents, List<Action> actions) 
+        public NecessaryEngaged(AgentsList agents, List<Action> actions) 
             : base(agents, actions, LogicExpression.Empty)
         {   
         }

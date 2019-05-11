@@ -15,7 +15,7 @@
         }
         public override string ToString()
         {
-            return $"(not({Left.ToString()}))";
+            return $"(\\{Left.ToString()})";
         }
     }
 

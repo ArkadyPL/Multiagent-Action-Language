@@ -60,13 +60,15 @@
     <Compile Include="Expressions\ByCausesIf.cs" />
     <Compile Include="Expressions\Expression.cs" />
     <Compile Include="Fluent.cs" />
+    <Compile Include="Instruction.cs" />
     <Compile Include="IProlog.cs" />
     <Compile Include="IPrologService.cs" />
-    <Compile Include="LogicConnector.cs" />
+    <Compile Include="LogicElement.cs" />
     <Compile Include="LogicExpression.cs" />
     <Compile Include="PrologService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Queries\NecessaryEngagedFrom.cs" />
+    <Compile Include="Queries\NecessaryExecutableFrom.cs" />
     <Compile Include="Queries\PossiblyEngagedFrom.cs" />
     <Compile Include="Queries\Query.cs" />
     <Compile Include="Story.cs" />
