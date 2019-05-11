@@ -2,13 +2,13 @@
 
 namespace MultiAgentLanguageModels.Queries
 {
-    public class PossiblyEngagedFrom : Query,  IProlog
+    public class NecessaryEngagedFrom : Query, IProlog
     {
         public List<Agent> Agents { get; }
         public List<Action> Actions { get; }
         public LogicExpression Condition { get; }
 
-        public PossiblyEngagedFrom(List<Agent> agents, List<Action> actions, LogicExpression condition)
+        public NecessaryEngagedFrom(List<Agent> agents, List<Action> actions, LogicExpression condition)
         {
             Agents = agents;
             Actions = actions;
@@ -17,20 +17,20 @@ namespace MultiAgentLanguageModels.Queries
 
         public override string ToProlog()
         {
-            return $"possibly_engaged_from({Agents.ToProlog()}, {Actions.ToProlog()}, {Condition.ToProlog()}).";
+            return $"necessary_engaged_from({Agents.ToProlog()}, {Actions.ToProlog()}, {Condition.ToProlog()}).";
         }
     }
 
-    public class PossiblyEngaged : PossiblyEngagedFrom
+    public class NecessaryEngaged : NecessaryEngagedFrom
     {
-        public PossiblyEngaged(List<Agent> agents, List<Action> actions) 
+        public NecessaryEngaged(List<Agent> agents, List<Action> actions) 
             : base(agents, actions, LogicExpression.Empty)
-        {
+        {   
         }
 
         public override string ToProlog()
         {
-            return $"possibly_engaged({Agents.ToProlog()}, {Actions.ToProlog()}).";
+            return $"necessary_engaged({Agents.ToProlog()}, {Actions.ToProlog()}).";
         }
     }
 }
