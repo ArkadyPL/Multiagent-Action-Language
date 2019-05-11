@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MultiAgentLanguageGUI", "Mu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MultiAgentLanguageModels", "..\MultiAgentLanguageModels\MultiAgentLanguageModels.csproj", "{0CA7F8F1-E991-4BDD-8A30-5F3EC3CC0BB3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MultiAgentLanguageModelsTests", "..\ModelsTests\MultiAgentLanguageModelsTests.csproj", "{F9A94D98-F6A5-4762-B0E5-252226627DF9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MultiAgentLanguageModelsTests", "..\ModelsTests\MultiAgentLanguageModelsTests.csproj", "{F9A94D98-F6A5-4762-B0E5-252226627DF9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

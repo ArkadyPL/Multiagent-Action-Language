@@ -30,7 +30,7 @@ namespace MultiAgentLanguageModels.Queries
 
         public override string ToProlog()
         {
-            return $"possibly_engaged({Agents}, {Actions}).";
+            return $"possibly_engaged({Agents.ToProlog()}, {Actions.ToProlog()}).";
         }
     }
 }

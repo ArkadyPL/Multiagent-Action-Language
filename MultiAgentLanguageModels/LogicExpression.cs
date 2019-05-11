@@ -4,7 +4,7 @@
     {
         public LogicElement Element { get; }
 
-        private bool empty = false;
+        private readonly bool empty = false;
 
         private static LogicExpression _empty;
         public static LogicExpression Empty {

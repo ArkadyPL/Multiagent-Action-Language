@@ -36,7 +36,7 @@ namespace MultiAgentLanguageModels.Expressions
 
         public override string ToProlog()
         {
-            return $"by_cause({A.ToProlog()}, {G.ToProlog()}, {Alpha.ToProlog()}).";
+            return $"by_causes({A.ToProlog()}, {G.ToProlog()}, {Alpha.ToProlog()}).";
         }
     }
 
