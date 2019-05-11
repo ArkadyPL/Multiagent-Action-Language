@@ -24,17 +24,26 @@ by_causes_if(Action, [], Result, State):-
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Executability queries - TODO
+% Executability queries
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-necessary_executable_from(Program, InitialState):- true.
+% CurrentStates means "initialState" in the first call, and then set of all changes states
+necessary_executable_from([[Action, Group] | Program], CurrentStates):-
+	by_causes_if(Action, Group, ResultingState, X),
+	subset(X, CurrentStates),
+	delete(CurrentStates, ResultingState, ListWithoutResultingState),
+	delete(ListWithoutResultingState, \ResultingState, ListWithoutNotResultingState),
+	append(ListWithoutNotResultingState, [ResultingState], NewCurrentStates),
+	necessary_executable_from(Program, NewCurrentStates).
+
+necessary_executable_from([], _).
 
 necessary_executable(Program):-
 	necessary_executable_from(Program, []).
 
+% TODO: do below
 
-
-possibly_executable_from(Program, InitialState):- true.
+possibly_executable_from(Program, State):- true.
 
 possibly_executable(Program):-
 	possibly_executable_from(Program, []).
@@ -45,14 +54,14 @@ possibly_executable(Program):-
 % Value queries - TODO
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-necessary_after_from(State, Program, InitialState):- true.
+necessary_after_from(State, Program, StartingState):- true.
 
 necessary_after(State, Program):-
 	necessary_after_from(State, Program, []).
 
 
 
-possibly_after_from(State, Program, InitialState):- true.
+possibly_after_from(State, Program, StartingState):- true.
 
 possibly_after(State, Program):-
 	possibly_after_from(State, Program, []).

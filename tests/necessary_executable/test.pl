@@ -1,0 +1,50 @@
+passed:- ansi_format([bold,fg(green)], 'Passed', []).
+failed:- ansi_format([bold,fg(red)], 'Failed', []).
+
+:- consult('../../logic.pl'), consult('model.pl'),
+
+write('Necessary Executable - TESTS STARTED'),nl,
+
+
+
+write('Test case 1 a. - action2 is possible because after action1, result is true\n'),
+(write('necessary_executable_from([[action1,[g1, g2]],[action2,[g1, g2]]], [pi]). => '),
+necessary_executable_from([[action1,[g1, g2]],[action2,[g1, g2]]], [pi]), nl, passed; failed), nl,
+
+write('Test case 1 b. - action2 is not possible because those agents cannot perform given action\n'),
+(write('not(necessary_executable_from([[action1,[gX, gY]],[action2,[gX, gY]]], [pi])). => '),
+not(necessary_executable_from([[action1,[gX, gY]],[action2,[gX, gY]]], [pi])), nl, passed; failed), nl,
+
+
+
+write('Test case 2 a. - action8 is possible because after action7, not(sigma) is true\n'),
+(write('necessary_executable_from([[action7, [g7, g8]],[action8, [g7, g8]]], [sigma]). => '),
+necessary_executable_from([[action7, [g7, g8]],[action8, [g7, g8]]], [sigma]), nl, passed; failed), nl,
+
+write('Test case 2 b. - action9 is not possible because after action7, not(sigma) is true and then after action8, sigma is true\n'),
+(write('necessary_executable_from([[action7, [g7, g8]],[action8, [g7, g8]],[action9, [g7, g8]]], [sigma]). => '),
+necessary_executable_from([[action7, [g7, g8]],[action8, [g7, g8]],[action9, [g7, g8]]], [sigma]), nl, passed; failed), nl,
+
+write('Test case 2 c. - action10 is not possible because after action8, sigma is true\n'),
+(write('not(necessary_executable_from([[action7, [g7, g8]],[action8, [g7, g8]],[action10, [g7, g8]]], [sigma])). => '),
+not(necessary_executable_from([[action7, [g7, g8]],[action8, [g7, g8]],[action10, [g7, g8]]], [sigma])), nl, passed; failed), nl,
+
+write('Test case 2 d. - action8 is not possible because after action9, sigma is true\n'),
+(write('not(necessary_executable_from([[action10, [g7, g8]],[action9, [g7, g8]],[action8, [g7, g8]]], [\sigma])). => '),
+not(necessary_executable_from([[action10, [g7, g8]],[action9, [g7, g8]],[action8, [g7, g8]]], [\sigma])), nl, passed; failed), nl,
+
+
+
+write('Test case 3 - action4 is possible because after action3 the following is true: [alpha, beta]\n'),
+(write('necessary_executable_from([[action3,[g3, g4]],[action4,[g3, g4]]], [alpha]). => '),
+necessary_executable_from([[action3,[g3, g4]],[action4,[g3, g4]]], [alpha]), nl, passed; failed), nl,
+
+
+
+write('Test case 4 - action6 impossible, because we never achieve delta\n'),
+(write('not(necessary_executable_from([[action5,[g5, g6]],[action6,[g5, g6]]], [psi])). => '),
+not(necessary_executable_from([[action5,[g5, g6]],[action6,[g5, g6]]], [psi])), nl, passed; failed), nl,
+
+
+
+write('Necessary Executable - TESTS FINISHED'),nl.
