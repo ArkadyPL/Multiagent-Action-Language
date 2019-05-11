@@ -23,8 +23,20 @@ by_causes_if(action4, [g3, g4], other, [alpha, beta]).
 by_causes_if(action5, [g5, g6], delta, [psi]).
 by_causes_if(action6, [g5, g6], result3, [delta, gamma]).
 
+<<<<<<< Updated upstream
 % Test case 5 a. - action_5_1 impossible by g_5_1
 % Test case 5 b. - action_5_1 possible by g_5_2
 impossible_by(action_5_1, [g_5_1]).
 by_causes_if(action_5_1, [g_5_1], delta_5,[psi_5]).
 by_causes_if(action_5_1, [g_5_2], delta_5,[psi_5]).
+=======
+
+
+% Test case 4 - action6 impossible, because we never achieve delta
+by_causes_if(action5, [g5, g6], delta, [psi]).
+by_causes_if(action6, [g5, g6], result3, [delta, gamma]).
+
+
+% Test case 6. - action_6_1 not necessary_executable by g_6_1
+by_releases_if(action_6_1, [g_6_1], delta_6, [psi_6]).
+>>>>>>> Stashed changes
