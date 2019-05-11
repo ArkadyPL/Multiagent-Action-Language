@@ -45,6 +45,13 @@ write('Test case 4 - action6 impossible, because we never achieve delta\n'),
 (write('not(necessary_executable_from([[action5,[g5, g6]],[action6,[g5, g6]]], [psi])). => '),
 not(necessary_executable_from([[action5,[g5, g6]],[action6,[g5, g6]]], [psi])), nl, passed; failed), nl,
 
+write('Test case 5 a. - action_5_1 impossible by g_5_1\n'),
+(write('not(necessary_executable_from([[action_5_1,[g_5_1]]],[psi_5])). => '),
+not(necessary_executable_from([[action_5_1,[g_5_1]]],[psi_5])), nl, passed; failed), nl,
+
+write('Test case 5 b. - action_5_1 possible by g_5_2\n'),
+(write('necessary_executable_from([[action_5_1,[g_5_2]]],[psi_5]). => '),
+necessary_executable_from([[action_5_1,[g_5_2]]],[psi_5]), nl, passed; failed), nl,
 
 
 write('Necessary Executable - TESTS FINISHED'),nl.

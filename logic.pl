@@ -7,10 +7,10 @@
 after(Result, []):-
 	initially(Result).
 
-impossible_by_if(Action, Group, []):-
+impossible_by_if(Action, Group, _):-
 	impossible_by(Action, Group), !.
 	
-impossible_by_if(Action, [], State):-
+impossible_by_if(Action, _, State):-
 	impossible_if(Action, State), !.
 
 
@@ -31,6 +31,7 @@ by_causes_if(Action, [], Result, State):-
 necessary_executable_from([[Action, Group] | Program], CurrentStates):-
 	by_causes_if(Action, Group, ResultingState, X),
 	subset(X, CurrentStates),
+	not(impossible_by_if(Action, Group, X)),
 	delete(CurrentStates, ResultingState, ListWithoutResultingState),
 	delete(ListWithoutResultingState, \ResultingState, ListWithoutNotResultingState),
 	append(ListWithoutNotResultingState, [ResultingState], NewCurrentStates),
