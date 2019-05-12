@@ -2,6 +2,7 @@ using MultiAgentLanguageModels;
 using Ninject;
 using NUnit.Framework;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Action = MultiAgentLanguageModels.Action;
@@ -61,6 +62,47 @@ namespace Tests
             var notSigma = new Not(sigma);
             var notSigmaExpression = new LogicExpression(notSigma);
             Assert.AreEqual(@"[(\sigma)]", notSigmaExpression.ToProlog());
+        }
+
+        [Test]
+        public void LogicExpressionCheck()
+        {
+            var sigma = new Fluent("sigma");
+            var notSigma = new Not(sigma);
+            var notSigmaExpression = new LogicExpression(notSigma);
+            var actual = notSigmaExpression.EvaluateLogicExpression();
+            var expected = new List<List<Tuple<string, bool>>>()
+            {
+                new List<Tuple<string, bool>>()
+                {
+                    new Tuple<string, bool>("sigma", false)
+                }
+            };
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void LogicExpressionCheck2()
+        {
+            var sigma = new Fluent("sigma");
+            var pi = new Fluent("pi");
+            var beta = new Fluent("beta");
+            var notSigma = new Not(sigma);
+            var ifPiBeta = new If(pi, beta);
+            var iffPiBetaSigma = new Iff(ifPiBeta, notSigma);
+
+            var iffExpression = new LogicExpression(iffPiBetaSigma);
+            var actual = iffExpression.EvaluateLogicExpression().ToListOfStrings();
+            var expected = new List<string>()
+            {
+                @"[beta, pi, \sigma]",
+                @"[beta, \pi, \sigma]",
+                @"[\beta, \pi, \sigma]",
+                @"[\beta, pi, sigma]"
+            };
+            var check1 = expected.TrueForAll(x => actual.Contains(x));
+            var check2 = actual.TrueForAll(x => expected.Contains(x));
+            Assert.True(check1 && check2);
         }
     }
 }

@@ -4,6 +4,7 @@
     {
         public LogicElement Left { get; set; }
         public LogicElement Right { get; set; }
+        public abstract bool GetValue();
     }
 
     public class Not : LogicElement
@@ -13,6 +14,12 @@
             Left = logicElement;
             Right = null;
         }
+
+        public override bool GetValue()
+        {
+            return !Left.GetValue();
+        }
+
         public override string ToString()
         {
             return $"(\\{Left.ToString()})";
@@ -26,6 +33,12 @@
             Left = left;
             Right = right;
         }
+
+        public override bool GetValue()
+        {
+            return Left.GetValue() || Right.GetValue();
+        }
+
         public override string ToString()
         {
             return $"({Left.ToString()}+{Right.ToString()})";
@@ -39,6 +52,12 @@
             Left = left;
             Right = right;
         }
+
+        public override bool GetValue()
+        {
+            return Left.GetValue() && Right.GetValue();
+        }
+
         public override string ToString()
         {
             return $"({Left.ToString()}*{Right.ToString()})";
@@ -52,6 +71,12 @@
             Left = left;
             Right = right;
         }
+
+        public override bool GetValue()
+        {
+            return (!Left.GetValue()) || Right.GetValue();
+        }
+
         public override string ToString()
         {
             Not notLeft = new Not(Left);
@@ -67,6 +92,12 @@
             Left = left;
             Right = right;
         }
+
+        public override bool GetValue()
+        {
+            return ((!Left.GetValue()) || Right.GetValue()) && ((!Right.GetValue()) || Left.GetValue());
+        }
+
         public override string ToString()
         {
             If leftToRight = new If(Left, Right);
