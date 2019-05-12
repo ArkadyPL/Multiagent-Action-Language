@@ -5,8 +5,60 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MultiAgentLanguageGUI"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="Multiagent Action Language" MinHeight="500" MinWidth="800" Height="500" Width="800">
+    <Window.Resources>
+        <Style TargetType="TextBox">
+            <Setter Property="FontFamily" Value="Courier New"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled"/>
+            <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
+            <Setter Property="AcceptsReturn" Value="True"/>
+        </Style>
+        <Style TargetType="GroupBox">
+            <Setter Property="Margin" Value="5,5,5,5"/>
+            <Setter Property="Padding" Value="8,8,8,8"/>
+        </Style>
+        <Style TargetType="Button">
+            <Setter Property="Margin" Value="8,4,8,4"/>
+        </Style>
+    </Window.Resources>
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*" MinHeight="200" />
+            <RowDefinition Height="5" />
+            <RowDefinition Height="1*" MinHeight="200" />
+        </Grid.RowDefinitions>
+        <GroupBox Header="Story">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="30"/>
+                </Grid.RowDefinitions>
+                <TextBox x:Name="TextBox_Story"/>
+                <DockPanel Grid.Row="1" LastChildFill="False">
+                    <Button x:Name="Button_StoryParse" DockPanel.Dock="Left" Width="200">Parse</Button>
+                    <Button x:Name="Button_StorySave" DockPanel.Dock="Right" Width="100">Save</Button>
+                    <Button x:Name="Button_StoryLoad" DockPanel.Dock="Right" Width="100">Load</Button>
+                    <Button x:Name="Button_StoryClear" DockPanel.Dock="Right" Width="100">Clear</Button>
+                </DockPanel>
+            </Grid>
+        </GroupBox>
+        <GridSplitter HorizontalAlignment="Stretch" Height="5" Grid.Row="1"/>
+        <GroupBox Header="Query" Grid.Row="2">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="3*"/>
+                </Grid.RowDefinitions>
+                <DockPanel Grid.Row="0">
+                    <Button x:Name="Button_QueryExecute" DockPanel.Dock="Right" Width="100" Height="35">Execute</Button>
+                    <TextBox x:Name="TextBox_Query" DockPanel.Dock="Left" />
+                </DockPanel>
+                <DockPanel Grid.Row="1">
+                    <Label DockPanel.Dock="Top" Content="Answer:"/>
+                    <TextBox x:Name="TextBox_Answer" Grid.Row="0" IsReadOnly="True" />
+                </DockPanel>
+            </Grid>
+        </GroupBox>
     </Grid>
 </Window>
