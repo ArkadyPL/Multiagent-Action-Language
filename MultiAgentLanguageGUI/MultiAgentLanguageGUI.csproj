@@ -72,6 +72,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Output.cs" />
+    <Compile Include="Parser.cs" />
+    <Compile Include="Tokenizer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -97,6 +100,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MultiAgentLanguageModels\MultiAgentLanguageModels.csproj">
+      <Project>{0ca7f8f1-e991-4bdd-8a30-5f3ec3cc0bb3}</Project>
+      <Name>MultiAgentLanguageModels</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
