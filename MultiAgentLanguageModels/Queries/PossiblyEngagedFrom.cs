@@ -23,7 +23,7 @@ namespace MultiAgentLanguageModels.Queries
 
     public class PossiblyEngaged : PossiblyEngagedFrom
     {
-        public PossiblyEngaged(AgentsList agents, List<Action> actions) 
+        public PossiblyEngaged(AgentsList agents, List<Action> actions)
             : base(agents, actions, LogicExpression.Empty)
         {
         }

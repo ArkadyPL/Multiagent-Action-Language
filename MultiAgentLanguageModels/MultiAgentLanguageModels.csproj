@@ -35,9 +35,6 @@
     </StartupObject>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CSProlog, Version=6.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\MultiAgentLanguageGUI\packages\CSProlog.6.0.0\lib\net35\CSProlog.dll</HintPath>
-    </Reference>
     <Reference Include="Ninject, Version=3.3.4.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
       <HintPath>..\MultiAgentLanguageGUI\packages\Ninject.3.3.4\lib\net45\Ninject.dll</HintPath>
     </Reference>
@@ -70,6 +67,7 @@
     <Compile Include="Queries\NecessaryEngagedFrom.cs" />
     <Compile Include="Queries\NecessaryExecutableFrom.cs" />
     <Compile Include="Queries\PossiblyEngagedFrom.cs" />
+    <Compile Include="Queries\PossiblyExecutableFrom.cs" />
     <Compile Include="Queries\Query.cs" />
     <Compile Include="Story.cs" />
   </ItemGroup>

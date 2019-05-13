@@ -23,9 +23,9 @@ namespace MultiAgentLanguageModels.Queries
 
     public class NecessaryEngaged : NecessaryEngagedFrom
     {
-        public NecessaryEngaged(AgentsList agents, List<Action> actions) 
+        public NecessaryEngaged(AgentsList agents, List<Action> actions)
             : base(agents, actions, LogicExpression.Empty)
-        {   
+        {
         }
 
         public override string ToProlog()
