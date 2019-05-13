@@ -7,10 +7,10 @@
 after(Result, []):-
 	initially(Result).
 
-impossible_by_if(Action, Group, _):-
+impossible_by_if(Action, Group, []):-
 	impossible_by(Action, Group), !.
 	
-impossible_by_if(Action, _, State):-
+impossible_by_if(Action, [], State):-
 	impossible_if(Action, State), !.
 
 
