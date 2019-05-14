@@ -7,6 +7,11 @@
 after(Result, []):-
 	initially(Result).
 
+private_impossible_by_if(Action, Group, State):-
+	impossible_by(Action, Group);
+	impossible_if(Action, State);
+	impossible_by_if(Action, Group, State).
+
 impossible_by_if(Action, Group, []):-
 	impossible_by(Action, Group), !.
 	
@@ -22,6 +27,12 @@ by_causes_if(Action, [], Result, State):-
 	causes_if(Action, Result, State).
 
 
+by_releases_if(Action, Group, Result, _):-
+	by_releases(Action, Group, Result).
+
+by_releases_if(Action, _, Result, State):-
+	releases_if(Action, Result, State).
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Executability queries
@@ -31,6 +42,7 @@ by_causes_if(Action, [], Result, State):-
 necessary_executable_from([[Action, Group] | Program], CurrentStates):-
 	by_causes_if(Action, Group, ResultingState, X),
 	subset(X, CurrentStates),
+	not(private_impossible_by_if(Action, Group, X)),
 	delete(CurrentStates, ResultingState, ListWithoutResultingState),
 	delete(ListWithoutResultingState, \ResultingState, ListWithoutNotResultingState),
 	append(ListWithoutNotResultingState, [ResultingState], NewCurrentStates),
@@ -41,9 +53,18 @@ necessary_executable_from([], _).
 necessary_executable(Program):-
 	necessary_executable_from(Program, []).
 
-% TODO: do below
 
-possibly_executable_from(Program, State):- true.
+
+possibly_executable_from([[Action, Group] | Program], CurrentStates):- 
+	(by_releases_if(Action, Group, ResultingState, X) ; by_causes_if(Action, Group, ResultingState, X)),
+	subset(X, CurrentStates),
+	not(private_impossible_by_if(Action, Group, X)),
+	delete(CurrentStates, ResultingState, ListWithoutResultingState),
+	delete(ListWithoutResultingState, \ResultingState, ListWithoutNotResultingState),
+	append(ListWithoutNotResultingState, [ResultingState], NewCurrentStates),
+	possibly_executable_from(Program, NewCurrentStates).
+
+possibly_executable_from([],_).
 
 possibly_executable(Program):-
 	possibly_executable_from(Program, []).
