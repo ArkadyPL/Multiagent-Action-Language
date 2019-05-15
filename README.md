@@ -9,6 +9,7 @@ To do:
 - [ ] Pierwsza wersja kwerendy *Possibly after from*
 - [ ] Pierwsza wersja kwerendy *Necessary after from*
 - [ ] Napisanie testów dla bardziej zaawansowanych historyjek, w szczególności z wykorzystaniem *releases*, *initially* i *always*
+- [ ] Ujednolicenie sposobu wpisywania wyrażeń logicznych
 
 ### C# logika ###
 - [x] Działający serwis C# <-> Prolog
