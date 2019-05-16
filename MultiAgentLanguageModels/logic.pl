@@ -75,12 +75,23 @@ possibly_executable(Program):-
 % Value queries - TODO
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-necessary_after_from(State, Program, StartingState):- true.
+necessary_after_from(State, Program, CurrentStates):-
+	after(State,Program),
+	necessary_after_from_main(State, Program, CurrentStates).
+
+necessary_after_from_main(State, [[Action, Group] | Program], CurrentStates):-
+	by_causes_if(Action, Group, ResultingState, X),
+	subset(X, CurrentStates),
+	not(private_impossible_by_if(Action, Group, X)),
+	delete(CurrentStates, ResultingState, ListWithoutResultingState),
+	delete(ListWithoutResultingState, \ResultingState, ListWithoutNotResultingState),
+	append(ListWithoutNotResultingState, [ResultingState], NewCurrentStates),
+	necessary_after_from_main(State,Program, NewCurrentStates).
+	
+necessary_after_from_main(_,[], _).
 
 necessary_after(State, Program):-
 	necessary_after_from(State, Program, []).
-
-
 
 possibly_after_from(State, Program, StartingState):- true.
 
