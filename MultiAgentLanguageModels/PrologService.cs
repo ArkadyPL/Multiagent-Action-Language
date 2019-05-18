@@ -1,6 +1,5 @@
 ﻿using MultiAgentLanguageModels.Queries;
 using System;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -11,16 +10,14 @@ namespace MultiAgentLanguageModels
     {
         readonly string logicPath;
         readonly string storyPath;
-        private TaskCompletionSource<bool> taskCompletionSource;
 
         public PrologService()
         {
             storyPath = @"story.pl";
             logicPath = @"logic.pl";
-            taskCompletionSource = new TaskCompletionSource<bool>();
         }
 
-        public async Task<bool> GetSolution(Story story, Query query)
+        public bool GetSolution(Story story, Query query)
         {
             if (!File.Exists(logicPath))
             {
@@ -31,15 +28,21 @@ namespace MultiAgentLanguageModels
 
             using (var prologEngine = new PrologEngine())
             {
-                if(!await prologEngine.ConsultAsync(logicPath))
+                var logicConsult= prologEngine.ConsultAsync(logicPath);
+                logicConsult.Wait();
+                if (!logicConsult.Result)
                 {
                     throw new Exception("Something went wrong with logic.pl file.");
                 }
-                if(!await prologEngine.ConsultAsync(storyPath))
+                var storyConsult = prologEngine.ConsultAsync(storyPath);
+                storyConsult.Wait();
+                if (!storyConsult.Result)
                 {
                     throw new Exception("Something went wrong with story.pl file.");
                 }
-                return await prologEngine.AskQuery(query);
+                var allPossibilities = query.ToProlog().Select(q => { var temp = prologEngine.WriteLineAsync(q); temp.Wait(); return temp.Result; });
+
+                return query.Interpret(allPossibilities);
             }
         }
 

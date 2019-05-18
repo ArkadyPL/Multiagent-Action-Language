@@ -1,6 +1,9 @@
-﻿namespace MultiAgentLanguageModels.Queries
+﻿using System.Collections.Generic;
+using System.Linq;
+
+namespace MultiAgentLanguageModels.Queries
 {
-    public class NecessaryExecutableFrom : Query, IProlog
+    public class NecessaryExecutableFrom : Query
     {
         public Instruction Instructions { get; }
         public LogicExpression Condition { get; }
@@ -9,9 +12,16 @@
             Instructions = instructions;
             Condition = condition;
         }
-        public override string ToProlog()
+        public override List<string> ToProlog()
         {
-            return $"necessary_executable_from({Instructions.ToProlog()}, {Condition.ToProlog()}).";
+            var possibleCondition = Condition.EvaluateLogicExpression().ToListOfStrings();
+            var result = possibleCondition.Select(pi => $"necessary_executable_from({Instructions.ToProlog()}, {pi}).").ToList();
+            return result;
+        }
+
+        public override bool Interpret(IEnumerable<bool> allPossibilities)
+        {
+            return allPossibilities.All(x => x);
         }
     }
 
@@ -22,9 +32,9 @@
         {
         }
 
-        public override string ToProlog()
+        public override List<string> ToProlog()
         {
-            return $"necessary_executable({Instructions.ToProlog()}).";
+            return new List<string>() { $"necessary_executable({Instructions.ToProlog()})." };
         }
     }
 }

@@ -4,12 +4,12 @@ using System.Linq;
 
 namespace MultiAgentLanguageModels
 {
-    public class Story : List<Expression>, IProlog
+    public class Story : List<Expression>
     {
+        public string StringExpression { get => ToProlog(); }
         public string ToProlog()
         {
-            string story = string.Empty;
-            this.ForEach(e => story = story + e.ToProlog() + "\n");
+            string story = this.Select(x => x.ToProlog()).Aggregate((a, b) => a + "\n" + b);
             return story;
         }
     }

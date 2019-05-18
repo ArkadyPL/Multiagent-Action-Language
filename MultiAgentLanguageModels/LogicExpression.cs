@@ -4,13 +4,17 @@ using System.Linq;
 
 namespace MultiAgentLanguageModels
 {
-    public class LogicExpression : IProlog
+    public class LogicExpression
     {
-
         private List<Fluent> Fluents
         {
             get
             {
+                if (empty)
+                {
+                    return null;
+                }
+
                 List<Fluent> fluents = new List<Fluent>();
                 List<LogicElement> temp = new List<LogicElement>();
                 temp.Add(Element);
@@ -64,14 +68,14 @@ namespace MultiAgentLanguageModels
         {
             Element = element;
         }
-
-        public string ToProlog()
-        {
-            return empty ? "[]" : $"[{Element.ToString()}]";
-        }
-
+        
         public List<List<Tuple<string, bool>>> EvaluateLogicExpression()
         {
+            if (empty)
+            {
+                return null;
+            }
+
             List<List<Tuple<string, bool>>> results = new List<List<Tuple<string, bool>>>();
             var fluents = Fluents;
             for(int i=0; i < Math.Pow(2, fluents.Count); i++)
@@ -90,12 +94,22 @@ namespace MultiAgentLanguageModels
             }
             return results;
         }
+
+        public static implicit operator LogicExpression(LogicElement logicElement)
+        {
+            return new LogicExpression(logicElement);
+        }
+
     }
 
     public static class EvaluationExt
     {
         public static List<string> ToListOfStrings(this List<List<Tuple<string, bool>>> tuples)
         {
+            if(tuples == null)
+            {
+                return new List<string>() { "[]" };
+            }
             return tuples.Select(x => $"[{x.Select(t => t.Item2 ? t.Item1 : $"\\{t.Item1}").Aggregate((a, b) => a + ", " + b)}]").ToList();
         }
     }

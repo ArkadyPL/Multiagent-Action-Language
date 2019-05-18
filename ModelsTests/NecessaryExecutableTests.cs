@@ -36,7 +36,7 @@ namespace Tests
         }
 
         [Test]
-        public async Task Test11()
+        public void Test11()
         {
             StandardKernel kernel = new StandardKernel();
             kernel.Load(Assembly.GetExecutingAssembly());
@@ -48,12 +48,12 @@ namespace Tests
             };
 
             var query = new NecessaryExecutableFrom(instruction, new LogicExpression(pi));
-            var solution = await prologService.GetSolution(s1, query);
+            var solution = prologService.GetSolution(s1, query);
             Assert.AreEqual(true, solution);
         }
 
         [Test]
-        public async Task Test12()
+        public void Test12()
         {
             StandardKernel kernel = new StandardKernel();
             kernel.Load(Assembly.GetExecutingAssembly());
@@ -65,7 +65,7 @@ namespace Tests
             };
 
             var query = new NecessaryExecutableFrom(instruction, new LogicExpression(pi));
-            var solution = await prologService.GetSolution(s1, query);
+            var solution = prologService.GetSolution(s1, query);
             Assert.AreEqual(false, solution);
         }
     }

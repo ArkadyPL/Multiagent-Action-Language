@@ -34,11 +34,6 @@ namespace MultiAgentLanguageModels
             prologProcess.BeginOutputReadLine();
         }
 
-        public async Task<bool> AskQuery(Query query)
-        {
-            return await WriteLineAsync(query.ToProlog());
-        }
-
         public async Task<bool> ConsultAsync(string filePath)
         {
             return await WriteLineAsync($"consult('{filePath}').");

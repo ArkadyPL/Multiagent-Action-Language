@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace MultiAgentLanguageModels
 {
-    public class Action : IProlog
+    public class Action
     {
         public string Name { get; }
         public Action(string name)

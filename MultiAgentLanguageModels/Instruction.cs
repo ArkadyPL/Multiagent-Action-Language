@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace MultiAgentLanguageModels
 {
-    public class Instruction : List<Tuple<Action, AgentsList>>, IProlog
+    public class Instruction : List<Tuple<Action, AgentsList>>
     {
         public string ToProlog()
         {

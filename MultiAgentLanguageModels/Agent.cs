@@ -13,7 +13,7 @@ namespace MultiAgentLanguageModels
         }
     }
 
-    public class AgentsList : List<Agent>, IProlog
+    public class AgentsList : List<Agent>
     {
         public AgentsList() : base()
         {

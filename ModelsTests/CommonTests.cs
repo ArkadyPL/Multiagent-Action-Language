@@ -52,7 +52,7 @@ namespace Tests
         {
             var sigma = new Fluent("sigma");
             var sigmaExpression = new LogicExpression(sigma);
-            Assert.AreEqual("[sigma]", sigmaExpression.ToProlog());
+            Assert.AreEqual("sigma", sigmaExpression.StringExpression);
         }
 
         [Test]
@@ -61,7 +61,7 @@ namespace Tests
             var sigma = new Fluent("sigma");
             var notSigma = new Not(sigma);
             var notSigmaExpression = new LogicExpression(notSigma);
-            Assert.AreEqual(@"[(\sigma)]", notSigmaExpression.ToProlog());
+            Assert.AreEqual(@"(\sigma)", notSigmaExpression.StringExpression);
         }
 
         [Test]
