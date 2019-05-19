@@ -11,7 +11,7 @@
         
         public override string ToProlog()
         {
-            throw new System.NotImplementedException();
+            return "";
         }
     }
 }

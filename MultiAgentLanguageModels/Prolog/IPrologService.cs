@@ -4,6 +4,6 @@ namespace MultiAgentLanguageModels
 {
     public interface IPrologService
     {
-        bool GetSolution(Story story, Query query);
+        bool GetSolution(LanguageStructure story, Query query);
     }
 }

@@ -13,7 +13,7 @@ namespace Tests
     {
         private Agent a, b, c, d, x, y, z;
         private Action push, run, sing, fly, swim;
-        private Story story1, story2, story3;
+        private LanguageStructure story1, story2, story3;
 
         [SetUp]
         public void Setup()
@@ -30,18 +30,18 @@ namespace Tests
             fly = new Action("fly");
             run = new Action("run");
             swim = new Action("swim");
-            story1 = new Story()
+            story1 = new LanguageStructure()
             {
                 new ByCauses(push, new AgentsList{ a }, LogicExpression.Empty),
                 new ByCauses(push, new AgentsList{ b }, LogicExpression.Empty)
             };
-            story2 = new Story()
+            story2 = new LanguageStructure()
             {
                 new ByCauses(sing, new AgentsList{c}, LogicExpression.Empty),
                 new ByCauses(sing, new AgentsList{d}, LogicExpression.Empty),
                 new ByCauses(fly, new AgentsList{c}, LogicExpression.Empty)
             };
-            story3 = new Story()
+            story3 = new LanguageStructure()
             {
                 new ByCauses(swim, new AgentsList{x,y}, LogicExpression.Empty)
             };

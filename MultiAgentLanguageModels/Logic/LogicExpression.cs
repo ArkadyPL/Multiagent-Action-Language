@@ -16,8 +16,10 @@ namespace MultiAgentLanguageModels
                 }
 
                 List<Fluent> fluents = new List<Fluent>();
-                List<LogicElement> temp = new List<LogicElement>();
-                temp.Add(Element);
+                List<LogicElement> temp = new List<LogicElement>
+                {
+                    Element
+                };
                 LogicElement logicElement;
                 while (temp.Count != 0)
                 {
@@ -39,7 +41,7 @@ namespace MultiAgentLanguageModels
                         }
                     }
                 }
-                return fluents.OrderBy(x => x.Name).GroupBy(fluent => fluent.Name).ToList();
+                return fluents.GroupBy(fluent => fluent.Name).OrderBy(x => x.Key).ToList();
             }
         }
 
@@ -100,6 +102,10 @@ namespace MultiAgentLanguageModels
             return new LogicExpression(logicElement);
         }
 
+        public static implicit operator LogicElement(LogicExpression logicExpression)
+        {
+            return logicExpression.Element;
+        } 
     }
 
     public static class EvaluationExt

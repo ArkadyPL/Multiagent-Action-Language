@@ -17,7 +17,12 @@ namespace MultiAgentLanguageModels
             logicPath = @"logic.pl";
         }
 
-        public bool GetSolution(Story story, Query query)
+        public bool GetSolution(LanguageStructure languageStructure, Query query)
+        {
+            return query.Interpret(languageStructure.ToProlog().Select(x => GetSolutionOfStory(x, query)));
+        }
+
+        private bool GetSolutionOfStory(string story, Query query)
         {
             if (!File.Exists(logicPath))
             {
@@ -46,13 +51,13 @@ namespace MultiAgentLanguageModels
             }
         }
 
-        private void SaveStory(Story story)
+        private void SaveStory(string story)
         {
             if (File.Exists(storyPath))
             {
                 File.Delete(storyPath);
             }
-            File.WriteAllText(storyPath, story.ToProlog());
+            File.WriteAllText(storyPath, story);
             if (!File.Exists(storyPath))
             {
                 throw new Exception("Can't create story file.");

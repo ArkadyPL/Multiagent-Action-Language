@@ -61,7 +61,6 @@
     <Compile Include="Expressions\Noninertial.cs" />
     <Compile Include="Logic\Fluent.cs" />
     <Compile Include="Other\Instruction.cs" />
-    <Compile Include="Other\Structure.cs" />
     <Compile Include="Prolog\IPrologService.cs" />
     <Compile Include="Logic\LogicElement.cs" />
     <Compile Include="Logic\LogicExpression.cs" />
@@ -74,7 +73,7 @@
     <Compile Include="Queries\PossiblyEngagedFrom.cs" />
     <Compile Include="Queries\PossiblyExecutableFrom.cs" />
     <Compile Include="Queries\Query.cs" />
-    <Compile Include="Other\Story.cs" />
+    <Compile Include="Other\LanguageStructure.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="logic.pl">

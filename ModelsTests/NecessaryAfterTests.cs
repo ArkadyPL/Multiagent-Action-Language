@@ -24,7 +24,7 @@ namespace Tests
         }
 
         [Test]
-        public async void Test1a()
+        public void Test1a()
         {
             StandardKernel kernel = new StandardKernel();
             kernel.Load(Assembly.GetExecutingAssembly());
@@ -39,7 +39,7 @@ namespace Tests
             var test = new NecessaryAfterFrom(instructions, new LogicExpression(final), new LogicExpression(pi));
 
             var result = new Fluent("result");
-            var story = new Story()
+            var story = new LanguageStructure()
             {
                 new ByCausesIf(a1, new AgentsList(){g1, g2}, new LogicExpression(result), new LogicExpression(pi)),
                 new ByCausesIf(a2, new AgentsList(){g1,g2}, new LogicExpression(new Fluent("another")), new LogicExpression(result)),
