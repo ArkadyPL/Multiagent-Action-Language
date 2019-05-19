@@ -6,7 +6,7 @@ namespace MultiAgentLanguageModels
 {
     public class LogicExpression
     {
-        private List<Fluent> Fluents
+        private List<IGrouping<string, Fluent>> Fluents
         {
             get
             {
@@ -39,7 +39,7 @@ namespace MultiAgentLanguageModels
                         }
                     }
                 }
-                return fluents.OrderBy(x => x.Name).ToList();
+                return fluents.OrderBy(x => x.Name).GroupBy(fluent => fluent.Name).ToList();
             }
         }
 
@@ -83,12 +83,12 @@ namespace MultiAgentLanguageModels
                 var binary = Convert.ToString(i, 2).PadLeft(fluents.Count, '0').Select(x => x == '1' ? true : false).ToArray();
                 for(int j = 0; j < fluents.Count; j++)
                 {
-                    fluents[j].Value = binary[j];
+                    fluents[j].ToList().ForEach(x => x.Value = binary[j]);
                 }
                 if (Element.GetValue())
                 {
                     results.Add(
-                            fluents.Select(x => new Tuple<string, bool>(x.Name, x.Value)).ToList()
+                            fluents.Select(x => new Tuple<string, bool>(x.Key, x.First().Value)).ToList()
                         );
                 }
             }

@@ -104,5 +104,55 @@ namespace Tests
             var check2 = actual.TrueForAll(x => expected.Contains(x));
             Assert.True(check1 && check2);
         }
+
+        [Test]
+        public void LogicExpressionCheck3()
+        {
+            var sigma = new Fluent("sigma");
+            var falseOrSigma = new Or(sigma, new False());
+            var falseOrSigmaExpression = new LogicExpression(falseOrSigma);
+            var actual = falseOrSigmaExpression.EvaluateLogicExpression().ToListOfStrings();
+            var expected = new List<string>()
+            {
+                @"[sigma]"
+            };
+            var check1 = expected.TrueForAll(x => actual.Contains(x));
+            var check2 = actual.TrueForAll(x => expected.Contains(x));
+            Assert.True(check1 && check2);
+        }
+
+        [Test]
+        public void LogicExpressionCheck4()
+        {
+            var sigma = new Fluent("sigma");
+            var taut = new Or(sigma, new Not(sigma));
+            var tautExpression = new LogicExpression(taut);
+            var actual = tautExpression.EvaluateLogicExpression().ToListOfStrings();
+            var expected = new List<string>()
+            {
+                @"[sigma]",
+                @"[\sigma]"
+            };
+            var check1 = expected.TrueForAll(x => actual.Contains(x));
+            var check2 = actual.TrueForAll(x => expected.Contains(x));
+            Assert.True(check1 && check2);
+        }
+
+        [Test]
+        public void LogicExpressionCheck5()
+        {
+            var sigma = new Fluent("sigma");
+            var taut = new Iff(sigma, sigma);
+            var tautExpression = new LogicExpression(taut);
+            var actual = tautExpression.EvaluateLogicExpression().ToListOfStrings();
+            var expected = new List<string>()
+            {
+                @"[sigma]",
+                @"[\sigma]"
+            };
+            var check1 = expected.TrueForAll(x => actual.Contains(x));
+            var check2 = actual.TrueForAll(x => expected.Contains(x));
+            Assert.True(check1 && check2);
+        }
     }
 }
