@@ -71,7 +71,7 @@ namespace MultiAgentLanguageGUI
 
         private void Button_StoryClear_Click(object sender, RoutedEventArgs e)
         {
-
+            TextBox_Story.Text = "";
         }
 
         private void Button_StoryLoad_Click(object sender, RoutedEventArgs e)
