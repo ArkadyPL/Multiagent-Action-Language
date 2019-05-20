@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace MultiAgentLanguageModels.Expressions
 {
@@ -23,7 +24,13 @@ namespace MultiAgentLanguageModels.Expressions
 
         public override string ToProlog()
         {
-            return $"by_causes_if({A.ToProlog()}, {G.ToProlog()}, {Alpha.ToProlog()}, {Pi.ToProlog()}).";
+            var possibleAlpha = Alpha.EvaluateLogicExpression().ToListOfStrings();
+            var possiblePi = Pi.EvaluateLogicExpression().ToListOfStrings();
+            var results = possibleAlpha.Select(
+                alpha => possiblePi.Select(pi =>
+                $"by_causes_if({A.ToProlog()}, {G.ToProlog()}, {alpha}, {pi}).")
+                .Aggregate((a,b) => a+"\n"+b)).Aggregate((a,b) => a+"\n"+b);
+            return results;
         }
     }
 
@@ -36,7 +43,11 @@ namespace MultiAgentLanguageModels.Expressions
 
         public override string ToProlog()
         {
-            return $"by_causes({A.ToProlog()}, {G.ToProlog()}, {Alpha.ToProlog()}).";
+            var possibleAlpha = Alpha.EvaluateLogicExpression().ToListOfStrings();
+            var results = possibleAlpha.Select(
+                alpha => $"by_causes({A.ToProlog()}, {G.ToProlog()}, {alpha}).")
+                .Aggregate((a, b) => a + "\n" + b);
+            return results;
         }
     }
 

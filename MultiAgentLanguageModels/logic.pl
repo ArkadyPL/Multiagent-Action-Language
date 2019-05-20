@@ -92,8 +92,23 @@ necessary_after_from_main(_,[], _).
 
 necessary_after(State, Program):-
 	necessary_after_from(State, Program, []).
+	
+possibly_after_from(State, Program, CurrentStates):-
+	after(State,Program),
+	possibly_after_from_main(State, Program, CurrentStates).
 
-possibly_after_from(State, Program, StartingState):- true.
+possibly_after_from_main(State, [[Action, Group] | Program], CurrentStates):-
+	write('before rease'),
+	(by_releases_if(Action, Group, ResultingState, X) ; by_causes_if(Action, Group, ResultingState, X)),
+	write('before sub'),
+	subset(X, CurrentStates),
+	not(private_impossible_by_if(Action, Group, X)),
+	delete(CurrentStates, ResultingState, ListWithoutResultingState),
+	delete(ListWithoutResultingState, \ResultingState, ListWithoutNotResultingState),
+	append(ListWithoutNotResultingState, [ResultingState], NewCurrentStates),
+	possibly_after_from_main(State,Program, NewCurrentStates).
+	
+possibly_after_from_main(_,[], _).
 
 possibly_after(State, Program):-
 	possibly_after_from(State, Program, []).

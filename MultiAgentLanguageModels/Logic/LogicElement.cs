@@ -95,7 +95,10 @@
 
         public override bool GetValue()
         {
-            return ((!Left.GetValue()) || Right.GetValue()) && ((!Right.GetValue()) || Left.GetValue());
+            If leftToRight = new If(Left, Right);
+            If rightToLeft = new If(Right, Left);
+            And both = new And(leftToRight, rightToLeft);
+            return both.GetValue();
         }
 
         public override string ToString()
@@ -105,5 +108,15 @@
             And both = new And(leftToRight, rightToLeft);
             return both.ToString();
         }
+    }
+
+    public class True : LogicElement
+    {
+        public override bool GetValue() => true;
+    }
+
+    public class False : LogicElement
+    {
+        public override bool GetValue() => false;
     }
 }

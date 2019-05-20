@@ -1,4 +1,4 @@
-# Multiagent-Action-Language
+﻿# Multiagent-Action-Language
 To do:
 
 ### Prolog ###
@@ -6,8 +6,8 @@ To do:
 - [x] Pierwsza wersja kwerendy *Necessary engaged from*
 - [x] Pierwsza wersja kwerendy *Possibly executable from*
 - [x] Pierwsza wersja kwerendy *Necessary executable from*
-- [ ] Pierwsza wersja kwerendy *Possibly after from*
-- [ ] Pierwsza wersja kwerendy *Necessary after from*
+- [x] Pierwsza wersja kwerendy *Possibly after from*
+- [x] Pierwsza wersja kwerendy *Necessary after from*
 - [ ] Napisanie testów dla bardziej zaawansowanych historyjek, w szczególności z wykorzystaniem *releases*, *initially* i *always*
 - [ ] Ujednolicenie sposobu wpisywania wyrażeń logicznych
 

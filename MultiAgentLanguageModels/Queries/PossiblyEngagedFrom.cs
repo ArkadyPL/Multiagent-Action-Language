@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace MultiAgentLanguageModels.Queries
 {
-    public class PossiblyEngagedFrom : Query,  IProlog
+    public class PossiblyEngagedFrom : Query
     {
         public AgentsList Agents { get; }
         public List<Action> Actions { get; }
@@ -15,9 +16,15 @@ namespace MultiAgentLanguageModels.Queries
             Condition = condition;
         }
 
-        public override string ToProlog()
+        public override List<string> ToProlog()
         {
-            return $"possibly_engaged_from({Agents.ToProlog()}, {Actions.ToProlog()}, {Condition.ToProlog()}).";
+            var possibleCondition = Condition.EvaluateLogicExpression().ToListOfStrings();
+            var result = possibleCondition.Select(pi => $"possibly_engaged_from({Agents.ToProlog()}, {Actions.ToProlog()}, {pi}).").ToList();
+            return result;
+        }
+        public override bool Interpret(IEnumerable<bool> allPossibilities)
+        {
+            return allPossibilities.Any(x => x);
         }
     }
 
@@ -28,9 +35,9 @@ namespace MultiAgentLanguageModels.Queries
         {
         }
 
-        public override string ToProlog()
+        public override List<string> ToProlog()
         {
-            return $"possibly_engaged({Agents.ToProlog()}, {Actions.ToProlog()}).";
+            return new List<string>() { $"possibly_engaged({Agents.ToProlog()}, {Actions.ToProlog()})." };
         }
     }
 }

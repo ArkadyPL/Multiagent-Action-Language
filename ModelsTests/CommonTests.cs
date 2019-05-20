@@ -1,26 +1,16 @@
 using MultiAgentLanguageModels;
-using Ninject;
+using MultiAgentLanguageModels.Expressions;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
+using System.Text.RegularExpressions;
 using Action = MultiAgentLanguageModels.Action;
 
 namespace Tests
 {
     public class CommonTests
     {
-        private IPrologService prologService;
-        
-        [SetUp]
-        public void Setup()
-        {
-            var kernel = new StandardKernel();
-            kernel.Load(Assembly.GetExecutingAssembly());
-            prologService = kernel.Get<IPrologService>();
-        }
-
         [Test]
         public void GeneratingAgents()
         {
@@ -48,58 +38,98 @@ namespace Tests
         }
 
         [Test]
-        public void GeneratingLogicExpression1()
+        public void GeneratingStories()
         {
-            var sigma = new Fluent("sigma");
-            var sigmaExpression = new LogicExpression(sigma);
-            Assert.AreEqual("[sigma]", sigmaExpression.ToProlog());
-        }
+            var a = new Agent("a");
+            var b = new Agent("b");
+            var push = new Action("push");
+            var run = new Action("run");
 
-        [Test]
-        public void GeneratingLogicExpression2()
-        {
-            var sigma = new Fluent("sigma");
-            var notSigma = new Not(sigma);
-            var notSigmaExpression = new LogicExpression(notSigma);
-            Assert.AreEqual(@"[(\sigma)]", notSigmaExpression.ToProlog());
-        }
-
-        [Test]
-        public void LogicExpressionCheck()
-        {
-            var sigma = new Fluent("sigma");
-            var notSigma = new Not(sigma);
-            var notSigmaExpression = new LogicExpression(notSigma);
-            var actual = notSigmaExpression.EvaluateLogicExpression();
-            var expected = new List<List<Tuple<string, bool>>>()
-            {
-                new List<Tuple<string, bool>>()
-                {
-                    new Tuple<string, bool>("sigma", false)
-                }
-            };
-            Assert.AreEqual(expected, actual);
-        }
-
-        [Test]
-        public void LogicExpressionCheck2()
-        {
-            var sigma = new Fluent("sigma");
-            var pi = new Fluent("pi");
+            var alpha = new Fluent("alpha");
             var beta = new Fluent("beta");
-            var notSigma = new Not(sigma);
-            var ifPiBeta = new If(pi, beta);
-            var iffPiBetaSigma = new Iff(ifPiBeta, notSigma);
+            var notBeta = new Not(beta);
+            var alphaOrNotBeta = new Or(alpha, notBeta);
 
-            var iffExpression = new LogicExpression(iffPiBetaSigma);
-            var actual = iffExpression.EvaluateLogicExpression().ToListOfStrings();
+            var expressions = new LanguageStructure()
+            {
+                new Initially(alphaOrNotBeta),
+                new ByCauses(push, new AgentsList{ a }, LogicExpression.Empty),
+                new ByCauses(push, new AgentsList{ b }, LogicExpression.Empty),
+                new ByCauses(run, new AgentsList{ a }, LogicExpression.Empty),
+                new ByCauses(run, new AgentsList{ b }, LogicExpression.Empty)
+            };
+
+            var actual = expressions.ToProlog().Select(x => Regex.Replace(x, @"[^0-9a-zA-Z:.]+", "")).ToList();
             var expected = new List<string>()
             {
-                @"[beta, pi, \sigma]",
-                @"[beta, \pi, \sigma]",
-                @"[\beta, \pi, \sigma]",
-                @"[\beta, pi, sigma]"
+@"initially([\alpha, \beta]).
+by_causes(push, [a], []).
+by_causes(push, [b], []).
+by_causes(run, [a], []).
+by_causes(run, [b], []).",
+
+@"initially([alpha, \beta]).
+by_causes(push, [a], []).
+by_causes(push, [b], []).
+by_causes(run, [a], []).
+by_causes(run, [b], []).",
+
+@"initially([alpha, beta]).
+by_causes(push, [a], []).
+by_causes(push, [b], []).
+by_causes(run, [a], []).
+by_causes(run, [b], [])."
+            }.Select(x => Regex.Replace(x, @"[^0-9a-zA-Z:.]+", "")).ToList(); 
+
+
+            var check1 = expected.TrueForAll(x => actual.Contains(x));
+            var check2 = actual.TrueForAll(x => expected.Contains(x));
+            Assert.True(check1 && check2);
+        }
+
+        [Test]
+        public void GeneratingStories2()
+        {
+            var a = new Agent("a");
+            var b = new Agent("b");
+            var push = new Action("push");
+            var run = new Action("run");
+
+            var alpha = new Fluent("alpha");
+            var beta = new Fluent("beta");
+            var notBeta = new Not(beta);
+            var alphaOrNotBeta = new Or(alpha, notBeta);
+
+            var gamma = new Fluent("gamma");
+            var gammaOrNotGamma = new Or(gamma, new Not(gamma));
+
+            var expressions = new LanguageStructure()
+            {
+                new Initially(alphaOrNotBeta),
+                new ByCauses(push, new AgentsList{ a }, gammaOrNotGamma),
+                new ByCauses(run, new AgentsList{ b }, LogicExpression.Empty)
             };
+
+            var actual = expressions.ToProlog().Select(x => Regex.Replace(x, @"[^0-9a-zA-Z:.]+", "")).ToList();
+            var expected = new List<string>()
+            {
+@"initially([\alpha, \beta]).
+by_causes(push, [a], [\gamma]).
+by_causes(push, [a], [gamma]).
+by_causes(run, [b], []).",
+
+@"initially([alpha, \beta]).
+by_causes(push, [a], [\gamma]).
+by_causes(push, [a], [gamma]).
+by_causes(run, [b], []).",
+
+@"initially([alpha, beta]).
+by_causes(push, [a], [\gamma]).
+by_causes(push, [a], [gamma]).
+by_causes(run, [b], [])."
+            }.Select(x => Regex.Replace(x, @"[^0-9a-zA-Z:.]+", "")).ToList();
+
+
             var check1 = expected.TrueForAll(x => actual.Contains(x));
             var check2 = actual.TrueForAll(x => expected.Contains(x));
             Assert.True(check1 && check2);

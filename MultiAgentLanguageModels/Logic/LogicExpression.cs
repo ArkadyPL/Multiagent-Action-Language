@@ -4,16 +4,22 @@ using System.Linq;
 
 namespace MultiAgentLanguageModels
 {
-    public class LogicExpression : IProlog
+    public class LogicExpression
     {
-
-        private List<Fluent> Fluents
+        private List<IGrouping<string, Fluent>> Fluents
         {
             get
             {
+                if (empty)
+                {
+                    return null;
+                }
+
                 List<Fluent> fluents = new List<Fluent>();
-                List<LogicElement> temp = new List<LogicElement>();
-                temp.Add(Element);
+                List<LogicElement> temp = new List<LogicElement>
+                {
+                    Element
+                };
                 LogicElement logicElement;
                 while (temp.Count != 0)
                 {
@@ -35,7 +41,7 @@ namespace MultiAgentLanguageModels
                         }
                     }
                 }
-                return fluents.OrderBy(x => x.Name).ToList();
+                return fluents.GroupBy(fluent => fluent.Name).OrderBy(x => x.Key).ToList();
             }
         }
 
@@ -64,14 +70,14 @@ namespace MultiAgentLanguageModels
         {
             Element = element;
         }
-
-        public string ToProlog()
-        {
-            return empty ? "[]" : $"[{Element.ToString()}]";
-        }
-
+        
         public List<List<Tuple<string, bool>>> EvaluateLogicExpression()
         {
+            if (empty)
+            {
+                return null;
+            }
+
             List<List<Tuple<string, bool>>> results = new List<List<Tuple<string, bool>>>();
             var fluents = Fluents;
             for(int i=0; i < Math.Pow(2, fluents.Count); i++)
@@ -79,23 +85,37 @@ namespace MultiAgentLanguageModels
                 var binary = Convert.ToString(i, 2).PadLeft(fluents.Count, '0').Select(x => x == '1' ? true : false).ToArray();
                 for(int j = 0; j < fluents.Count; j++)
                 {
-                    fluents[j].Value = binary[j];
+                    fluents[j].ToList().ForEach(x => x.Value = binary[j]);
                 }
                 if (Element.GetValue())
                 {
                     results.Add(
-                            fluents.Select(x => new Tuple<string, bool>(x.Name, x.Value)).ToList()
+                            fluents.Select(x => new Tuple<string, bool>(x.Key, x.First().Value)).ToList()
                         );
                 }
             }
             return results;
         }
+
+        public static implicit operator LogicExpression(LogicElement logicElement)
+        {
+            return new LogicExpression(logicElement);
+        }
+
+        public static implicit operator LogicElement(LogicExpression logicExpression)
+        {
+            return logicExpression.Element;
+        } 
     }
 
     public static class EvaluationExt
     {
         public static List<string> ToListOfStrings(this List<List<Tuple<string, bool>>> tuples)
         {
+            if(tuples == null)
+            {
+                return new List<string>() { "[]" };
+            }
             return tuples.Select(x => $"[{x.Select(t => t.Item2 ? t.Item1 : $"\\{t.Item1}").Aggregate((a, b) => a + ", " + b)}]").ToList();
         }
     }

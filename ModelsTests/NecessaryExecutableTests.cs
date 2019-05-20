@@ -13,7 +13,7 @@ namespace Tests
     {
         Action a1, a2, a3, a4, a5, a6, a7, a8, a9, a10;
         Agent g1, g2, g3, g4, g5, g6, g7, g8, gX, gY;
-        Story s1, s2, s3, s4;
+        LanguageStructure s1, s2, s3, s4;
         Fluent result, pi, another, sigma, beta, alpha, other, delta, psi, result3, gamma;
 
         [SetUp]
@@ -28,7 +28,7 @@ namespace Tests
             result = new Fluent("result");
             pi = new Fluent("pi");
             another = new Fluent("another");
-            s1 = new Story()
+            s1 = new LanguageStructure()
             {
                 new ByCausesIf(a1, new AgentsList(){g1, g2}, new LogicExpression(result), new LogicExpression(pi)),
                 new ByCausesIf(a2, new AgentsList(){g1, g2}, new LogicExpression(another), new LogicExpression(result))
@@ -36,7 +36,7 @@ namespace Tests
         }
 
         [Test]
-        public async Task Test11()
+        public void Test11()
         {
             StandardKernel kernel = new StandardKernel();
             kernel.Load(Assembly.GetExecutingAssembly());
@@ -48,12 +48,12 @@ namespace Tests
             };
 
             var query = new NecessaryExecutableFrom(instruction, new LogicExpression(pi));
-            var solution = await prologService.GetSolution(s1, query);
+            var solution = prologService.GetSolution(s1, query);
             Assert.AreEqual(true, solution);
         }
 
         [Test]
-        public async Task Test12()
+        public void Test12()
         {
             StandardKernel kernel = new StandardKernel();
             kernel.Load(Assembly.GetExecutingAssembly());
@@ -65,7 +65,7 @@ namespace Tests
             };
 
             var query = new NecessaryExecutableFrom(instruction, new LogicExpression(pi));
-            var solution = await prologService.GetSolution(s1, query);
+            var solution = prologService.GetSolution(s1, query);
             Assert.AreEqual(false, solution);
         }
     }
