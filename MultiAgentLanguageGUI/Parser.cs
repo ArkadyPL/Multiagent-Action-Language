@@ -234,6 +234,7 @@ namespace MultiAgentLanguageGUI
                     {
                         firstToken.ThrowException("Expected ']' at the end of agents list.");
                     }
+                    // dalszy ciąg zdania zaczynającego się od "nazwa_akcji by..."
                     break;
                 case "causes":
                     break;
