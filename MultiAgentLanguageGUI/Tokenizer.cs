@@ -10,7 +10,8 @@ namespace MultiAgentLanguageGUI
     {
         Prototype,
         Name, Operator,
-        Action, Agent, Fluent
+        Action, Agent, Fluent,
+        Keyword
     }
 
     public class Token : ICloneable
@@ -52,7 +53,18 @@ namespace MultiAgentLanguageGUI
         {
             { "Action", TokenType.Action },
             { "Agent", TokenType.Agent },
-            { "Fluent", TokenType.Fluent }
+            { "Fluent", TokenType.Fluent },
+            { "initially", TokenType.Keyword },
+            { "noninertial", TokenType.Keyword },
+            { "by", TokenType.Keyword },
+            { "causes", TokenType.Keyword },
+            { "releases", TokenType.Keyword },
+            { "if", TokenType.Keyword },
+            { "impossible", TokenType.Keyword },
+            { "always", TokenType.Keyword },
+            { "not", TokenType.Keyword },
+            {"after", TokenType.Keyword },
+            {"observable", TokenType.Keyword }
         };
         // poniższe znaki traktowane są jako znaki operatorów i powodują przerwanie tworzenia tokena z alfanumerycznymi znakami
         // wszystkie znaki niebędące na poniższej liście są traktowane jako części nazw/keywordów w przypadku liter, cyfr i _

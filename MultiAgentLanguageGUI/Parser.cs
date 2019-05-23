@@ -13,6 +13,7 @@ namespace MultiAgentLanguageGUI
         public Dictionary<string, MultiAgentLanguageModels.Agent> Agent { get; set; }
         public Dictionary<string, MultiAgentLanguageModels.Fluent> Fluent { get; set; }
         public Dictionary<string, MultiAgentLanguageModels.Action> Action { get; set; }
+        public Dictionary<string, MultiAgentLanguageModels.Expressions.Noninertial> Noninertial { get; set; }
 
         public ParserState(List<Token> tokenList)
         {
@@ -20,6 +21,7 @@ namespace MultiAgentLanguageGUI
             Agent = new Dictionary<string, MultiAgentLanguageModels.Agent>();
             Fluent = new Dictionary<string, MultiAgentLanguageModels.Fluent>();
             Action = new Dictionary<string, MultiAgentLanguageModels.Action>();
+            Noninertial = new Dictionary<string, MultiAgentLanguageModels.Expressions.Noninertial>();
         }
 
         public Token PopToken()
@@ -31,6 +33,15 @@ namespace MultiAgentLanguageGUI
             Token a = TokenList[0];
             TokenList.RemoveAt(0);
             return a;
+        }
+
+        public Token PeepToken()
+        {
+            if (TokenList.Count == 0)
+            {
+                return null;
+            }
+            return TokenList[0];
         }
 
         public void AddAgent(string name)
@@ -46,6 +57,12 @@ namespace MultiAgentLanguageGUI
             Action.Add(name, new MultiAgentLanguageModels.Action(name));
         }
 
+        public void AddNoninertial(string name)
+        {
+            Fluent f = new Fluent(name);
+            Noninertial.Add(name, new MultiAgentLanguageModels.Expressions.Noninertial(f));
+        }
+
         public bool NameAvailable(string name)
         {
             if (Agent.ContainsKey(name))
@@ -53,6 +70,8 @@ namespace MultiAgentLanguageGUI
             if (Fluent.ContainsKey(name))
                 return false;
             if (Action.ContainsKey(name))
+                return false;
+            if (Noninertial.ContainsKey(name))
                 return false;
             return true;
         }
@@ -92,7 +111,8 @@ namespace MultiAgentLanguageGUI
         {
             { TokenType.Agent, ParseAgent },
             { TokenType.Fluent, ParseFluent },
-            { TokenType.Action, ParseAction }
+            { TokenType.Action, ParseAction },
+            { TokenType.Keyword, ParseKeyword }
         };
 
         public static void ParseAgent(ParserState state, Token firstToken)
@@ -144,6 +164,98 @@ namespace MultiAgentLanguageGUI
             }
         }
 
+        public static void ParseNoninertial(ParserState state, Token firstToken)
+        {
+            Token n = state.PopToken();
+            if (n == null)
+            {
+                firstToken.ThrowException("No noninertial fluent name");
+            }
+            if (state.NameAvailable(n.Name))
+            {
+                state.AddNoninertial(n.Name);
+            }
+            else
+            {
+                firstToken.ThrowException("Attempt to use an already used name");
+            }
+        }
+        public static AgentsList GetAgentList(ParserState state)  
+        {
+            AgentsList al = new AgentsList();
+            Token open = state.PopToken();
+            if (open.Name != "[")
+            {
+                open.ThrowException("Expected '[' at the beginning of agents list.");
+            }
+            bool correctSyntax = false;
+            while(state.TokenList.Count > 0)
+            {
+                Token t = state.PopToken();
+                if(state.Agent.ContainsKey(t.Name))
+                {
+                    al.Add(new Agent(t.Name));
+                }
+                else
+                {
+                    t.ThrowException("Agent name doesn't exist.");
+                }
+                if (state.TokenList.Count == 0) return null;
+
+                Token x = state.PopToken();
+                if (x.Name == "]")
+                {
+                    correctSyntax = true;
+                    break;
+                }
+                if (x.Name != ",")
+                {
+                    x.ThrowException("',' should separate agents' names.");
+                }
+            }
+            if(correctSyntax)
+            {
+                return al;
+            }
+            return null;
+        }
+        public static void ParseKeyword(ParserState state, Token firstToken)
+        {
+            switch(firstToken.Name)
+            {
+                case "initially":
+                    break;
+                case "noninertial":
+                    ParseNoninertial(state, firstToken);
+                    break;
+                case "by":                    
+                    AgentsList al = GetAgentList(state);
+                    if(al == null)
+                    {
+                        firstToken.ThrowException("Expected ']' at the end of agents list.");
+                    }
+                    break;
+                case "causes":
+                    break;
+                case "releases":
+                    break;
+                case "if":
+                    break;
+                case "impossible":
+                    break;
+                case "always":
+                    break;
+                case "not":
+                    break;
+                case "after":
+                    break;
+                case "observable":
+                    break;
+            }
+        }
+
+        
+
         public static ParserState Parse(List<Token> tokenList)
         {
             ParserState state = new ParserState(tokenList);
@@ -155,6 +267,11 @@ namespace MultiAgentLanguageGUI
                 {
                     Action<ParserState, Token> action = TokenTypeHandle[token.Type];
                     action(state, token);
+                }
+                else if(state.Action.ContainsKey(token.Name))
+                {
+                    Token keyword = state.PopToken();
+                    ParseKeyword(state, keyword);
                 }
                 else
                 {
