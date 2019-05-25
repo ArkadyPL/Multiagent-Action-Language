@@ -14,6 +14,7 @@ namespace MultiAgentLanguageGUI
         public Dictionary<string, MultiAgentLanguageModels.Fluent> Fluent { get; set; }
         public Dictionary<string, MultiAgentLanguageModels.Action> Action { get; set; }
         public Dictionary<string, MultiAgentLanguageModels.Expressions.Noninertial> Noninertial { get; set; }
+        public List<MultiAgentLanguageModels.Expressions.Expression> Expression { get; set; }
 
         public ParserState(List<Token> tokenList)
         {
@@ -22,6 +23,7 @@ namespace MultiAgentLanguageGUI
             Fluent = new Dictionary<string, MultiAgentLanguageModels.Fluent>();
             Action = new Dictionary<string, MultiAgentLanguageModels.Action>();
             Noninertial = new Dictionary<string, MultiAgentLanguageModels.Expressions.Noninertial>();
+            Expression = new List<MultiAgentLanguageModels.Expressions.Expression>();
         }
 
         public Token PopToken()
@@ -287,7 +289,7 @@ namespace MultiAgentLanguageGUI
                 f.Value = false;
                 return f;
             }
-            else if (state.Fluent.ContainsKey(t.Name))
+            else if (state.Fluent.ContainsKey(t.Name) || state.Noninertial.ContainsKey(t.Name))
             {
                 Fluent f = new Fluent(t.Name);
                 f.Value = true;
@@ -316,7 +318,7 @@ namespace MultiAgentLanguageGUI
             {
                 return null;
             }
-            else if (t.Type != TokenType.Keyword)
+            else if (t.Type != TokenType.Keyword && !state.Action.ContainsKey(t.Name))
             {
                 t.ThrowException("Expected keyword token.");
             }
@@ -339,9 +341,9 @@ namespace MultiAgentLanguageGUI
             {
                 return null;
             }
-            else if (t.Type != TokenType.Keyword)
+            else if (t.Type != TokenType.Keyword && !state.Action.ContainsKey(t.Name))
             {
-                t.ThrowException("Expected keyword token.");
+                t.ThrowException("Expected keyword token or action.");
             }
             return null;
         }
@@ -362,7 +364,7 @@ namespace MultiAgentLanguageGUI
             {
                 return null;
             }
-            else if (t.Type != TokenType.Keyword)
+            else if (t.Type != TokenType.Keyword && !state.Action.ContainsKey(t.Name))
             {
                 t.ThrowException("Expected keyword token.");
             }
@@ -385,7 +387,7 @@ namespace MultiAgentLanguageGUI
             {
                 return null;
             }
-            else if (t.Type != TokenType.Keyword)
+            else if (t.Type != TokenType.Keyword && !state.Action.ContainsKey(t.Name))
             {
                 t.ThrowException("Expected keyword token.");
             }
@@ -401,7 +403,9 @@ namespace MultiAgentLanguageGUI
                 case "noninertial":
                     ParseNoninertial(state, firstToken);
                     break;
-                case "by":                    
+                case "by":
+                    Token action = state.TokenList[state.TokenList.Count - 1];
+                    state.TokenList.RemoveAt(state.TokenList.Count - 1);
                     AgentsList al = GetAgentList(state);
                     if(al == null)
                     {
@@ -413,8 +417,49 @@ namespace MultiAgentLanguageGUI
                     {
                         t.ThrowException("Expected 'causes' or 'releases'");
                     }
-                    LogicElement cause = C1(state);
+                    LogicElement result = C1(state);
+                    if(t.Name == "releases" && (result is Fluent) == false)
+                    {
+                        t.ThrowException("Expected fluent after release.");
+                    }
 
+                    LogicElement condition = null;
+                    Token if_token = state.PeepToken();
+                    if(if_token != null && if_token.Name == "if")
+                    {
+                        state.PopToken();
+                        condition = C1(state);
+                    }
+                    if(t.Name == "causes")
+                    {
+                        if (condition == null)
+                        {
+                            state.Expression.Add(new MultiAgentLanguageModels.Expressions.ByCauses(
+                                new MultiAgentLanguageModels.Action(action.Name),
+                                al, result));
+                        }
+                        else
+                        {
+                            state.Expression.Add(new MultiAgentLanguageModels.Expressions.ByCausesIf(
+                                new MultiAgentLanguageModels.Action(action.Name),
+                                al, result, condition));
+                        }
+                    }
+                    if(t.Name == "releases")
+                    {
+                        if (condition == null)
+                        {
+                            state.Expression.Add(new MultiAgentLanguageModels.Expressions.ByReleases(
+                                new MultiAgentLanguageModels.Action(action.Name),
+                                al, (Fluent)result));
+                        }
+                        else
+                        {
+                            state.Expression.Add(new MultiAgentLanguageModels.Expressions.ByReleasesIf(
+                                new MultiAgentLanguageModels.Action(action.Name),
+                                al, (Fluent)result, condition));
+                        }
+                    }
                     break;
                 case "causes":
                     break;
@@ -452,6 +497,7 @@ namespace MultiAgentLanguageGUI
                 else if(state.Action.ContainsKey(token.Name))
                 {
                     Token keyword = state.PopToken();
+                    if (keyword.Name == "by") state.TokenList.Add(token);
                     ParseKeyword(state, keyword);
                 }
                 else
