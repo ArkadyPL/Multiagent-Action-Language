@@ -30,9 +30,18 @@ namespace MultiAgentLanguageModels
 
             prologProcess.Start();
 
+            prologProcess.ErrorDataReceived += PrologProcess_ErrorDataReceived;
+
             streamWriter = prologProcess.StandardInput;
 
             prologProcess.BeginOutputReadLine();
+            prologProcess.BeginErrorReadLine();
+        }
+
+        private void PrologProcess_ErrorDataReceived(object sender, DataReceivedEventArgs e)
+        {
+            if(!string.IsNullOrEmpty(e.Data) && !e.Data.StartsWith("Warning:") && !e.Data.Trim().StartsWith("Singleton variables"))
+                throw new Exception(e.Data);
         }
 
         public async Task<bool> ConsultAsync(string filePath)
@@ -43,11 +52,11 @@ namespace MultiAgentLanguageModels
         public async Task<bool> WriteLineAsync(string line)
         {
             taskCompletionSource = new TaskCompletionSource<bool>();
-
-            streamWriter?.WriteLine(line);
-
+            line = line.TrimEnd('.');
             prologProcess.OutputDataReceived += OutputDataHandler;
 
+            streamWriter?.WriteLine($"({line}, false; true).");
+            
             return await taskCompletionSource.Task;
         }
 
@@ -68,6 +77,7 @@ namespace MultiAgentLanguageModels
 
         public void Dispose()
         {
+
             streamWriter.Dispose();
             prologProcess.Dispose();
         }
@@ -78,11 +88,12 @@ namespace MultiAgentLanguageModels
             ProcessStartInfo result = new ProcessStartInfo
             {
                 FileName = path,
-                Arguments = "",
+                Arguments = "--quiet",
                 UseShellExecute = false,
                 CreateNoWindow = true,
                 RedirectStandardOutput = true,
-                RedirectStandardInput = true
+                RedirectStandardInput = true,
+                RedirectStandardError = true
             };
 
             return result;
