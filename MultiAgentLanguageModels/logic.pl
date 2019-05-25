@@ -2,6 +2,18 @@
 :- dynamic impossible_if/2.
 :- dynamic by_causes/3.
 :- dynamic causes_if/3.
+:- dynamic by_releases_if/4.
+:- dynamic by_releases/3.
+:- dynamic releases_if/3.
+:- dynamic always/1.
+:- dynamic initially/1.
+
+% Support for tests:
+:- multifile impossible_by/2, by_causes_if/4, by_causes/3, after/2, by_releases_if/4.
+:- style_check(-discontiguous).
+passed:- nl, ansi_format([bold,fg(green)], 'Passed', []).
+failed:- nl, ansi_format([bold,fg(red)], 'Failed', []).
+
 
 % Make sure, "initially" also propagates to after(Result, []).
 after(Result, []):-
@@ -38,6 +50,9 @@ by_releases_if(Action, _, Result, State):-
 % Executability queries
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+necessary_executable_from(_,_):-
+	always(_), !.
+
 % CurrentStates means "initialState" in the first call, and then set of all changes states
 necessary_executable_from([[Action, Group] | Program], CurrentStates):-
 	by_causes_if(Action, Group, ResultingState, X),
@@ -54,6 +69,8 @@ necessary_executable(Program):-
 	necessary_executable_from(Program, []).
 
 
+possibly_executable_from(_,_):-
+	always(_), !.
 
 possibly_executable_from([[Action, Group] | Program], CurrentStates):- 
 	(by_releases_if(Action, Group, ResultingState, X) ; by_causes_if(Action, Group, ResultingState, X)),
@@ -71,10 +88,14 @@ possibly_executable(Program):-
 
 
 
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Value queries - TODO
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+necessary_after_from(_, _, _):-
+	always(_), !.
+		 
 necessary_after_from(State, Program, CurrentStates):-
 	after(State,Program),
 	necessary_after_from_main(State, Program, CurrentStates).
@@ -92,15 +113,16 @@ necessary_after_from_main(_,[], _).
 
 necessary_after(State, Program):-
 	necessary_after_from(State, Program, []).
+
+possibly_after_from(_, _, _):-
+	always(_), !.
 	
 possibly_after_from(State, Program, CurrentStates):-
 	after(State,Program),
 	possibly_after_from_main(State, Program, CurrentStates).
 
 possibly_after_from_main(State, [[Action, Group] | Program], CurrentStates):-
-	write('before rease'),
 	(by_releases_if(Action, Group, ResultingState, X) ; by_causes_if(Action, Group, ResultingState, X)),
-	write('before sub'),
 	subset(X, CurrentStates),
 	not(private_impossible_by_if(Action, Group, X)),
 	delete(CurrentStates, ResultingState, ListWithoutResultingState),
@@ -118,6 +140,9 @@ possibly_after(State, Program):-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Engagement queries
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+necessary_engaged_from(_, _, _):-
+	always(_), !.
 
 necessary_engaged_from(Group, [Action|List], State):-
 	not(impossible_by_if(Action, Group, State)),
@@ -138,6 +163,8 @@ necessary_engaged(Group, Actions):-
 	necessary_engaged_from(Group, Actions, []).	
 
 
+possibly_engaged_from(_, _, _):-
+	always(_), !.
 
 possibly_engaged_from(Group, [Action|List], State):-
 	not(impossible_by_if(Action, Group, State)),
