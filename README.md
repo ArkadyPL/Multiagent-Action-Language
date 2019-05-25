@@ -8,7 +8,7 @@ To do:
 - [x] Pierwsza wersja kwerendy *Necessary executable from*
 - [x] Pierwsza wersja kwerendy *Possibly after from*
 - [x] Pierwsza wersja kwerendy *Necessary after from*
-- [ ] Napisanie testów dla bardziej zaawansowanych historyjek, w szczególności z wykorzystaniem *releases*, *initially* i *always*
+- [ ] Napisanie testów dla bardziej zaawansowanych historyjek, w szczególności z wykorzystaniem *releases*, *initially*, *after* i *always*
 - [ ] Ujednolicenie sposobu wpisywania wyrażeń logicznych
 
 ### C# logika ###
