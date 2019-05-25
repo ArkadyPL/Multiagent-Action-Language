@@ -58,4 +58,14 @@ write('Test case 7 a. - should be false because 2nd action is not executable aft
 (write('not(necessary_executable_from([[nex_7a_action1, [nex_7a_g1, nex_7a_g2]],[nex_7a_action2, [nex_7a_g1, nex_7a_g2]]],[nex_7a_pi])). => '),
 not(necessary_executable_from([[nex_7a_action1, [nex_7a_g1, nex_7a_g2]],[nex_7a_action2, [nex_7a_g1, nex_7a_g2]]],[nex_7a_pi])), passed; failed), nl,
 
+write('Test case 8 - action_8_2 is possible because of always statement\n'),
+(write('necessary_executable_from([[a_8_1,[g_8_1]],[a_8_2,[g_8_1]]], [gamma_8]). => '),
+necessary_executable_from([[a_8_1,[g_8_1]],[a_8_2,[g_8_1]]], [gamma_8]), passed; failed), nl,
+
+
+write('Test case 9 - action_9_2 is not possible, always statement only for gamma_8\n'),
+(write('necessary_executable_from([[a_9_1,[g_9_1]],[a_9_2,[g_9_1]]], [gamma_9]). => '),
+not(necessary_executable_from([[a_9_1,[g_9_1]],[a_9_2,[g_9_1]]], [gamma_9])), passed; failed), nl,
+
+
 write('Necessary Executable - TESTS FINISHED'),nl.

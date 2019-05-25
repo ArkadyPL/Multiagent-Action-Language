@@ -38,3 +38,15 @@ by_releases_if(action_6_1, [g_6_1], [delta_6], [psi_6]).
 by_causes_if(nex_7a_action1, [nex_7a_g1, nex_7a_g2], [nex_7a_result], [nex_7a_pi]).
 by_causes(nex_7a_action2, [nex_7a_g1, nex_7a_g2], [nex_7a_another]).
 
+% Test case 8 - action_8_2 is possible because of always statement
+by_causes_if(a_8_1, [g_8_1], beta_8, [alpha_8]).
+by_causes_if(a_8_2, [g_8_1], other_8, [beta_8]).
+always(alpha_8).
+
+
+% Test case 9 - action_9_2 is not possible, always statement only for gamma_9
+by_causes_if(a_9_1, [g_9_1], beta_9, [alpha_9]).
+by_causes_if(a_9_2, [g_9_1], other_9, [beta_9]).
+always(gamma_9).
+
+
