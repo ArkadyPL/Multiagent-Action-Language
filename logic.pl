@@ -88,8 +88,15 @@ necessary_executable(Program):-
 
 
 % CurrentState means "initialState" in the first call, and then set of all changes states
-possibly_executable_from([[Action, Group] | Program], CurrentState).
-	% TODO - implement
+possibly_executable_from([[Action, Group] | Program], CurrentState):-
+	(by_releases_if(Action, Group, ResultingState, X) ; by_causes_if(Action, Group, ResultingState, X)),
+	((not(is_empty(X)),subset(X, CurrentState)) ; (is_empty(X),is_empty(CurrentState))),	
+	not(private_impossible_by_if(Action, Group, X)),	
+	subtract(CurrentState, ResultingState, ListWithoutResultingState),	
+	negate_list(ResultingState, NotResultingState),	
+	subtract(ListWithoutResultingState, NotResultingState, ListWithoutNotResultingState),	
+	append(ListWithoutNotResultingState, ResultingState, NewCurrentState),	
+	possibly_executable_from(Program, NewCurrentState), !.
 
 possibly_executable_from([],_).
 
@@ -120,19 +127,8 @@ necessary_after(State, Program):-
 	necessary_after_from(State, Program, []), !.
 
 
-possibly_after_from(State, Program, CurrentState):-
-	after(State,Program),
-	possibly_after_from_main(State, Program, CurrentState).
-
-possibly_after_from_main(State, [[Action, Group] | Program], CurrentState):-
-	(by_releases_if(Action, Group, ResultingState, X) ; by_causes_if(Action, Group, ResultingState, X)),
-	subset(X, CurrentState),
-	not(private_impossible_by_if(Action, Group, X)),
-	subtract(CurrentState, ResultingState, ListWithoutResultingState),
-	negate_list(ResultingState, NotResultingState),
-	subtract(ListWithoutResultingState, NotResultingState, ListWithoutNotResultingState),
-	append(ListWithoutNotResultingState, ResultingState, NewCurrentState),
-	possibly_after_from_main(State,Program, NewCurrentState), !.
+possibly_after_from(State, Program, CurrentState).
+	% TODO - implement
 
 possibly_after_from_main(_,[], _).
 
