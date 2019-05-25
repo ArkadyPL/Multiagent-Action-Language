@@ -15,6 +15,11 @@ namespace MultiAgentLanguageModels
         {
             return Name;
         }
+
+        public static implicit operator Action(string str)
+        {
+            return new Action(str);
+        }
     }
 
     public static class ActionsList

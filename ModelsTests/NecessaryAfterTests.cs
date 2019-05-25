@@ -9,44 +9,217 @@ namespace Tests
 {
     public class NecessaryAfterTests
     {
-        Action a1, a2;
-        Agent g1, g2;
-
+        
 
         [SetUp]
         public void Setup()
         {
-            a1 = new Action("action1");
-            a2 = new Action("action2");
-
-            g1 = new Agent("g1");
-            g2 = new Agent("g2");
+            
         }
 
         [Test]
-        public void Test1a()
+        public void Test1()
         {
+            Action a1, a2;
+            AgentsList G1 = new AgentsList()
+            {
+                new Agent("g11"), new Agent("g12")
+            };
+            a1 = new Action("a11");
+            a2 = new Action("a12");
+            Fluent result, pi, another, expected;
+            result = new Fluent("res");
+            pi = new Fluent("pi");
+            another = new Fluent("another");
+            expected = new Fluent("exp");
+
+            var story = new LanguageStructure()
+            {
+                new ByCausesIf(a1, G1, result, pi),
+                new ByCauses(a2, G1, another),
+                new After(expected, new Instruction()
+                {
+                    new System.Tuple<Action, AgentsList>(a1, G1),
+                    new System.Tuple<Action, AgentsList>(a2, G1)
+                })
+            };
+
+            var query = new NecessaryAfter(new Instruction()
+            {
+                new System.Tuple<Action, AgentsList>(a1, G1),
+                new System.Tuple<Action, AgentsList>(a2, G1)
+            }, expected);
+
             StandardKernel kernel = new StandardKernel();
             kernel.Load(Assembly.GetExecutingAssembly());
             var prologService = kernel.Get<IPrologService>();
-            var instructions = new Instruction()
-            {
-                new System.Tuple<Action, AgentsList>(a1, new AgentsList(){g1, g2 }),
-                new System.Tuple<Action, AgentsList>(a2, new AgentsList(){g1, g2})
-            };
-            var final = new Fluent("final");
-            var pi = new Fluent("pi");
-            var test = new NecessaryAfterFrom(instructions, new LogicExpression(final), new LogicExpression(pi));
+            var answer = prologService.GetSolution(story, query);
+            Assert.AreEqual(false, answer);
+        }
 
-            var result = new Fluent("result");
+        [Test]
+        public void Test2()
+        {
+            AgentsList G = new AgentsList()
+            {
+                "g1", "g2"
+            };
+            
             var story = new LanguageStructure()
             {
-                new ByCausesIf(a1, new AgentsList(){g1, g2}, new LogicExpression(result), new LogicExpression(pi)),
-                new ByCausesIf(a2, new AgentsList(){g1,g2}, new LogicExpression(new Fluent("another")), new LogicExpression(result)),
-                new After(new LogicExpression(final), instructions)
+                new ByCausesIf("a1", G, "result", LogicExpression.Empty),
+                new ByCausesIf("a2", G, "another", "pi"),
+                new After("expected", new Instruction()
+                {
+                    new System.Tuple<Action, AgentsList>("a1", G),
+                    new System.Tuple<Action, AgentsList>("a2", G)
+                })
             };
 
-            var answer = prologService.GetSolution(story, test);
+            var query = new NecessaryAfter(new Instruction()
+            {
+                new System.Tuple<Action, AgentsList>("a1", G),
+                new System.Tuple<Action, AgentsList>("a2", G)
+            }, "expected");
+
+            StandardKernel kernel = new StandardKernel();
+            kernel.Load(Assembly.GetExecutingAssembly());
+            var prologService = kernel.Get<IPrologService>();
+            var answer = prologService.GetSolution(story, query);
+            Assert.AreEqual(false, answer);
+        }
+
+        [Test]
+        public void Test3()
+        {
+            var G = new AgentsList()
+            {
+                "g1", "g2"
+            };
+
+            var story = new LanguageStructure(){
+                new ByCauses("a1", G, "res"),
+                new ByCausesIf("a2", G, "another", "res"),
+                new After("expected", new Instruction()
+                {
+                    new System.Tuple<Action, AgentsList>("a1", G),
+                    new System.Tuple<Action, AgentsList>("a2", G)
+                })
+            };
+            var query = new NecessaryAfterFrom(new Instruction()
+            {
+                new System.Tuple<Action, AgentsList>("a1", G),
+                new System.Tuple<Action, AgentsList>("a2", G)
+            }, "expected", LogicExpression.Empty);
+
+            StandardKernel kernel = new StandardKernel();
+            kernel.Load(Assembly.GetExecutingAssembly());
+            var prologService = kernel.Get<IPrologService>();
+            var answer = prologService.GetSolution(story, query);
+            Assert.AreEqual(true, answer);
+        }
+
+        [Test]
+        public void Test4()
+        {
+            var G = new AgentsList()
+            {
+                "g1", "g2"
+            };
+
+            var story = new LanguageStructure(){
+                new ByCauses("a1", G, "res"),
+                new ByCausesIf("a2", G, "expected", "res"),
+            };
+            var query = new NecessaryAfterFrom(new Instruction()
+            {
+                new System.Tuple<Action, AgentsList>("a1", G),
+                new System.Tuple<Action, AgentsList>("a2", G)
+            }, "expected", LogicExpression.Empty);
+
+            StandardKernel kernel = new StandardKernel();
+            kernel.Load(Assembly.GetExecutingAssembly());
+            var prologService = kernel.Get<IPrologService>();
+            var answer = prologService.GetSolution(story, query);
+            Assert.AreEqual(true, answer);
+        }
+
+        [Test]
+        public void Test10()
+        {
+            var G = new AgentsList()
+            {
+                "g1", "g2"
+            };
+
+            var story = new LanguageStructure(){
+                new ByCausesIf("a1", G, "res", "pi"),
+                new ByCausesIf("a2", G, "another", "res"),
+                new Always(new And(new Fluent("notImportant1"), new Fluent("NotImportant2")))
+            };
+            var query = new NecessaryAfterFrom(new Instruction()
+            {
+                new System.Tuple<Action, AgentsList>("a1", G),
+                new System.Tuple<Action, AgentsList>("a2", G)
+            }, "expected", "pi");
+
+            StandardKernel kernel = new StandardKernel();
+            kernel.Load(Assembly.GetExecutingAssembly());
+            var prologService = kernel.Get<IPrologService>();
+            var answer = prologService.GetSolution(story, query);
+            Assert.AreEqual(false, answer);
+        }
+
+        [Test]
+        public void Test9a()
+        {
+            var G = new AgentsList()
+            {
+                "g1", "g2"
+            };
+
+            var story = new LanguageStructure(){
+                new ByCausesIf("a1", G, "res", "pi"),
+                new ByCausesIf("a2", G, "another", "res"),
+                new Always(new And(new Fluent("expected"), new Fluent("NotImportant2")))
+            };
+            var query = new NecessaryAfterFrom(new Instruction()
+            {
+                new System.Tuple<Action, AgentsList>("a1", G),
+                new System.Tuple<Action, AgentsList>("a2", G)
+            }, "expected", "pi");
+
+            StandardKernel kernel = new StandardKernel();
+            kernel.Load(Assembly.GetExecutingAssembly());
+            var prologService = kernel.Get<IPrologService>();
+            var answer = prologService.GetSolution(story, query);
+            Assert.AreEqual(true, answer);
+        }
+
+        [Test]
+        public void Test9b()
+        {
+            var G = new AgentsList()
+            {
+                "g1", "g2"
+            };
+
+            var story = new LanguageStructure(){
+                new ByCausesIf("a1", G, "res", "pi"),
+                new ByCausesIf("a2", G, "another", "res"),
+                new Always(new Fluent("expected")),
+                new Always(new Fluent("NotImportant2"))
+            };
+            var query = new NecessaryAfterFrom(new Instruction()
+            {
+                new System.Tuple<Action, AgentsList>("a1", G),
+                new System.Tuple<Action, AgentsList>("a2", G)
+            }, "expected", "pi");
+
+            StandardKernel kernel = new StandardKernel();
+            kernel.Load(Assembly.GetExecutingAssembly());
+            var prologService = kernel.Get<IPrologService>();
+            var answer = prologService.GetSolution(story, query);
             Assert.AreEqual(true, answer);
         }
     }

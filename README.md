@@ -2,18 +2,17 @@
 To do:
 
 ### Prolog ###
+- [ ] Obsługa listy fluentów przez *always*
+- [ ] Napisanie testów dla bardziej zaawansowanych historyjek, w szczególności z wykorzystaniem *releases*, *initially*, *after* i *always*
+- [ ] Ujednolicenie sposobu wpisywania wyrażeń logicznych
 - [x] Pierwsza wersja kwerendy *Possibly engagnd from*
 - [x] Pierwsza wersja kwerendy *Necessary engaged from*
 - [x] Pierwsza wersja kwerendy *Possibly executable from*
 - [x] Pierwsza wersja kwerendy *Necessary executable from*
 - [ ] Pierwsza wersja kwerendy *Possibly after from*
 - [x] Pierwsza wersja kwerendy *Necessary after from*
-- [ ] Napisanie testów dla bardziej zaawansowanych historyjek, w szczególności z wykorzystaniem *releases*, *initially*, *after* i *always*
-- [ ] Ujednolicenie sposobu wpisywania wyrażeń logicznych
 
 ### C# GUI ###
-- [x] Widoki dla kontrolek
-- [x] Parser tworzenia agentów
 - [ ] Parser na wyrażenia wartości *after*, *observable after*, *initially*
 - [ ] Parser na wyrażenia efektu akcji *by causes if*, *impossible by if*
 - [ ] Parser na wyrażenia uwolnienia fluentu *by releases if*
@@ -23,8 +22,11 @@ To do:
 - [ ] Parser na kwerendę wartości *after*
 - [ ] Parser na kwerendę zaangażowania *engaged*
 - [ ] Parser wyrażeń logicznych do obiektów
+- [x] Widoki dla kontrolek
+- [x] Parser tworzenia agentów
 
 ### C# logika ###
+- [ ] Testy
 - [x] Działający serwis C# <-> Prolog
 - [x] Wrappery na wyrażenia wartości *after*, *observable after*, *initially*
 - [x] Wrappery na wyrażenia efektu akcji *by causes if*, *impossible by if*
@@ -36,4 +38,3 @@ To do:
 - [x] Wrappery na kwerendę zaangażowania *engaged*
 - [x] Parser wyrażeń logicznych do formatu prologowego, z uwzględnieniem wszystkich kombinacji fluentów spełniających dane wyrażenie
 - [x] Dodanie stanów początkowych
-- [ ] Testy

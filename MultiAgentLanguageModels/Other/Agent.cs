@@ -11,6 +11,11 @@ namespace MultiAgentLanguageModels
         {
             Name = name;
         }
+
+        public static implicit operator Agent(string str)
+        {
+            return new Agent(str);
+        }
     }
 
     public class AgentsList : List<Agent>

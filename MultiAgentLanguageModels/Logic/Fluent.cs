@@ -38,5 +38,11 @@ namespace MultiAgentLanguageModels
         {
             return Name.GetHashCode();
         }
+
+        public static implicit operator Fluent(string str)
+        {
+            return new Fluent(str);
+        }
+
     }
 }
