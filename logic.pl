@@ -58,9 +58,10 @@ necessary_executable_from([[Action, Group] | Program], CurrentState):-
 	by_causes_if(Action, Group, ResultingState, X),
 	subset(X, CurrentState),
 	not(private_impossible_by_if(Action, Group, X)),
-	delete(CurrentState, ResultingState, ListWithoutResultingState),
-	delete(ListWithoutResultingState, \ResultingState, ListWithoutNotResultingState),
-	append(ListWithoutNotResultingState, [ResultingState], NewCurrentStates),
+	subtract(CurrentState, ResultingState, ListWithoutResultingState),
+	negate_list(ResultingState, NotResultingState),
+	subtract(ListWithoutResultingState, NotResultingState, ListWithoutNotResultingState),
+	append(ListWithoutNotResultingState, ResultingState, NewCurrentStates),
 	necessary_executable_from(Program, NewCurrentStates).
 
 necessary_executable_from([], _).
@@ -177,3 +178,11 @@ possibly_engaged_from(_, [], _):- !.
 	
 possibly_engaged(Group, [Action|List]):-
 	possibly_engaged_from(Group, [Action|List], []), !.
+	
+	
+% Utils
+negate_list([Item|List], NegatedList):-
+	NegatedList = [\Item, NegatedList],
+	negate_list(List, NegatedList).
+negate_list([Item|[]], NegatedList):-
+	NegatedList = [\Item, NegatedList].

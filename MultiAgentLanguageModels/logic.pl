@@ -53,14 +53,15 @@ by_releases_if(Action, _, Result, State):-
 necessary_executable_from(_,_):-
 	always(_), !.
 
-% CurrentStates means "initialState" in the first call, and then set of all changes states
-necessary_executable_from([[Action, Group] | Program], CurrentStates):-
+% CurrentState means "initialState" in the first call, and then set of all changes states
+necessary_executable_from([[Action, Group] | Program], CurrentState):-
 	by_causes_if(Action, Group, ResultingState, X),
-	subset(X, CurrentStates),
+	subset(X, CurrentState),
 	not(private_impossible_by_if(Action, Group, X)),
-	delete(CurrentStates, ResultingState, ListWithoutResultingState),
-	delete(ListWithoutResultingState, \ResultingState, ListWithoutNotResultingState),
-	append(ListWithoutNotResultingState, [ResultingState], NewCurrentStates),
+	subtract(CurrentState, ResultingState, ListWithoutResultingState),
+	negate_list(ResultingState, NotResultingState),
+	subtract(ListWithoutResultingState, NotResultingState, ListWithoutNotResultingState),
+	append(ListWithoutNotResultingState, ResultingState, NewCurrentStates),
 	necessary_executable_from(Program, NewCurrentStates).
 
 necessary_executable_from([], _).
@@ -72,11 +73,12 @@ necessary_executable(Program):-
 possibly_executable_from(_,_):-
 	always(_), !.
 
-possibly_executable_from([[Action, Group] | Program], CurrentStates):- 
+% CurrentState means "initialState" in the first call, and then set of all changes states
+possibly_executable_from([[Action, Group] | Program], CurrentState):- 
 	(by_releases_if(Action, Group, ResultingState, X) ; by_causes_if(Action, Group, ResultingState, X)),
-	subset(X, CurrentStates),
+	subset(X, CurrentState),
 	not(private_impossible_by_if(Action, Group, X)),
-	delete(CurrentStates, ResultingState, ListWithoutResultingState),
+	delete(CurrentState, ResultingState, ListWithoutResultingState),
 	delete(ListWithoutResultingState, \ResultingState, ListWithoutNotResultingState),
 	append(ListWithoutNotResultingState, [ResultingState], NewCurrentStates),
 	possibly_executable_from(Program, NewCurrentStates).
@@ -90,7 +92,7 @@ possibly_executable(Program):-
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Value queries - TODO
+% Value queries
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 necessary_after_from(_, _, _):-
@@ -176,3 +178,11 @@ possibly_engaged_from(_, [], _):- !.
 	
 possibly_engaged(Group, [Action|List]):-
 	possibly_engaged_from(Group, [Action|List], []), !.
+	
+	
+% Utils
+negate_list([Item|List], NegatedList):-
+	NegatedList = [\Item, NegatedList],
+	negate_list(List, NegatedList).
+negate_list([Item|[]], NegatedList):-
+	NegatedList = [\Item, NegatedList].
