@@ -50,27 +50,27 @@ by_releases_if(Action, _, Result, State):-
 % Executability queries
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-necessary_executable_from(_,_):-
-	always(_), !.
+check_always([Element | List]):-
+	(always(Element) -> true ; check_always(List)).
 
+check_always([]):-
+	fail.
+	
 % CurrentStates means "initialState" in the first call, and then set of all changes states
 necessary_executable_from([[Action, Group] | Program], CurrentStates):-
 	by_causes_if(Action, Group, ResultingState, X),
-	subset(X, CurrentStates),
+	(check_always(X) -> true; subset(X, CurrentStates)),
 	not(private_impossible_by_if(Action, Group, X)),
 	delete(CurrentStates, ResultingState, ListWithoutResultingState),
 	delete(ListWithoutResultingState, \ResultingState, ListWithoutNotResultingState),
 	append(ListWithoutNotResultingState, [ResultingState], NewCurrentStates),
-	necessary_executable_from(Program, NewCurrentStates).
+	necessary_executable_from(Program, NewCurrentStates).	
 
 necessary_executable_from([], _).
 
 necessary_executable(Program):-
 	necessary_executable_from(Program, []).
 
-
-possibly_executable_from(_,_):-
-	always(_), !.
 
 possibly_executable_from([[Action, Group] | Program], CurrentStates):- 
 	(by_releases_if(Action, Group, ResultingState, X) ; by_causes_if(Action, Group, ResultingState, X)),
@@ -92,9 +92,6 @@ possibly_executable(Program):-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Value queries - TODO
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-necessary_after_from(_, _, _):-
-	always(_), !.
 		 
 necessary_after_from(State, Program, CurrentStates):-
 	after(State,Program),
@@ -114,8 +111,6 @@ necessary_after_from_main(_,[], _).
 necessary_after(State, Program):-
 	necessary_after_from(State, Program, []).
 
-possibly_after_from(_, _, _):-
-	always(_), !.
 	
 possibly_after_from(State, Program, CurrentStates):-
 	after(State,Program),
@@ -141,8 +136,6 @@ possibly_after(State, Program):-
 % Engagement queries
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-necessary_engaged_from(_, _, _):-
-	always(_), !.
 
 necessary_engaged_from(Group, [Action|List], State):-
 	not(impossible_by_if(Action, Group, State)),
@@ -162,9 +155,6 @@ necessary_engaged_from(_, [], _, [_|_]):- fail.
 necessary_engaged(Group, Actions):-
 	necessary_engaged_from(Group, Actions, []).	
 
-
-possibly_engaged_from(_, _, _):-
-	always(_), !.
 
 possibly_engaged_from(Group, [Action|List], State):-
 	not(impossible_by_if(Action, Group, State)),

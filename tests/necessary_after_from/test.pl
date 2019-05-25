@@ -16,4 +16,8 @@ write('Test case 1 c.\n'),
 (write('not(necessary_after_from(final_c,[[action1_c,[g1_c]]], [pi_c])). => '),
 not(necessary_after_from(final_c,[[action1_c,[g1_c]]], [pi_c])), passed; failed), nl,
 
+write('Test case 1 d.\n'),
+(write('not(necessary_after_from(final_c,[[action1_c,[g1_c]]], [pi_c])). => '),
+necessary_after_from(final_d,[[action1_d,[g1_d, g2_d]],[action2_d,[g1_d, g2_d]]], [pi_d]), passed; failed), nl,
+
 write('Necessary After From - TESTS FINISHED'),nl.

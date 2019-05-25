@@ -33,3 +33,17 @@ by_causes_if(action_5_1, [g_5_2], delta_5, [psi_5]).
 
 % Test case 6. - action_6_1 not necessary_executable by g_6_1
 by_releases_if(action_6_1, [g_6_1], delta_6, [psi_6]).
+
+
+% Test case 7 - action_7_2 is possible because of always statement
+by_causes_if(a_7_1, [g_7_1], beta_7, [alpha_7]).
+by_causes_if(a_7_2, [g_7_1], other_7, [beta_7]).
+always(alpha_7).
+
+% Test case 8 - action_8_2 is not possible, always statement only for gamma_8
+by_causes_if(a_8_1, [g_8_1], beta_8, [alpha_8]).
+by_causes_if(a_8_2, [g_8_1], other_8, [beta_8]).
+always(gamma_8).
+
+
+
