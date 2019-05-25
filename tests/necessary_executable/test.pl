@@ -54,12 +54,8 @@ write('Test case 6. - action_6_1 not necessary_executable by g_6_1\n'),
 (write('not(necessary_executable_from([[action_6_1,[g_6_1]]],[psi_6])). => '),
 not(necessary_executable_from([[action_6_1,[g_6_1]]],[psi_6])), passed; failed), nl,
 
-write('Test case 7 - action_7_2 is possible because of always statement\n'),
-(write('necessary_executable_from([[a_7_1,[g_7_1]],[a_7_2,[g_7_1]]], [gamma_7]). => '),
-necessary_executable_from([[a_7_1,[g_7_1]],[a_7_2,[g_7_1]]], [gamma_7]), passed; failed), nl,
-
-write('action_8_2 is not possible, always statement only for gamma_8\n'),
-(write('necessary_executable_from([[a_8_1,[g_8_1]],[a_8_2,[g_8_1]]], [gamma_8]). => '),
-not(necessary_executable_from([[a_8_1,[g_8_1]],[a_8_2,[g_8_1]]], [gamma_8])), passed; failed), nl,
+write('Test case 7 a. - should be false because 2nd action is not executable after 1st one (becuase it requires initial state)\n'),
+(write('not(necessary_executable_from([[nex_7a_action1, [nex_7a_g1, nex_7a_g2]],[nex_7a_action2, [nex_7a_g1, nex_7a_g2]]],[nex_7a_pi])). => '),
+not(necessary_executable_from([[nex_7a_action1, [nex_7a_g1, nex_7a_g2]],[nex_7a_action2, [nex_7a_g1, nex_7a_g2]]],[nex_7a_pi])), passed; failed), nl,
 
 write('Necessary Executable - TESTS FINISHED'),nl.

@@ -219,6 +219,179 @@ namespace MultiAgentLanguageGUI
             }
             return null;
         }
+
+        public static LogicElement C1 (ParserState state)
+        {
+            LogicElement fluent = C2(state);
+            if (fluent == null) return null;
+            LogicElement exp = C1prime(state);
+            if (exp != null)
+            {
+                exp.Left = fluent;
+                return exp;
+            }
+            return fluent;
+        }
+
+        public static LogicElement C2(ParserState state)
+        {
+            LogicElement fluent = C3(state);
+            if (fluent == null) return null;
+            LogicElement exp = C2prime(state);
+            if (exp != null)
+            {
+                exp.Left = fluent;
+                return exp;
+            }
+            return fluent;
+        }
+
+        public static LogicElement C3(ParserState state)
+        {
+            LogicElement fluent = C4(state);
+            if (fluent == null) return null;
+            LogicElement exp = C3prime(state);
+            if (exp != null)
+            {
+                exp.Left = fluent;
+                return exp;
+            }
+            return fluent;
+        }
+
+        public static LogicElement C4(ParserState state)
+        {
+            LogicElement fluent = C5(state);
+            if (fluent == null) return null;
+            LogicElement exp = C4prime(state);
+            if (exp != null)
+            {
+                exp.Left = fluent;
+                return exp;
+            }
+            return fluent;
+        }
+
+        public static LogicElement C5(ParserState state)
+        {
+            Token t = state.PopToken();
+            if (t.Name == "(")
+            {
+                return C1(state);
+            }
+            else if (t.Name == "~")
+            {
+                Token name = state.PopToken();
+                if (!state.Fluent.ContainsKey(name.Name)) name.ThrowException("Expected fluent name");
+                Fluent f = new Fluent(name.Name);
+                f.Value = false;
+                return f;
+            }
+            else if (state.Fluent.ContainsKey(t.Name))
+            {
+                Fluent f = new Fluent(t.Name);
+                f.Value = true;
+                return f;
+            }
+            else
+            {
+                t.ThrowException("Error in logical expression. Mismatched bracekts or operator in wrong places.");
+            }
+            return null;
+        }
+
+        public static LogicElement C1prime(ParserState state)
+        {
+            Token t = state.PeepToken();
+            if (t == null) return null;
+            if (t.Name == "&&")
+            {
+                state.PopToken();
+                LogicElement exp = C2(state);
+                if (exp.Right == null) exp.Right = C1prime(state);
+                And and = new And(null, exp);
+                return and;
+            }
+            else if (t.Type == TokenType.Operator)
+            {
+                return null;
+            }
+            else if (t.Type != TokenType.Keyword)
+            {
+                t.ThrowException("Expected keyword token.");
+            }
+            return null;
+            
+        }
+        public static LogicElement C2prime(ParserState state)
+        {
+            Token t = state.PeepToken();
+            if (t == null) return null;
+            if (t.Name == "||")
+            {
+                state.PopToken();
+                LogicElement exp = C3(state);
+                if (exp.Right == null) exp.Right = C2prime(state);
+                Or or = new Or(null, exp);
+                return or;
+            }
+            else if (t.Type == TokenType.Operator)
+            {
+                return null;
+            }
+            else if (t.Type != TokenType.Keyword)
+            {
+                t.ThrowException("Expected keyword token.");
+            }
+            return null;
+        }
+
+        public static LogicElement C3prime(ParserState state)
+        {
+            Token t = state.PeepToken();
+            if (t == null) return null;
+            if (t.Name == "<->")
+            {
+                state.PopToken();
+                LogicElement exp = C4(state);
+                if (exp.Right == null) exp.Right = C3prime(state);
+                Iff iff = new Iff(null, exp);
+                return iff;
+            }
+            else if (t.Type == TokenType.Operator)
+            {
+                return null;
+            }
+            else if (t.Type != TokenType.Keyword)
+            {
+                t.ThrowException("Expected keyword token.");
+            }
+            return null;
+        }
+
+        public static LogicElement C4prime(ParserState state)
+        {
+            Token t = state.PeepToken();
+            if (t == null) return null;
+            if (t.Name == "->")
+            {
+                state.PopToken();
+                LogicElement exp = C5(state);
+                if (exp.Right == null) exp.Right = C4prime(state);
+                If if_exp = new If(null, exp);
+                return if_exp;
+            }
+            else if(t.Type == TokenType.Operator)
+            {
+                return null;
+            }
+            else if (t.Type != TokenType.Keyword)
+            {
+                t.ThrowException("Expected keyword token.");
+            }
+            return null;
+        }
+    
         public static void ParseKeyword(ParserState state, Token firstToken)
         {
             switch(firstToken.Name)
@@ -234,7 +407,14 @@ namespace MultiAgentLanguageGUI
                     {
                         firstToken.ThrowException("Expected ']' at the end of agents list.");
                     }
-                    // dalszy ciąg zdania zaczynającego się od "nazwa_akcji by..."
+                    Token t = state.PopToken();
+                    if (t == null) firstToken.ThrowException("Expected 'causes' or 'releases'");
+                    if(t.Name != "causes" && t.Name != "releases")
+                    {
+                        t.ThrowException("Expected 'causes' or 'releases'");
+                    }
+                    LogicElement cause = C1(state);
+
                     break;
                 case "causes":
                     break;

@@ -50,6 +50,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Expressions\ByReleasesIf.cs" />
     <Compile Include="Other\Agent.cs" />
     <Compile Include="Other\Action.cs" />
     <Compile Include="Bindings.cs" />
@@ -70,6 +71,7 @@
     <Compile Include="Queries\NecessaryAfterFrom.cs" />
     <Compile Include="Queries\NecessaryEngagedFrom.cs" />
     <Compile Include="Queries\NecessaryExecutableFrom.cs" />
+    <Compile Include="Queries\PossiblyAfterFrom.cs" />
     <Compile Include="Queries\PossiblyEngagedFrom.cs" />
     <Compile Include="Queries\PossiblyExecutableFrom.cs" />
     <Compile Include="Queries\Query.cs" />
