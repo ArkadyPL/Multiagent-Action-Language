@@ -78,9 +78,10 @@ possibly_executable_from([[Action, Group] | Program], CurrentState):-
 	(by_releases_if(Action, Group, ResultingState, X) ; by_causes_if(Action, Group, ResultingState, X)),
 	subset(X, CurrentState),
 	not(private_impossible_by_if(Action, Group, X)),
-	delete(CurrentState, ResultingState, ListWithoutResultingState),
-	delete(ListWithoutResultingState, \ResultingState, ListWithoutNotResultingState),
-	append(ListWithoutNotResultingState, [ResultingState], NewCurrentStates),
+	subtract(CurrentState, ResultingState, ListWithoutResultingState),
+	negate_list(ResultingState, NotResultingState),
+	subtract(ListWithoutResultingState, NotResultingState, ListWithoutNotResultingState),
+	append(ListWithoutNotResultingState, ResultingState, NewCurrentStates),
 	possibly_executable_from(Program, NewCurrentStates).
 
 possibly_executable_from([],_).
@@ -92,46 +93,36 @@ possibly_executable(Program):-
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Value queries
+% Value queries - TODO
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 necessary_after_from(_, _, _):-
 	always(_), !.
-		 
-necessary_after_from(State, Program, CurrentStates):-
-	after(State,Program),
-	necessary_after_from_main(State, Program, CurrentStates).
 
-necessary_after_from_main(State, [[Action, Group] | Program], CurrentStates):-
-	by_causes_if(Action, Group, ResultingState, X),
-	subset(X, CurrentStates),
-	not(private_impossible_by_if(Action, Group, X)),
-	delete(CurrentStates, ResultingState, ListWithoutResultingState),
-	delete(ListWithoutResultingState, \ResultingState, ListWithoutNotResultingState),
-	append(ListWithoutNotResultingState, [ResultingState], NewCurrentStates),
-	necessary_after_from_main(State,Program, NewCurrentStates).
-	
-necessary_after_from_main(_,[], _).
+necessary_after_from(State, [[Action, Group] | Program], CurrentState).
+	% TODO
 
 necessary_after(State, Program):-
 	necessary_after_from(State, Program, []).
 
 possibly_after_from(_, _, _):-
 	always(_), !.
-	
-possibly_after_from(State, Program, CurrentStates):-
-	after(State,Program),
-	possibly_after_from_main(State, Program, CurrentStates).
 
-possibly_after_from_main(State, [[Action, Group] | Program], CurrentStates):-
+
+possibly_after_from(State, Program, CurrentState):-
+	after(State,Program),
+	possibly_after_from_main(State, Program, CurrentState).
+
+possibly_after_from_main(State, [[Action, Group] | Program], CurrentState):-
 	(by_releases_if(Action, Group, ResultingState, X) ; by_causes_if(Action, Group, ResultingState, X)),
-	subset(X, CurrentStates),
+	subset(X, CurrentState),
 	not(private_impossible_by_if(Action, Group, X)),
-	delete(CurrentStates, ResultingState, ListWithoutResultingState),
-	delete(ListWithoutResultingState, \ResultingState, ListWithoutNotResultingState),
-	append(ListWithoutNotResultingState, [ResultingState], NewCurrentStates),
+	subtract(CurrentState, ResultingState, ListWithoutResultingState),
+	negate_list(ResultingState, NotResultingState),
+	subtract(ListWithoutResultingState, NotResultingState, ListWithoutNotResultingState),
+	append(ListWithoutNotResultingState, ResultingState, NewCurrentStates),
 	possibly_after_from_main(State,Program, NewCurrentStates).
-	
+
 possibly_after_from_main(_,[], _).
 
 possibly_after(State, Program):-
