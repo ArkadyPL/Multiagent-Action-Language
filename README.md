@@ -11,6 +11,7 @@ To do:
 - [x] Pierwsza wersja kwerendy *Necessary executable from*
 - [ ] Pierwsza wersja kwerendy *Possibly after from*
 - [x] Pierwsza wersja kwerendy *Necessary after from*
+- [ ] *Necessary after from* powinna być false kiedy jest releases
 
 ### C# GUI ###
 - [ ] Parser na wyrażenia wartości *after*, *observable after*, *initially*
