@@ -50,13 +50,28 @@ by_releases_if(Action, _, Result, State):-
 % Executability queries
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+check_always([Element | List]):-
+	(always(Element) ; check_always(List)).
+check_always([]):- fail.
+
 necessary_executable_from([[Action, Group] | Program], CurrentState):-
 	private_necessary_executable_from([[Action, Group] | Program], CurrentState, _).
 
 % CurrentState means "initialState" in the first call, and then set of all changes states
 private_necessary_executable_from([[Action, Group] | Program], CurrentState, FinalState):-
-	by_causes_if(Action, Group, ResultingState, RequiredState),	
-	((not(is_empty(RequiredState)),subset(RequiredState, CurrentState)) ; (is_empty(RequiredState),is_empty(CurrentState))),
+	by_causes_if(Action, Group, ResultingState, RequiredState),
+	(
+		(
+			not(is_empty(RequiredState)),
+			(
+				check_always(RequiredState)
+					;
+				subset(RequiredState, CurrentState)
+			)
+		)
+			;
+		(is_empty(RequiredState),is_empty(CurrentState))
+	),
 	not(private_impossible_by_if(Action, Group, RequiredState)),
 	subtract(CurrentState, ResultingState, ListWithoutResultingState),
 	negate_list(ResultingState, NotResultingState),
