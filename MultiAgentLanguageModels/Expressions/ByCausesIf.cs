@@ -65,22 +65,41 @@ namespace MultiAgentLanguageModels.Expressions
 
     public class ImpossibleByIf : ByCausesIf
     {
-        public ImpossibleByIf(Action action, AgentsList agents, LogicExpression result, LogicExpression condition) : base(action, agents, result, condition)
+        public ImpossibleByIf(Action action, AgentsList agents, LogicExpression condition) : base(action, agents, null, condition)
         {
+        }
+
+        public override string ToProlog()
+        {
+            var possiblePi = Pi.EvaluateLogicExpression().ToListOfStrings();
+            var results = possiblePi.Select(pi =>
+                $"impossible_by_if({A.ToProlog()}, {G.ToProlog()}, {pi}).")
+                .Aggregate((a, b) => a + "\n" + b);
+            return results;
         }
     }
 
     public class ImpossibleBy : ByCausesIf
     {
-        public ImpossibleBy(Action action, AgentsList agents, LogicExpression result, LogicExpression condition) : base(action, agents, result, condition)
+        public ImpossibleBy(Action action, AgentsList agents) : base(action, agents, null, null)
         {
+        }
+
+        public override string ToProlog()
+        {
+            return $"impossible_by({A.ToProlog()}, {G.ToProlog()}).";
         }
     }
 
     public class ImpossibleIf : ByCausesIf
     {
-        public ImpossibleIf(Action action, AgentsList agents, LogicExpression result, LogicExpression condition) : base(action, agents, result, condition)
+        public ImpossibleIf(Action action, LogicExpression condition) : base(action, null, null, condition)
         {
+        }
+
+        public override string ToProlog()
+        {
+            return Pi.EvaluateLogicExpression().ToListOfStrings().Select(pi => $"impossible_if({A.ToProlog()}, {pi}).").Aggregate((a, b) => a + "\n" + b);
         }
     }
 }

@@ -20,6 +20,11 @@ namespace MultiAgentLanguageModels
             return Name;
         }
 
+        public string ToProlog()
+        {
+            return $"[{Name}]";
+        }
+
         public override bool GetValue()
         {
             return Value;

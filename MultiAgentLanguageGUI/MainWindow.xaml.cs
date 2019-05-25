@@ -27,14 +27,11 @@ namespace MultiAgentLanguageGUI
             Output.Target = TextBox_Output;
 
             TextBox_Story.Text =
-                "// komentarz" + "\n" +
-                "Agent Agent_1;" + "\n" +
-                "Agent a2;" + "\n" +
-                "Fluent f1; // inny komentarz" + "\n" +
-                "Agent a3;" + "\n" +
-                "Agent a4 Agent a5 // średniki są ozdobne" + "\n" +
-                "Action ac1" + "\n" +
-                "Action a1; // tu się wykrzaczy ze względu na duplikat nazwy" + "\n";
+                "Agent a\n" +
+                "Fluent f1\n" +
+                "Fluent f2\n" +
+                "Action x\n" +
+                "x by [a] causes f1 -> f2";
         }
 
         private void TextBox_Story_TextChanged(object sender, TextChangedEventArgs e)
