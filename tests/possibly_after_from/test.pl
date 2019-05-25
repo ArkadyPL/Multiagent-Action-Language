@@ -3,9 +3,13 @@
 write('Possibly After From - TESTS STARTED'),nl,
 
 
+write('Test case 0 a. - Should be false - action not defined\n'),
+(write('not(possibly_after_from(pa_1_fluent, [[pa_1_action1,[pa_1_g1, pa_1_g2]]], [pa_0_cond])).'),
+not(possibly_after_from(pa_0_result, [[pa_0_action1,[pa_0_g1, pa_0_g2]]], [pa_0_cond])), passed; failed), nl,
+
 write('Test case 1 a. - Should be false - action not defined\n'),
-(write('not(possibly_after_from(pa_1_fluent, [[pa_1_action1,[pa_1_g1, pa_1_g2]]], [pa_1a_pi])).'),
-not(possibly_after_from(pa_1_fluent, [[pa_1_action1,[pa_1_g1, pa_1_g2]]], [pa_1_pi])), passed; failed), nl,
+(write('not(possibly_after_from(pa_1_fluent, [[pa_1_action1,[pa_1_g1, pa_1_g2]]], [pa_1_cond])).'),
+not(possibly_after_from(pa_1_fluent, [[pa_1_action1,[pa_1_g1, pa_1_g2]]], [pa_1_cond])), passed; failed), nl,
 
 write('Test case 2 a. - should be true, action defined and has the same condition\n'),
 (write('possibly_after_from(pa_2_fluent, [[pa_2_action,[pa_2_g1, pa_2_g2]]], [pa_2_pi]).'),

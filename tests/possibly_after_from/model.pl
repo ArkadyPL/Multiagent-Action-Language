@@ -1,5 +1,8 @@
+% Test case 0 a. - Should be true - just a query
+by_causes_if(pa_0_action, [pa_0_g1, pa_0_g2], [pa_0_result], [pa_0_cond]).
+
 % Test case 1 a. - Should be false - action not defined
-by_releases_if(pa_1_action1, [pa_1_g1, pa_1_g2], [pa_1_fluent], [pa_1_pi]).
+by_releases_if(pa_1_action1, [pa_1_g1, pa_1_g2], [pa_1_fluent], [pa_1_cond]).
 
 % Test case 2 a. - should be true, action defined and has the same condition
 by_releases_if(pa_2_action, [pa_2_g1, pa_2_g2], [pa_2_fluent], [pa_2_cond]).
