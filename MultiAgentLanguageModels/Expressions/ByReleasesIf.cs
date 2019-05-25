@@ -20,7 +20,7 @@ namespace MultiAgentLanguageModels.Expressions
         {
             return Condition.EvaluateLogicExpression()
                 .ToListOfStrings()
-                .Select(pi => $"by_releases_if({Action.ToProlog()}, {Agents.ToProlog()}, {Fluent.Name}, {pi}).")
+                .Select(pi => $"by_releases_if({Action.ToProlog()}, {Agents.ToProlog()}, {Fluent.ToProlog()}, {pi}).")
                 .Aggregate((a,b) => a+"\n"+b);
         }
     }
@@ -34,7 +34,7 @@ namespace MultiAgentLanguageModels.Expressions
         }
         public override string ToProlog()
         {
-            return $"by_releases({Action.ToProlog()}, {Agents.ToProlog()}, {Fluent.Name}).";
+            return $"by_releases({Action.ToProlog()}, {Agents.ToProlog()}, {Fluent.ToProlog()}).";
         }
     }
 
@@ -49,7 +49,7 @@ namespace MultiAgentLanguageModels.Expressions
         {
             return Condition.EvaluateLogicExpression()
                 .ToListOfStrings()
-                .Select(pi => $"releases_if({Action.ToProlog()}, {Fluent.Name}, {pi}).")
+                .Select(pi => $"releases_if({Action.ToProlog()}, {Fluent.ToProlog()}, {pi}).")
                 .Aggregate((a, b) => a + "\n" + b);
         }
     }
