@@ -1,6 +1,3 @@
-passed:- nl, ansi_format([bold,fg(green)], 'Passed', []).
-failed:- nl, ansi_format([bold,fg(red)], 'Failed', []).
-
 :- consult('../../logic.pl'), consult('model.pl'),
 
 write('Necessary After From - TESTS STARTED'),nl,

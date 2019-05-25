@@ -2,6 +2,17 @@
 :- dynamic impossible_if/2.
 :- dynamic by_causes/3.
 :- dynamic causes_if/3.
+:- dynamic by_releases_if/4.
+:- dynamic by_releases/3.
+:- dynamic releases_if/3.
+
+
+% Support for tests:
+:- multifile impossible_by/2, by_causes_if/4, by_causes/3, after/2, by_releases_if/4.
+:- style_check(-discontiguous).
+passed:- nl, ansi_format([bold,fg(green)], 'Passed', []).
+failed:- nl, ansi_format([bold,fg(red)], 'Failed', []).
+
 
 % Make sure, "initially" also propagates to after(Result, []).
 after(Result, []):-
