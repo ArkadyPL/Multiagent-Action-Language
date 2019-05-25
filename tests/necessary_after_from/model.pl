@@ -14,7 +14,7 @@ by_causes_if(na_3a_action2, [na_3a_g1, na_3a_g2], [na_3a_another], [na_3a_result
 after([na_3a_expected], [[na_3a_action1,[na_3a_g1, na_3a_g2]], [na_3a_action2, [na_3a_g1, na_3a_g2]]]).
 
 % Test case 4 a. - should be true because program is executable from initial state, and it is true that "na_4a_expected" after this program
-by_causes_if(na_4a_action1, [na_4a_g1, na_4a_g2], [na_4a_result]).
+by_causes(na_4a_action1, [na_4a_g1, na_4a_g2], [na_4a_result]).
 by_causes_if(na_4a_action2, [na_4a_g1, na_4a_g2], [na_4a_expected], [na_4a_result]).
 
 % Test case 5 a. - should be false because 2nd action is not executable after 1st one
@@ -33,7 +33,6 @@ by_causes_if(na_7a_action2, [na_7a_g1, na_7a_g2], [na_7a_expected], [na_7a_resul
 
 % Test case 8 a. - should be false - trivial, actions undefined
 after([na_8a_expected], [[na_8a_action1,[na_8a_g1, na_8a_g2]], [na_8a_action2, [na_8a_g1, na_8a_g2]]]).
-
 
 
 

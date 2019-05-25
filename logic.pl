@@ -50,21 +50,25 @@ by_releases_if(Action, _, Result, State):-
 % Executability queries
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-necessary_executable_from(_,_):-
-	always(_), !.
+check_always([Element | List]):-
+	(always(Element) -> true ; check_always(List)).
+
+necessary_executable_from([[Action, Group] | Program], CurrentState):-
+	private_necessary_executable_from([[Action, Group] | Program], CurrentState, _).
 
 % CurrentState means "initialState" in the first call, and then set of all changes states
-necessary_executable_from([[Action, Group] | Program], CurrentState):-
-	by_causes_if(Action, Group, ResultingState, X),
-	((not(is_empty(X)),write('NE'),subset(X, CurrentState)) ; (is_empty(X),write('EE'),is_empty(CurrentState))),
-	not(private_impossible_by_if(Action, Group, X)),
+private_necessary_executable_from([[Action, Group] | Program], CurrentState, FinalState):-
+	by_causes_if(Action, Group, ResultingState, RequiredState),
+	((not(is_empty(RequiredState)),subset(RequiredState, CurrentState)) ; (is_empty(RequiredState),is_empty(CurrentState))),
+	not(private_impossible_by_if(Action, Group, RequiredState)),
 	subtract(CurrentState, ResultingState, ListWithoutResultingState),
 	negate_list(ResultingState, NotResultingState),
 	subtract(ListWithoutResultingState, NotResultingState, ListWithoutNotResultingState),
-	append(ListWithoutNotResultingState, ResultingState, NewCurrentStates),
-	necessary_executable_from(Program, NewCurrentStates).
+	append(ListWithoutNotResultingState, ResultingState, NewCurrentState),
+	private_necessary_executable_from(Program, NewCurrentState, FinalState).
 
-necessary_executable_from([], _).
+private_necessary_executable_from([], NewCurrentState, FinalState):-
+	FinalState = NewCurrentState.
 
 necessary_executable(Program):-
 	necessary_executable_from(Program, []).
@@ -76,13 +80,13 @@ possibly_executable_from(_,_):-
 % CurrentState means "initialState" in the first call, and then set of all changes states
 possibly_executable_from([[Action, Group] | Program], CurrentState):- 
 	(by_releases_if(Action, Group, ResultingState, X) ; by_causes_if(Action, Group, ResultingState, X)),
-	((not(is_empty(X)),write('NE'),subset(X, CurrentState)) ; (is_empty(X),write('EE'),is_empty(CurrentState))),
+	((not(is_empty(X)),subset(X, CurrentState)) ; (is_empty(X),is_empty(CurrentState))),
 	not(private_impossible_by_if(Action, Group, X)),
 	subtract(CurrentState, ResultingState, ListWithoutResultingState),
 	negate_list(ResultingState, NotResultingState),
 	subtract(ListWithoutResultingState, NotResultingState, ListWithoutNotResultingState),
-	append(ListWithoutNotResultingState, ResultingState, NewCurrentStates),
-	possibly_executable_from(Program, NewCurrentStates).
+	append(ListWithoutNotResultingState, ResultingState, NewCurrentState),
+	possibly_executable_from(Program, NewCurrentState).
 
 possibly_executable_from([],_).
 
@@ -100,13 +104,12 @@ necessary_after_from(_, _, _):-
 	always(_), !.
 
 necessary_after_from(State, [[Action, Group] | Program], CurrentState):-
-	necessary_executable_from([[Action, Group] | Program], CurrentState),
-	after(State, [[Action, Group] | Program]).
-	% TODO: continue to fix all testes
-	
+	private_necessary_executable_from([[Action, Group] | Program], CurrentState, StateAfterProgram),
+	(after(State, [[Action, Group] | Program]) ; subset(State, StateAfterProgram)).
 
 necessary_after(State, Program):-
 	necessary_after_from(State, Program, []).
+
 
 possibly_after_from(_, _, _):-
 	always(_), !.
@@ -123,8 +126,8 @@ possibly_after_from_main(State, [[Action, Group] | Program], CurrentState):-
 	subtract(CurrentState, ResultingState, ListWithoutResultingState),
 	negate_list(ResultingState, NotResultingState),
 	subtract(ListWithoutResultingState, NotResultingState, ListWithoutNotResultingState),
-	append(ListWithoutNotResultingState, ResultingState, NewCurrentStates),
-	possibly_after_from_main(State,Program, NewCurrentStates).
+	append(ListWithoutNotResultingState, ResultingState, NewCurrentState),
+	possibly_after_from_main(State,Program, NewCurrentState).
 
 possibly_after_from_main(_,[], _).
 
@@ -137,8 +140,6 @@ possibly_after(State, Program):-
 % Engagement queries
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-necessary_engaged_from(_, _, _):-
-	always(_), !.
 
 necessary_engaged_from(Group, [Action|List], State):-
 	not(impossible_by_if(Action, Group, State)),
@@ -158,9 +159,6 @@ necessary_engaged_from(_, [], _, [_|_]):- fail.
 necessary_engaged(Group, Actions):-
 	necessary_engaged_from(Group, Actions, []).	
 
-
-possibly_engaged_from(_, _, _):-
-	always(_), !.
 
 possibly_engaged_from(Group, [Action|List], State):-
 	not(impossible_by_if(Action, Group, State)),

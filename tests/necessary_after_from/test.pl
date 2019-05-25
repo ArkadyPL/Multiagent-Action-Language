@@ -36,4 +36,8 @@ write('Test case 8 a. - should be false - trivial, actions undefined\n'),
 not(necessary_after([na_8a_expected], [[na_8a_action1,[na_8a_g1, na_8a_g2]], [na_8a_action2, [na_8a_g1, na_8a_g2]]])), passed; failed), nl,
 
 
+write('Test case 1 d.\n'),
+(write('not(necessary_after_from(final_c,[[action1_c,[g1_c]]], [pi_c])). => '),
+necessary_after_from(final_d,[[action1_d,[g1_d, g2_d]],[action2_d,[g1_d, g2_d]]], [pi_d]), passed; failed), nl,
+
 write('Necessary After From - TESTS FINISHED'),nl.
