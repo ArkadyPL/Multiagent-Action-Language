@@ -52,11 +52,13 @@ namespace MultiAgentLanguageModels
         public async Task<bool> WriteLineAsync(string line)
         {
             taskCompletionSource = new TaskCompletionSource<bool>();
-            line = line.TrimEnd('.');
+
             prologProcess.OutputDataReceived += OutputDataHandler;
 
-            streamWriter?.WriteLine($"({line}, false; true).");
-            
+            streamWriter?.WriteLine($"{line.TrimEnd('.')}, !.");
+
+            //streamWriter?.WriteLine(line);
+
             return await taskCompletionSource.Task;
         }
 
