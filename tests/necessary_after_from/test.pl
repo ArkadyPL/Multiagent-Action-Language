@@ -35,5 +35,13 @@ write('Test case 8 a. - should be false - trivial, actions undefined\n'),
 (write('not(necessary_after([na_8a_expected], [[na_8a_action1,[na_8a_g1, na_8a_g2]], [na_8a_action2, [na_8a_g1, na_8a_g2]]])).'),
 not(necessary_after([na_8a_expected], [[na_8a_action1,[na_8a_g1, na_8a_g2]], [na_8a_action2, [na_8a_g1, na_8a_g2]]])), passed; failed), nl,
 
+write('Test case 9 a. - should be true because expected term is always true\n'),
+(write('necessary_after_from([na_9a_expected], [[na_9a_action1,[na_9a_g1, na_9a_g2]], [na_9a_action2, [na_9a_g1, na_9a_g2]]], [na_9a_pi]).'),
+necessary_after_from([na_9a_expected], [[na_9a_action1,[na_9a_g1, na_9a_g2]], [na_9a_action2, [na_9a_g1, na_9a_g2]]], [na_9a_pi]), passed; failed), nl,
+
+write('Test case 10 a. - should be false because expected term is never true\n'),
+(write('not(necessary_after_from([na_10a_expected], [[na_10a_action1,[na_10a_g1, na_10a_g2]], [na_10a_action2, [na_10a_g1, na_10a_g2]]], [na_10a_pi])).'),
+not(necessary_after_from([na_10a_expected], [[na_10a_action1,[na_10a_g1, na_10a_g2]], [na_10a_action2, [na_10a_g1, na_10a_g2]]], [na_10a_pi])), passed; failed), nl,
+
 
 write('Necessary After From - TESTS FINISHED'),nl.
