@@ -11,18 +11,29 @@ To do:
 - [ ] Napisanie testów dla bardziej zaawansowanych historyjek, w szczególności z wykorzystaniem *releases*, *initially*, *after* i *always*
 - [ ] Ujednolicenie sposobu wpisywania wyrażeń logicznych
 
+### C# GUI ###
+- [x] Widoki dla kontrolek
+- [x] Parser tworzenia agentów
+- [ ] Parser na wyrażenia wartości *after*, *observable after*, *initially*
+- [ ] Parser na wyrażenia efektu akcji *by causes if*, *impossible by if*
+- [ ] Parser na wyrażenia uwolnienia fluentu *by releases if*
+- [ ] Parser na wyrażenia integralności *always*
+- [ ] Parser na wyrażenie zachowania fluentów *noninertial*
+- [ ] Parser na kwerendę wykonywalności *executable*
+- [ ] Parser na kwerendę wartości *after*
+- [ ] Parser na kwerendę zaangażowania *engaged*
+- [ ] Parser wyrażeń logicznych do obiektów
+
 ### C# logika ###
 - [x] Działający serwis C# <-> Prolog
-- [ ] Wrappery na wyrażenia wartości *after*, *observable after*, *initially*
-- [ ] Wrappery na wyrażenia efektu akcji *by causes if*, *impossible by if*
-- [ ] Wrappery na wyrażenia uwolnienia fluentu *by releases if*
-- [ ] Wrappery na wyrażenia integralności *always*
-- [ ] Wrapper na wyrażenie zachowania fluentów *noninertial*
-- [ ] Wrappery na kwerendę wykonywalności *executable*
-- [ ] Wrappery na kwerendę wartości *after*
+- [x] Wrappery na wyrażenia wartości *after*, *observable after*, *initially*
+- [x] Wrappery na wyrażenia efektu akcji *by causes if*, *impossible by if*
+- [x] Wrappery na wyrażenia uwolnienia fluentu *by releases if*
+- [x] Wrappery na wyrażenia integralności *always*
+- [x] Wrapper na wyrażenie zachowania fluentów *noninertial*
+- [x] Wrappery na kwerendę wykonywalności *executable*
+- [x] Wrappery na kwerendę wartości *after*
 - [x] Wrappery na kwerendę zaangażowania *engaged*
-- [ ] Parser wyrażeń logicznych do formatu prologowego, z uwzględnieniem wszystkich kombinacji fluentów spełniających dane wyrażenie
-
-### C# GUI ###
-- [ ] Widoki dla kontrolek
-- [ ] Parser wyrażeń logicznych do obiektów
+- [x] Parser wyrażeń logicznych do formatu prologowego, z uwzględnieniem wszystkich kombinacji fluentów spełniających dane wyrażenie
+- [x] Dodanie stanów początkowych
+- [ ] Testy
