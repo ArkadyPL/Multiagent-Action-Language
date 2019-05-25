@@ -56,7 +56,7 @@ necessary_executable_from(_,_):-
 % CurrentState means "initialState" in the first call, and then set of all changes states
 necessary_executable_from([[Action, Group] | Program], CurrentState):-
 	by_causes_if(Action, Group, ResultingState, X),
-	subset(X, CurrentState),
+	((not(is_empty(X)),write('NE'),subset(X, CurrentState)) ; (is_empty(X),write('EE'),is_empty(CurrentState))),
 	not(private_impossible_by_if(Action, Group, X)),
 	subtract(CurrentState, ResultingState, ListWithoutResultingState),
 	negate_list(ResultingState, NotResultingState),
@@ -76,7 +76,7 @@ possibly_executable_from(_,_):-
 % CurrentState means "initialState" in the first call, and then set of all changes states
 possibly_executable_from([[Action, Group] | Program], CurrentState):- 
 	(by_releases_if(Action, Group, ResultingState, X) ; by_causes_if(Action, Group, ResultingState, X)),
-	subset(X, CurrentState),
+	((not(is_empty(X)),write('NE'),subset(X, CurrentState)) ; (is_empty(X),write('EE'),is_empty(CurrentState))),
 	not(private_impossible_by_if(Action, Group, X)),
 	subtract(CurrentState, ResultingState, ListWithoutResultingState),
 	negate_list(ResultingState, NotResultingState),
@@ -99,8 +99,11 @@ possibly_executable(Program):-
 necessary_after_from(_, _, _):-
 	always(_), !.
 
-necessary_after_from(State, [[Action, Group] | Program], CurrentState).
-	% TODO
+necessary_after_from(State, [[Action, Group] | Program], CurrentState):-
+	necessary_executable_from([[Action, Group] | Program], CurrentState),
+	after(State, [[Action, Group] | Program]).
+	% TODO: continue to fix all testes
+	
 
 necessary_after(State, Program):-
 	necessary_after_from(State, Program, []).
@@ -177,3 +180,5 @@ negate_list([Item|List], NegatedList):-
 	negate_list(List, NegatedList).
 negate_list([Item|[]], NegatedList):-
 	NegatedList = [\Item, NegatedList].
+
+is_empty([]).

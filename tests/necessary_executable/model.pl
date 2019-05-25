@@ -33,3 +33,8 @@ by_causes_if(action_5_1, [g_5_2], [delta_5], [psi_5]).
 
 % Test case 6. - action_6_1 not necessary_executable by g_6_1
 by_releases_if(action_6_1, [g_6_1], [delta_6], [psi_6]).
+
+% Test case 7 a. - should be false because 2nd action is not executable after 1st one (becuase it requires initial state)
+by_causes_if(nex_7a_action1, [nex_7a_g1, nex_7a_g2], [nex_7a_result], [nex_7a_pi]).
+by_causes(nex_7a_action2, [nex_7a_g1, nex_7a_g2], [nex_7a_another]).
+

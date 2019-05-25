@@ -12,8 +12,8 @@ write('Test case 2 a. - should be false because 2nd action is not executable aft
 not(necessary_after([na_2a_expected], [[na_2a_action1,[na_2a_g1, na_2a_g2]], [na_2a_action2, [na_2a_g1, na_2a_g2]]])), passed; failed), nl,
 
 write('Test case 3 a. - should be true because program is executable from initial state, and it is true that "na_3a_expected" after this program\n'),
-(write('not(necessary_after_from([na_3a_expected], [[na_3a_action1,[na_3a_g1, na_3a_g2]], [na_3a_action2, [na_3a_g1, na_3a_g2]]], [])).'),
-not(necessary_after_from([na_3a_expected], [[na_3a_action1,[na_3a_g1, na_3a_g2]], [na_3a_action2, [na_3a_g1, na_3a_g2]]], [])), passed; failed), nl,
+(write('necessary_after_from([na_3a_expected], [[na_3a_action1,[na_3a_g1, na_3a_g2]], [na_3a_action2, [na_3a_g1, na_3a_g2]]], []).'),
+necessary_after_from([na_3a_expected], [[na_3a_action1,[na_3a_g1, na_3a_g2]], [na_3a_action2, [na_3a_g1, na_3a_g2]]], []), passed; failed), nl,
 
 write('Test case 4 a. - should be true because program is executable from initial state, and it is true that "na_4a_expected" after this program\n'),
 (write('necessary_after_from([na_4a_expected], [[na_4a_action1,[na_4a_g1, na_4a_g2]], [na_4a_action2, [na_4a_g1, na_4a_g2]]], []).'),

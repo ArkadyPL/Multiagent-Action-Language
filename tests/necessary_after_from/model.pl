@@ -1,4 +1,4 @@
-% Test case 1 a. - should be false because 1nd action is not executable from initial state
+% Test case 1 a. - should be false because 1st action is not executable from initial state
 by_causes_if(na_1a_action1, [na_1a_g1, na_1a_g2], [na_1a_result], [na_1a_pi]).
 by_causes(na_1a_action2, [na_1a_g1, na_1a_g2], [na_1a_another]).
 after([na_1a_expected], [[na_1a_action1,[na_1a_g1, na_1a_g2]], [na_1a_action2, [na_1a_g1, na_1a_g2]]]).
