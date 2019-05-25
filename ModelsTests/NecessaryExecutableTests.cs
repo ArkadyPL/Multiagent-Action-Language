@@ -3,9 +3,7 @@ using MultiAgentLanguageModels.Expressions;
 using MultiAgentLanguageModels.Queries;
 using Ninject;
 using NUnit.Framework;
-using System.Collections.Generic;
 using System.Reflection;
-using System.Threading.Tasks;
 
 namespace Tests
 {

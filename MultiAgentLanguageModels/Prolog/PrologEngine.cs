@@ -23,10 +23,11 @@ namespace MultiAgentLanguageModels
                 prologPath
             };
 
-            prologProcess = new Process();
+            prologProcess = new Process
+            {
+                StartInfo = CreatePrologStartInfoInstance()
+            };
 
-            prologProcess.StartInfo = CreatePrologStartInfoInstance();
-            
             prologProcess.Start();
 
             streamWriter = prologProcess.StandardInput;
@@ -74,13 +75,15 @@ namespace MultiAgentLanguageModels
         private ProcessStartInfo CreatePrologStartInfoInstance()
         {
             var path = paths.FirstOrDefault(x => File.Exists(x)) ?? throw new Exception("Can't find swipl.exe file.");
-            ProcessStartInfo result = new ProcessStartInfo();
-            result.FileName = path;
-            result.Arguments = "";
-            result.UseShellExecute = false;
-            result.CreateNoWindow = true;
-            result.RedirectStandardOutput = true;
-            result.RedirectStandardInput = true;
+            ProcessStartInfo result = new ProcessStartInfo
+            {
+                FileName = path,
+                Arguments = "",
+                UseShellExecute = false,
+                CreateNoWindow = true,
+                RedirectStandardOutput = true,
+                RedirectStandardInput = true
+            };
 
             return result;
         }

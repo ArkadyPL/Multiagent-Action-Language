@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace MultiAgentLanguageModels.Queries
 {
-    class PossiblyAfterFrom : Query
+    public class PossiblyAfterFrom : Query
     {
         LogicExpression Result { get; }
         Instruction Instructions { get; }
