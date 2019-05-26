@@ -32,7 +32,7 @@ namespace Tests
         {
             var query = new NecessaryExecutableFrom(new Instruction()
             {
-                new System.Tuple<Action, AgentsList>("push", new AgentsList(){"A", "B"})
+                new System.Tuple<Action, AgentsList>("push", new AgentsList(){"a", "b"})
             }, new Not(new Fluent("isRunning")));
 
             StandardKernel kernel = new StandardKernel();
@@ -47,7 +47,7 @@ namespace Tests
         {
             var query = new NecessaryExecutableFrom(new Instruction()
             {
-                new System.Tuple<Action, AgentsList>("push", new AgentsList(){"A", "C"})
+                new System.Tuple<Action, AgentsList>("push", new AgentsList(){"a", "c"})
             }, new Not(new Fluent("isRunning")));
 
             StandardKernel kernel = new StandardKernel();
@@ -62,7 +62,7 @@ namespace Tests
         {
             var query = new NecessaryAfterFrom(new Instruction()
             {
-                new System.Tuple<Action, AgentsList>("push", new AgentsList(){"A", "B"})
+                new System.Tuple<Action, AgentsList>("push", new AgentsList(){"a", "b"})
             }, "isRunning", new Not(new Fluent("isRunning")));
 
             StandardKernel kernel = new StandardKernel();
@@ -77,7 +77,7 @@ namespace Tests
         {
             var query = new NecessaryAfterFrom(new Instruction()
             {
-                new System.Tuple<Action, AgentsList>("push", new AgentsList(){"A", "C"})
+                new System.Tuple<Action, AgentsList>("push", new AgentsList(){"a", "c"})
             }, "isRunning", new Not(new Fluent("isRunning")));
 
             StandardKernel kernel = new StandardKernel();
@@ -90,7 +90,7 @@ namespace Tests
         [Test]
         public void Test5()
         {
-            var query = new NecessaryEngaged(new AgentsList() { "A" }, new System.Collections.Generic.List<Action>() {"push" });
+            var query = new NecessaryEngaged(new AgentsList() { "a" }, new System.Collections.Generic.List<Action>() {"push" });
 
             StandardKernel kernel = new StandardKernel();
             kernel.Load(Assembly.GetExecutingAssembly());
@@ -102,7 +102,7 @@ namespace Tests
         [Test]
         public void Test6()
         {
-            var query = new PossiblyEngaged(new AgentsList() { "B" }, new System.Collections.Generic.List<Action>() { "push" });
+            var query = new PossiblyEngaged(new AgentsList() { "b" }, new System.Collections.Generic.List<Action>() { "push" });
 
             StandardKernel kernel = new StandardKernel();
             kernel.Load(Assembly.GetExecutingAssembly());
@@ -114,7 +114,7 @@ namespace Tests
         [Test]
         public void Test7()
         {
-            var query = new PossiblyEngaged(new AgentsList() { "C" }, new System.Collections.Generic.List<Action>() { "push" });
+            var query = new PossiblyEngaged(new AgentsList() { "c" }, new System.Collections.Generic.List<Action>() { "push" });
 
             StandardKernel kernel = new StandardKernel();
             kernel.Load(Assembly.GetExecutingAssembly());

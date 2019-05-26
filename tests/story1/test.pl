@@ -12,11 +12,11 @@ necessary_executable_from([[push,[a,c]]],[\isRunning]), passed; failed), nl,
 
 write('Test case 3\n'),
 (write('necessary_after_from([isRunning], [[push,[A,B]]], [\\isRunning]). => '),
-necessary_after_from([isRunning], [[push,[A,B]]], [\isRunning]), passed; failed), nl,
+necessary_after_from([isRunning], [[push,[a,b]]], [\isRunning]), passed; failed), nl,
 
 write('Test case 4\n'),
 (write('necessary_after_from([isRunning], [[push,[A,C]]], [\\isRunning]). => '),
-necessary_after_from([isRunning], [[push,[A,C]]], [\isRunning]), passed; failed), nl,
+necessary_after_from([isRunning], [[push,[a,c]]], [\isRunning]), passed; failed), nl,
 
 write('Test case 5\n'),
 (write('necessary_engaged([a], [push]). => '),
