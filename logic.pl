@@ -159,10 +159,15 @@ possibly_after(State, Program):-
 % Engagement queries
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-necessary_engaged_from(Group, [Action|List], State):-
-	not(impossible_by_if(Action, Group, State)),
-	findall(X, by_causes_if(Action, X, _, State), Engaged),
-	necessary_engaged_from(Group, List, State, Engaged), !.
+check_state(Action,[FirstEngaged | _ ], States):-
+	by_causes_if(Action, FirstEngaged, _, RequiredState),
+	subset(RequiredState, States).
+
+necessary_engaged_from(Group, [Action|List], States):-
+	not(impossible_by_if(Action, Group, RequiredState)),
+	findall(X, by_causes_if(Action, X, _, RequiredState), Engaged),	
+	check_state(Action, Engaged,States),
+	necessary_engaged_from(Group, List, RequiredState, Engaged), !.
 
 necessary_engaged_from(Group, [Action|List], State, Engaged):-
 	not(impossible_by_if(Action, Group, State)),
