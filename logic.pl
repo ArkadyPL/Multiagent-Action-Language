@@ -61,7 +61,7 @@ necessary_executable_from([[Action, Group] | Program], CurrentState):-
 private_necessary_executable_from([[Action, Group] | Program], CurrentState, FinalState):-
 	by_causes_if(Action, Group, ResultingState, RequiredState),
 	(
-		(
+		(		
 			not(is_empty(RequiredState)),
 			(
 				check_always(RequiredState)
@@ -69,7 +69,9 @@ private_necessary_executable_from([[Action, Group] | Program], CurrentState, Fin
 				subset(RequiredState, CurrentState)
 			)
 		)
-			;
+		;		
+		(is_empty(RequiredState),initially(CurrentState))		
+		;
 		(is_empty(RequiredState),is_empty(CurrentState))
 	),
 	not(private_impossible_by_if(Action, Group, RequiredState)),

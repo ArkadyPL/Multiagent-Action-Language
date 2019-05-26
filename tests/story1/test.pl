@@ -1,5 +1,5 @@
 :- consult('../../logic.pl'), consult('story.pl'),
-
+write('---------------------------------------------------------------------------------'),nl,
 write('Story 1 - TESTS STARTED'),nl,
 
 write('Test case 1 - should be true, initial condition ok, agent group ok \n'),
@@ -30,4 +30,5 @@ write('Test case 7 - should be true, "c" is possibly because in [a, b] and [a, c
 (write('necessary_engaged([c], [push]). => '),
 possibly_engaged([c], [push]), passed; failed), nl,
 
-write('Story 1 - TESTS FINISHED'),nl.
+write('Story 1 - TESTS FINISHED'),nl,
+write('---------------------------------------------------------------------------------'),nl.
