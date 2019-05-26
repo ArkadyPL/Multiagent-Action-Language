@@ -185,7 +185,10 @@ necessary_engaged(Group, Actions):-
 
 possibly_engaged_from(Group, [Action|List], State):-
 	not(impossible_by_if(Action, Group, State)),
-	by_causes_if(Action, X, _, State),
+	(	by_causes_if(Action, X, _, State);
+		by_causes_if(Action, X, _, CheckedState),
+		always(CheckedState)
+	),
 	subset(X, Group),
 	possibly_engaged_from(Group, List, State), !.
 	
