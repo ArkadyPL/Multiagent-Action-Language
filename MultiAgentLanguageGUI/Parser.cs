@@ -280,7 +280,13 @@ namespace MultiAgentLanguageGUI
             Token t = state.PopToken();
             if (t.Name == "(")
             {
-                return C1(state);
+                LogicElement inside = C1(state);
+                Token close = state.PopToken();
+                if(close == null || close.Name != ")")
+                {
+                    t.ThrowException("No closing brackets");
+                }
+                return inside;
             }
             else if (t.Name == "~")
             {
