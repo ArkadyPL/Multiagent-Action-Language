@@ -28,7 +28,7 @@ namespace MultiAgentLanguageModels.Expressions
     public class ByReleases : ByReleasesIf
     {
         public ByReleases(Action action, AgentsList agents, Fluent fluent)
-            : base(action, agents, fluent, null)
+            : base(action, agents, fluent, new True())
         {
 
         }
