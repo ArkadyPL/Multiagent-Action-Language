@@ -42,9 +42,9 @@ write('Test case 5 b. - action_5_1 possible by g_5_2\n'),
 (write('necessary_executable_from([[action_5_1,[g_5_2]]],[psi_5]). => '),
 necessary_executable_from([[action_5_1,[g_5_2]]],[psi_5]), passed; failed), nl,
 
-write('Test case 6. - action_6_1 not necessary_executable by g_6_1\n'),
-(write('not(necessary_executable_from([[action_6_1,[g_6_1]]],[psi_6])). => '),
-not(necessary_executable_from([[action_6_1,[g_6_1]]],[psi_6])), passed; failed), nl,
+write('Test case 6. - action_6_1 is executable by g_6_1\n'),
+(write('necessary_executable_from([[action_6_1,[g_6_1]]],[psi_6]). => '),
+necessary_executable_from([[action_6_1,[g_6_1]]],[psi_6]), passed; failed), nl,
 
 write('Test case 7 a. - should be false because 2nd action is not executable after 1st one (becuase it requires initial state)\n'),
 (write('not(necessary_executable_from([[nex_7a_action1, [nex_7a_g1, nex_7a_g2]],[nex_7a_action2, [nex_7a_g1, nex_7a_g2]]],[nex_7a_pi])). => '),
