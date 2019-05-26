@@ -37,7 +37,7 @@ namespace MultiAgentLanguageModels.Expressions
     public class ByCauses : ByCausesIf
     {
         public ByCauses(Action action, AgentsList agents, LogicExpression result)
-            :base(action, agents, result, null)
+            :base(action, agents, result, new True())
         {  
         }
 
@@ -89,7 +89,7 @@ namespace MultiAgentLanguageModels.Expressions
 
     public class ImpossibleByIf : ByCausesIf
     {
-        public ImpossibleByIf(Action action, AgentsList agents, LogicExpression condition) : base(action, agents, null, condition)
+        public ImpossibleByIf(Action action, AgentsList agents, LogicExpression condition) : base(action, agents, new False(), condition)
         {
         }
 
@@ -105,7 +105,7 @@ namespace MultiAgentLanguageModels.Expressions
 
     public class ImpossibleBy : ByCausesIf
     {
-        public ImpossibleBy(Action action, AgentsList agents) : base(action, agents, null, null)
+        public ImpossibleBy(Action action, AgentsList agents) : base(action, agents, new False(), new True())
         {
         }
 
@@ -117,7 +117,7 @@ namespace MultiAgentLanguageModels.Expressions
 
     public class ImpossibleIf : ByCausesIf
     {
-        public ImpossibleIf(Action action, LogicExpression condition) : base(action, null, null, condition)
+        public ImpossibleIf(Action action, LogicExpression condition) : base(action, null, new False(), condition)
         {
         }
 

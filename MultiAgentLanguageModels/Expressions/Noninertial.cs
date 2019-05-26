@@ -2,7 +2,7 @@
 {
     public class Noninertial : Expression
     {
-        Fluent Fluent { get; }
+        public Fluent Fluent { get; }
 
         public Noninertial(Fluent fluent)
         {

@@ -6,7 +6,7 @@ namespace MultiAgentLanguageModels
 {
     public class LogicExpression
     {
-        private List<IGrouping<string, Fluent>> Fluents
+        public List<IGrouping<string, Fluent>> Fluents
         {
             get
             {
