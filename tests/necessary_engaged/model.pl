@@ -16,3 +16,9 @@ by_causes(swim, [x, y], []).
 % Test case 4
 by_causes_if(eat, [john],[], [is_hungry]).
 
+% Test case 5
+by_causes_if(talks, [anna], [],[is_ready]).
+
+% Test case 6
+by_causes_if(goes_to_sleep, [george], [],[is_tired]).
+always([is_tired]).

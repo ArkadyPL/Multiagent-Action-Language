@@ -161,7 +161,7 @@ possibly_after(State, Program):-
 
 check_state(Action,[FirstEngaged | _ ], States):-
 	by_causes_if(Action, FirstEngaged, _, RequiredState),
-	subset(RequiredState, States).
+	(subset(RequiredState, States); always(RequiredState)).
 
 necessary_engaged_from(Group, [Action|List], States):-
 	not(impossible_by_if(Action, Group, RequiredState)),

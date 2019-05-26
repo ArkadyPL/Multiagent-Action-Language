@@ -49,4 +49,12 @@ write('Test case 4b - should accept, good state\n'),
 (write('necessary_engaged([john], [eat], [is_hungry]) => '),
 necessary_engaged_from([john], [eat], [is_hungry]), passed; failed), nl,
 
+write('Test case 5 - should fail, needs always statement\n'),
+(write('not(necessary_engaged_from([anna],[talks],[is_bored])) => '),
+not(necessary_engaged_from([anna],[talks],[is_bored])), passed; failed), nl,
+
+write('Test case 6 - should be fine, there is always statement \n'),
+(write('necessary_engaged_from([george],[goes_to_sleep],[on_monday]) => '),
+necessary_engaged_from([george],[goes_to_sleep],[on_monday]), passed; failed), nl,
+
 write('Necessary Engaged - TESTS FINISHED'),nl.
