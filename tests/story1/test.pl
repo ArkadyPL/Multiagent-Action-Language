@@ -20,7 +20,7 @@ necessary_after_from([isRunning], [[push,[a,c]]], [\isRunning]), passed; failed)
 
 write('Test case 5 - should be true, "a" is necessary because in [a, b] and [a, c] \n'),
 (write('necessary_engaged([a], [push]). => '),
-necessary_engaged([a], [push]), passed; failed), nl,
+possibly_engaged([a], [push]), passed; failed), nl,
 
 write('Test case 6 - should be true, "b" is possibly because in [a, b] and [a, c] \n'),
 (write('necessary_engaged([b], [push]). => '),
