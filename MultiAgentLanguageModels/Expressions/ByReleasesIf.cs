@@ -53,4 +53,17 @@ namespace MultiAgentLanguageModels.Expressions
                 .Aggregate((a, b) => a + "\n" + b);
         }
     }
+
+    public class Releases : ByReleasesIf
+    {
+        public Releases(Action action, Fluent fluent)
+            : base(action, null, fluent, null)
+        {
+
+        }
+        public override string ToProlog()
+        {
+            return $"releases({Action.ToProlog()}, {Fluent.ToProlog()}).";
+        }
+    }
 }

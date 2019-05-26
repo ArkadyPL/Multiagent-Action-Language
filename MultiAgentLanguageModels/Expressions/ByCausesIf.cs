@@ -53,13 +53,37 @@ namespace MultiAgentLanguageModels.Expressions
 
     public class CausesIf : ByCausesIf
     {
-        public CausesIf(Action action, AgentsList agents, LogicExpression result, LogicExpression condition) : base(action, agents, result, condition)
+        public CausesIf(Action action, LogicExpression result, LogicExpression condition) 
+            : base(action, null, result, condition)
         {
         }
 
-        public override string ToProlog()
+        public override string ToProlog() //Sprwadzic czy dobrze
         {
-            throw new NotImplementedException();
+            var possibleAlpha = Alpha.EvaluateLogicExpression().ToListOfStrings();
+            var possiblePi = Pi.EvaluateLogicExpression().ToListOfStrings();
+            var results = possibleAlpha.Select(
+                alpha => possiblePi.Select(pi =>
+                $"causes_if({A.ToProlog()}, {alpha}, {pi}).")
+                .Aggregate((a, b) => a + "\n" + b)).Aggregate((a, b) => a + "\n" + b);
+            return results;
+        }
+    }
+
+    public class Causes : ByCausesIf
+    {
+        public Causes(Action action, LogicExpression result)
+            : base(action, null, result, null)
+        {
+        }
+
+        public override string ToProlog() //Sprwadzic czy dobrze
+        {
+            var possibleAlpha = Alpha.EvaluateLogicExpression().ToListOfStrings();
+            var results = possibleAlpha.Select(
+               alpha => $"causes({A.ToProlog()}, {alpha}).")
+               .Aggregate((a, b) => a + "\n" + b);
+            return results;
         }
     }
 
