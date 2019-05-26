@@ -5,13 +5,13 @@ To do:
 - [ ] Obsługa listy fluentów przez *always*
 - [ ] Napisanie testów dla bardziej zaawansowanych historyjek, w szczególności z wykorzystaniem *releases*, *initially*, *after* i *always*
 - [ ] Ujednolicenie sposobu wpisywania wyrażeń logicznych
+- [ ] Testy do *Possibly executable from*
 - [x] Pierwsza wersja kwerendy *Possibly engagnd from*
 - [x] Pierwsza wersja kwerendy *Necessary engaged from*
-- [ ] Pierwsza wersja kwerendy *Possibly executable from*
+- [x] Pierwsza wersja kwerendy *Possibly executable from*
 - [x] Pierwsza wersja kwerendy *Necessary executable from*
 - [ ] Pierwsza wersja kwerendy *Possibly after from*
 - [x] Pierwsza wersja kwerendy *Necessary after from*
-- [ ] *Necessary after from* powinna być false kiedy jest releases
 
 ### C# GUI ###
 - [ ] Parser na wyrażenia wartości *after*, *observable after*, *initially*
