@@ -130,27 +130,43 @@ necessary_after_from(State, [[Action, Group] | Program], CurrentState):-
 necessary_after(State, Program):-
 	necessary_after_from(State, Program, []), !.
 
-
-possibly_after_from(State, [[Action, Group] | Program], CurrentState):-
+possibly_after_from(State, [[Action, Group] | Program], CurrentState):-	
+%TODO rozważyć odpalenie possibly_executable_from
 	(
-		by_releases_if(Action, Group, ReleasedState, CurrentState),
-		subset(State, ReleasedState),
-		possibly_executable_from([[Action, Group] | Program], CurrentState)
+		%Bierzemy stan do którego musimy przejść i idziemy do następnej instrukcji. Jeżeli to się nie powiedzie to zwracamy false bo musimy przejść do ResultingState(!)
+		by_causes_if(Action, Group, ResultingState, CurrentState),
+		apply_resulting_state(ResultingState, CurrentState, NewCurrentState),
+		possibly_after_from(State, Program, NewCurrentState), !
+	)
+		;
+	(	
+		% Nie mamy stanu, do którego musimy przejść, generujemy stany usuwając poszczególne fluenty i sprawdzamy
+		possibly_after_from_without_causes(State, [[Action, Group] | Program], CurrentState)
+	).
+	
+possibly_after_from_without_causes(State, [[Action, Group] | Program], CurrentState):-
+	%Ta reguła generuje nowe stany na podstawie reguł releases i weryfikuje dla nich działanie	
+	%by_releases_if(Action, Group, ReleasedFluent, CurrentState), % sprawdzamy, czy możemy w ogóle wykonać releases
+	(
+		%Sprawdzamy dalszy przebieg dla obecnego stanu		
+		by_releases_if(Action, Group, ReleasedFluent, CurrentState),
+		possibly_after_from(State, Program, CurrentState)
 	)
 		;
 	(
-		by_causes_if(Action, Group, ResultingState, CurrentState),
-		subtract(CurrentState, ResultingState, ListWithoutResultingState),
-		negate_list(ResultingState, NotResultingState),
-		subtract(ListWithoutResultingState, NotResultingState, ListWithoutNotResultingState),
-		append(ListWithoutNotResultingState, ResultingState, NewCurrentState),
-		possibly_after_from(State, Program, NewCurrentState)
-	), !.
-	% TODO - finish implementation
-	
+		%Generujemy nowy stan usuwając jeden z uwolnionych fluentów i sprawdzamy dalszy przebieg rekurencyjnie		
+		by_releases_if(Action, Group, ReleasedFluent, CurrentState),
+		subset([ReleasedFluent], CurrentState),
+		subtract(CurrentState, [ReleasedFluent], NewCurrentState),
+		possibly_after_from_without_causes(State, [[Action, Group] | Program], NewCurrentState)
+	).
 
+possibly_after_from_without_causes(State, [], CurrentState):-
+	possibly_after_from(State, [], CurrentState).
+	
 possibly_after_from(State,[], CurrentState):-
-	subset(State, CurrentState), !.
+	negate_list(State, NegatedRequiredState),
+	not(subset(NegatedRequiredState, State)), !.	
 
 possibly_after(State, Program):-
 	possibly_after_from(State, Program, []), !.
@@ -201,11 +217,17 @@ possibly_engaged(Group, [Action|List]):-
 	
 	
 % Utils
+apply_resulting_state(ResultingState, CurrentState, NewState):-
+	subtract(CurrentState, ResultingState, ListWithoutResultingState),
+	negate_list(ResultingState, NotResultingState),	
+	subtract(ListWithoutResultingState, NotResultingState, ListWithoutNotResultingState),	
+	append(ListWithoutNotResultingState, ResultingState, NewState).
+
 negate_list([Item|List], NegatedList):-
 	negate_list(List, NegatedSublist),
 	append([\Item], NegatedSublist, NegatedList).	
 negate_list([Item|[]], NegatedList):-
-	append([\Item], NegatedList, NegatedList).		
+	NegatedList = [\Item].	
 negate_list([],[]).
 
 is_empty([]).
