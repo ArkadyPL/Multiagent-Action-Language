@@ -6,9 +6,9 @@ namespace MultiAgentLanguageModels.Queries
 {
     public class NecessaryAfterFrom : Query
     {
-        LogicExpression Result { get; }
-        Instruction Instructions { get; }
-        LogicExpression Condition { get; }
+        public LogicExpression Result { get; }
+        public Instruction Instructions { get; }
+        public LogicExpression Condition { get; }
 
         public NecessaryAfterFrom(Instruction instructions, LogicExpression finaly, LogicExpression condition)
         {
@@ -31,6 +31,18 @@ namespace MultiAgentLanguageModels.Queries
         public override bool Interpret(IEnumerable<bool> allPossibilities)
         {
             return allPossibilities.All(x => x);
+        }
+    }
+
+    public class NecessaryAfter : NecessaryAfterFrom
+    {
+        public NecessaryAfter(Instruction instructions, LogicExpression finaly) : base(instructions, finaly, null)
+        {
+        }
+
+        public override List<string> ToProlog()
+        {
+            return Result.EvaluateLogicExpression().ToListOfStrings().Select(alpha => $"necessary_after({alpha}, {Instructions.ToProlog()}).").ToList();
         }
     }
 }

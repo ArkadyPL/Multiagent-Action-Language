@@ -105,7 +105,12 @@ namespace MultiAgentLanguageModels
         public static implicit operator LogicElement(LogicExpression logicExpression)
         {
             return logicExpression.Element;
-        } 
+        }
+
+        public static implicit operator LogicExpression(string str)
+        {
+            return new Fluent(str);
+        }
     }
 
     public static class EvaluationExt
