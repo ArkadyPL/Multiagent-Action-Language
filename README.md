@@ -14,15 +14,15 @@ To do:
 - [ ] *Necessary after from* powinna być false kiedy jest releases
 
 ### C# GUI ###
-- [ ] Parser na wyrażenia wartości *after*, *observable after*, *initially*
-- [ ] Parser na wyrażenia efektu akcji *by causes if*, *impossible by if*
-- [ ] Parser na wyrażenia uwolnienia fluentu *by releases if*
-- [ ] Parser na wyrażenia integralności *always*
-- [ ] Parser na wyrażenie zachowania fluentów *noninertial*
+- [x] Parser na wyrażenia wartości *after*, *observable after*, *initially*
+- [x] Parser na wyrażenia efektu akcji *by causes if*, *impossible by if*
+- [x] Parser na wyrażenia uwolnienia fluentu *by releases if*
+- [x] Parser na wyrażenia integralności *always*
+- [x] Parser na wyrażenie zachowania fluentów *noninertial*
 - [ ] Parser na kwerendę wykonywalności *executable*
 - [ ] Parser na kwerendę wartości *after*
 - [ ] Parser na kwerendę zaangażowania *engaged*
-- [ ] Parser wyrażeń logicznych do obiektów
+- [x] Parser wyrażeń logicznych do obiektów
 - [x] Widoki dla kontrolek
 - [x] Parser tworzenia agentów
 
