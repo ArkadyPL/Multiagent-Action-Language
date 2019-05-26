@@ -7,7 +7,7 @@ To do:
 - [ ] Ujednolicenie sposobu wpisywania wyrażeń logicznych
 - [x] Pierwsza wersja kwerendy *Possibly engagnd from*
 - [x] Pierwsza wersja kwerendy *Necessary engaged from*
-- [x] Pierwsza wersja kwerendy *Possibly executable from*
+- [ ] Pierwsza wersja kwerendy *Possibly executable from*
 - [x] Pierwsza wersja kwerendy *Necessary executable from*
 - [ ] Pierwsza wersja kwerendy *Possibly after from*
 - [x] Pierwsza wersja kwerendy *Necessary after from*

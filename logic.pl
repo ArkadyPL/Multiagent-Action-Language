@@ -47,7 +47,7 @@ by_releases_if(Action, _, Result, State):-
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Executability queries
+% Executability queries - TODO: fix possibly_executable_from query
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 check_always([Element | List]):-
@@ -86,6 +86,8 @@ necessary_executable(Program):-
 	necessary_executable_from(Program, []), !.
 
 
+% TODO: create more tests and fix that query
+% Remember that action must be defined to be executable!!!
 
 % CurrentState means "initialState" in the first call, and then set of all changes states
 possibly_executable_from([[Action, Group] | Program], CurrentState):-
@@ -107,7 +109,7 @@ possibly_executable(Program):-
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Value queries - TODO
+% Value queries - TODO: finish possibly_after_from implementation
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 necessary_after_from(State, [[Action, Group] | Program], CurrentState):-
@@ -127,10 +129,26 @@ necessary_after(State, Program):-
 	necessary_after_from(State, Program, []), !.
 
 
-possibly_after_from(State, Program, CurrentState).
-	% TODO - implement
+possibly_after_from(State, [[Action, Group] | Program], CurrentState):-
+	(
+		by_releases_if(Action, Group, ReleasedState, CurrentState),
+		subset(State, ReleasedState),
+		possibly_executable_from([[Action, Group] | Program], CurrentState)
+	)
+		;
+	(
+		by_causes_if(Action, Group, ResultingState, CurrentState),
+		subtract(CurrentState, ResultingState, ListWithoutResultingState),
+		negate_list(ResultingState, NotResultingState),
+		subtract(ListWithoutResultingState, NotResultingState, ListWithoutNotResultingState),
+		append(ListWithoutNotResultingState, ResultingState, NewCurrentState),
+		possibly_after_from(State, Program, NewCurrentState)
+	), !.
+	% TODO - finish implementation
+	
 
-possibly_after_from_main(_,[], _).
+possibly_after_from(State,[], CurrentState):-
+	subset(State, CurrentState), !.
 
 possibly_after(State, Program):-
 	possibly_after_from(State, Program, []), !.
@@ -178,5 +196,6 @@ negate_list([Item|List], NegatedList):-
 	negate_list(List, NegatedList).
 negate_list([Item|[]], NegatedList):-
 	NegatedList = [\Item, NegatedList].
+negate_lis([],[]).
 
 is_empty([]).
