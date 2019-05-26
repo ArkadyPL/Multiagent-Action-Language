@@ -202,10 +202,10 @@ possibly_engaged(Group, [Action|List]):-
 	
 % Utils
 negate_list([Item|List], NegatedList):-
-	NegatedList = [\Item | NegatedList],
-	negate_list(List, NegatedList).
+	negate_list(List, NegatedSublist),
+	append([\Item], NegatedSublist, NegatedList).	
 negate_list([Item|[]], NegatedList):-
-	NegatedList = [\Item | NegatedList].
-negate_lis([],[]).
+	append([\Item], NegatedList, NegatedList).		
+negate_list([],[]).
 
 is_empty([]).
