@@ -14,14 +14,15 @@ To do:
 - [x] Pierwsza wersja kwerendy *Necessary after from*
 
 ### C# GUI ###
+- [ ] Parser na wyrażenie *not by if*
+- [ ] Parser na kwerendę wykonywalności *executable*
+- [ ] Parser na kwerendę wartości *after*
+- [ ] Parser na kwerendę zaangażowania *engaged*
 - [x] Parser na wyrażenia wartości *after*, *observable after*, *initially*
 - [x] Parser na wyrażenia efektu akcji *by causes if*, *impossible by if*
 - [x] Parser na wyrażenia uwolnienia fluentu *by releases if*
 - [x] Parser na wyrażenia integralności *always*
 - [x] Parser na wyrażenie zachowania fluentów *noninertial*
-- [ ] Parser na kwerendę wykonywalności *executable*
-- [ ] Parser na kwerendę wartości *after*
-- [ ] Parser na kwerendę zaangażowania *engaged*
 - [x] Parser wyrażeń logicznych do obiektów
 - [x] Widoki dla kontrolek
 - [x] Parser tworzenia agentów
