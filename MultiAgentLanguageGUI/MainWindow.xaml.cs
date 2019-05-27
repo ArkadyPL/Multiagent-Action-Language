@@ -1,6 +1,8 @@
-﻿using MultiAgentLanguageModels.Queries;
+﻿using Microsoft.Win32;
+using MultiAgentLanguageModels.Queries;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -98,12 +100,16 @@ namespace MultiAgentLanguageGUI
 
         private void Button_StoryLoad_Click(object sender, RoutedEventArgs e)
         {
-
+            OpenFileDialog saveFileDialog = new OpenFileDialog() { Filter = "MAR Language|*.mar" };
+            if (saveFileDialog.ShowDialog() == true)
+                TextBox_Story.Text = File.ReadAllText(saveFileDialog.FileName);
         }
 
         private void Button_StorySave_Click(object sender, RoutedEventArgs e)
         {
-
+            SaveFileDialog saveFileDialog = new SaveFileDialog() { Filter="MAR Language|*.mar" };
+            if (saveFileDialog.ShowDialog() == true)
+                File.WriteAllText(saveFileDialog.FileName, TextBox_Story.Text);
         }
 
         private void TextBox_Query_TextChanged(object sender, TextChangedEventArgs e)
