@@ -69,8 +69,12 @@ namespace MultiAgentLanguageGUI
             Noninertial.Add(name, new MultiAgentLanguageModels.Expressions.Noninertial(f));
         }
 
-        public bool NameAvailable(string name)
+        public bool NameAvailable(Token fallbackToken, string name)
         {
+            if (Tokenizer.Keyword.ContainsKey(name))
+            {
+                fallbackToken.ThrowException("Attempting to use a special keyword as a name.");
+            }
             if (Agent.ContainsKey(name))
                 return false;
             if (Fluent.ContainsKey(name))
@@ -148,7 +152,7 @@ namespace MultiAgentLanguageGUI
             {
                 firstToken.ThrowException("No agent name");
             }
-            if (state.NameAvailable(a.Name))
+            if (state.NameAvailable(a,a.Name))
             {
                 state.AddAgent(a.Name);
             }
@@ -164,7 +168,7 @@ namespace MultiAgentLanguageGUI
             {
                 firstToken.ThrowException("No fluent name");
             }
-            if (state.NameAvailable(a.Name))
+            if (state.NameAvailable(a,a.Name))
             {
                 state.AddFluent(a.Name);
             }
@@ -180,7 +184,7 @@ namespace MultiAgentLanguageGUI
             {
                 firstToken.ThrowException("No action name");
             }
-            if (state.NameAvailable(a.Name))
+            if (state.NameAvailable(a,a.Name))
             {
                 state.AddAction(a.Name);
             }
@@ -197,7 +201,7 @@ namespace MultiAgentLanguageGUI
             {
                 firstToken.ThrowException("No noninertial fluent name");
             }
-            if (state.NameAvailable(n.Name))
+            if (state.NameAvailable(n,n.Name))
             {
                 state.AddNoninertial(n.Name);
             }
@@ -244,6 +248,23 @@ namespace MultiAgentLanguageGUI
                 return al;
             }
             return null;
+        }
+
+        public static LogicElement EntryC1(ParserState state)
+        {
+            Token a;
+            a = state.PopToken();
+            if (a.Type != TokenType.Operator || a.Name != "[")
+            {
+                a.ThrowException("Expected '[' at the beginning of a logic expression.");
+            }
+            LogicElement c = C1(state);
+            a = state.PopToken();
+            if (a.Type != TokenType.Operator || a.Name != "]")
+            {
+                a.ThrowException("Expected ']' at the end of a logic expression.");
+            }
+            return c;
         }
 
         public static LogicElement C1(ParserState state)
@@ -429,7 +450,7 @@ namespace MultiAgentLanguageGUI
             switch (firstToken.Name)
             {
                 case "initially":
-                    LogicElement le = C1(state);
+                    LogicElement le = EntryC1(state);
                     Initially st = new Initially(le);
                     state.Expression.Add(st);
                     break;
@@ -445,12 +466,12 @@ namespace MultiAgentLanguageGUI
                         firstToken.ThrowException("Expected ']' at the end of agents list.");
                     }
                     Token t = state.PopToken();
-                    if (t == null) firstToken.ThrowException("Expected 'causes' or 'releases'");
+                    if (t == null) firstToken.ThrowException("Expected 'causes' or 'releases'.");
                     if (t.Name != "causes" && t.Name != "releases")
                     {
-                        t.ThrowException("Expected 'causes' or 'releases'");
+                        t.ThrowException("Expected 'causes' or 'releases'.");
                     }
-                    LogicElement result = C1(state);
+                    LogicElement result = EntryC1(state);
                     if (t.Name == "releases" && (result is Fluent) == false)
                     {
                         t.ThrowException("Expected fluent after release.");
@@ -461,7 +482,7 @@ namespace MultiAgentLanguageGUI
                     if (if_token != null && if_token.Name == "if")
                     {
                         state.PopToken();
-                        condition = C1(state);
+                        condition = EntryC1(state);
                     }
                     if (t.Name == "causes")
                     {
@@ -498,12 +519,12 @@ namespace MultiAgentLanguageGUI
                     MultiAgentLanguageModels.Action act =
                         new MultiAgentLanguageModels.Action(state.TokenList[state.TokenList.Count - 1].Name);
                     state.TokenList.RemoveAt(state.TokenList.Count - 1);
-                    LogicElement effect = C1(state);
+                    LogicElement effect = EntryC1(state);
                     Token if_exp = state.PeepToken();
                     if (if_exp != null && if_exp.Name == "if")
                     {
                         state.PopToken();
-                        LogicElement con = C1(state);
+                        LogicElement con = EntryC1(state);
                         state.Expression.Add(new CausesIf(act, effect, con));
                     }
                     else
@@ -515,13 +536,13 @@ namespace MultiAgentLanguageGUI
                     MultiAgentLanguageModels.Action act1 =
                         new MultiAgentLanguageModels.Action(state.TokenList[state.TokenList.Count - 1].Name);
                     state.TokenList.RemoveAt(state.TokenList.Count - 1);
-                    LogicElement eff1 = C1(state);
-                    if ((eff1 is Fluent) == false) firstToken.ThrowException("Expected fluent after release");
+                    LogicElement eff1 = EntryC1(state);
+                    if ((eff1 is Fluent) == false) firstToken.ThrowException("Expected fluent after release.");
                     Token if_expr = state.PeepToken();
                     if (if_expr != null && if_expr.Name == "if")
                     {
                         state.PopToken();
-                        LogicElement con = C1(state);
+                        LogicElement con = EntryC1(state);
                         state.Expression.Add(new ReleasesIf(act1, (Fluent)eff1, con));
                     }
                     else
@@ -530,7 +551,7 @@ namespace MultiAgentLanguageGUI
                     }
                     break;
                 case "if":
-                    firstToken.ThrowException("Unexpected if token.");
+                    firstToken.ThrowException("Unexpected 'if' token.");
                     break;
                 case "impossible":
                     Token token = state.PopToken();
@@ -538,15 +559,15 @@ namespace MultiAgentLanguageGUI
                     if (!state.Action.ContainsKey(token.Name)) token.ThrowException("Unknown action name.");
                     MultiAgentLanguageModels.Action ac = new MultiAgentLanguageModels.Action(token.Name);
                     Token key = state.PopToken();
-                    if (key == null) firstToken.ThrowException("Expected by or if token.");
+                    if (key == null) firstToken.ThrowException("Expected 'by' or 'if' token.");
                     AgentsList agentsList = null;
                     if (key.Name == "by")
                     {
                         agentsList = GetAgentList(state);
                         Token cond_st = state.PopToken();
                         if (cond_st == null || cond_st.Name != "if")
-                            key.ThrowException("Expected if after the list of agents.");
-                        LogicElement c = C1(state);
+                            key.ThrowException("Expected 'if' after the list of agents.");
+                        LogicElement c = EntryC1(state);
                         state.Expression.Add(new ImpossibleByIf(ac, agentsList, c));
                     }
                     else if (key.Name == "if")
@@ -554,16 +575,16 @@ namespace MultiAgentLanguageGUI
                         //Token cond_st = state.PopToken();
                         //if (cond_st == null || cond_st.Name != "if")
                         //key.ThrowException("Expected if after the list of agents.");
-                        LogicElement c = C1(state);
+                        LogicElement c = EntryC1(state);
                         state.Expression.Add(new ImpossibleIf(ac, c));
                     }
                     else
                     {
-                        firstToken.ThrowException("Expected by or if token.");
+                        firstToken.ThrowException("Expected 'by' or 'if' token.");
                     }
                     break;
                 case "always":
-                    LogicElement cond = C1(state);
+                    LogicElement cond = EntryC1(state);
                     state.Expression.Add(new Always(cond));
                     break;
                 case "not":
@@ -573,7 +594,7 @@ namespace MultiAgentLanguageGUI
                     Token by = state.PopToken();
                     if (by == null || by.Name != "by")
                     {
-                        firstToken.ThrowException("Expected by after not");
+                        firstToken.ThrowException("Expected 'by' after 'not'.");
                     }
                     AgentsList agents = GetAgentList(state);
                     Token if_st = state.PeepToken();
@@ -582,27 +603,27 @@ namespace MultiAgentLanguageGUI
                     else if (if_st.Name == "if")
                     {
                         state.PopToken();
-                        condition = C1(state);
+                        condition = EntryC1(state);
                         state.Expression.Add(new NotByIf(actt, agents, condition));
                     }
                     break;
                 case "after":
-                    LogicElement observable = C1(state);
+                    LogicElement observable = EntryC1(state);
                     Token aft = state.PopToken();
                     if (aft == null || aft.Name != "after")
                     {
-                        firstToken.ThrowException("Expected 'after' after logic expression");
+                        firstToken.ThrowException("Expected 'after' after logic expression.");
                     }
                     Instruction instr = GetInstructions(state, aft);
                     After after_exp = new After(observable, instr);
                     state.Expression.Add(after_exp);
                     break;
                 case "observable":
-                    LogicElement obs = C1(state);
+                    LogicElement obs = EntryC1(state);
                     Token after = state.PopToken();
                     if (after == null || after.Name != "after")
                     {
-                        firstToken.ThrowException("Expected 'after' after logic expression");
+                        firstToken.ThrowException("Expected 'after' after logic expression.");
                     }
                     Instruction inst = GetInstructions(state, after);
                     ObservableAfter obsAfter = new ObservableAfter(obs, inst);
@@ -660,10 +681,10 @@ namespace MultiAgentLanguageGUI
             if(first.Name == "necessary")
             {
                 Token t = state.PopToken();
-                if (t == null) first.ThrowException("Expected: executable, [ or logic expression.");
+                if (t == null) first.ThrowException("Expected: executable, '[' or logic expression.");
                 if(t.Name == "executable") // necessary executable
                 {
-                    if (state.PeepToken() == null) t.ThrowException("Expected program");
+                    if (state.PeepToken() == null) t.ThrowException("Expected program.");
                     Instruction inst = GetInstructions(state, t);
                     Token from = state.PopToken();
                     if (from == null)
@@ -671,7 +692,7 @@ namespace MultiAgentLanguageGUI
                         return new NecessaryExecutable(inst);
                     }
                     if(from.Name != "from") t.ThrowException("Expected from after program.");
-                    LogicElement cond = C1(state);
+                    LogicElement cond = EntryC1(state);
                     return new NecessaryExecutableFrom(inst, cond);
                 }
                 else if(t.Name == "[") // necessary engaged
@@ -689,7 +710,7 @@ namespace MultiAgentLanguageGUI
             }
             else
             {
-                first.ThrowException("Expected necessary or possibly");
+                first.ThrowException("Expected 'necessary' or 'possibly'.");
             }
             return null;
         }
@@ -713,18 +734,18 @@ namespace MultiAgentLanguageGUI
                         state.TokenList.Add(token);
                     ParseKeyword(state, keyword);
                 }
-                else if (token.Name == "(" || token.Name == "~" ||
+                else if (token.Name == "(" || token.Name == "~" || token.Name == "[" ||
                     state.Fluent.ContainsKey(token.Name) || state.Noninertial.ContainsKey(token.Name))
                 {
                     state.TokenList.Insert(0, token);
-                    Token kw = new Token(0, 0);
+                    Token kw = new Token(token.LineNumber, token.ColumnNumber);
                     kw.Name = "after";
                     ParseKeyword(state, kw);
                 }
                 //else if(token.n)
                 else
                 {
-                    token.ThrowException("Illegal token at position");
+                    token.ThrowException("Illegal token at position.");
                 }
             }
 

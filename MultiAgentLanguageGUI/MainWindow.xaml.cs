@@ -37,21 +37,21 @@ namespace MultiAgentLanguageGUI
                 "Fluent f2\n" +
                 "Action x\n" +
                 "Action y\n" +
-                "f1 && f2 after (x,[a,b]),(y,[b])\n" +
-                "initially f1\n" +
-                "y by [a,b] causes ~f1 if f2\n" +
-                "y causes ~f1 if f2\n" +
-                "y by [a,b] causes ~f1\n" +
-                "y causes f1\n" +
-                "x by [a,b] releases ~f1 if f2\n" +
-                "x releases ~f1 if f2\n" +
-                "x by [a,b] releases ~f1\n" +
-                "x causes f1\n" +
-                "impossible x by [a] if f1 && f2\n" +
-                "impossible x if f1 && f2\n" +
-                "always f1 || f2\n" +
+                "[f1 && f2] after (x,[a,b]),(y,[b])\n" +
+                "initially [f1]\n" +
+                "y by [a,b] causes [~f1] if [f2]\n" +
+                "y causes [~f1] if [f2]\n" +
+                "y by [a,b] causes [~f1]\n" +
+                "y causes [f1]\n" +
+                "x by [a,b] releases [~f1] if [f2]\n" +
+                "x releases [~f1] if [f2]\n" +
+                "x by [a,b] releases [~f1]\n" +
+                "x causes [f1]\n" +
+                "impossible x by [a] if [f1 && f2]\n" +
+                "impossible x if [f1 && f2]\n" +
+                "always [f1 || f2]\n" +
                 "noninertial f3\n" +
-                "observable f3 after (x,[a,b]),(y,[b])";
+                "observable [f3] after (x,[a,b]),(y,[b])";
         }
 
         private void TextBox_Story_TextChanged(object sender, TextChangedEventArgs e)
