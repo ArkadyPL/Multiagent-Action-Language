@@ -31,9 +31,4 @@ write('Test case 6 - Should be true - "pa_6_fluentX" is always true so it is pos
 (write('possibly_after_from([pa_6_fluentX], [[pa_6_action,[pa_6_g1, pa_6_g2]]], [pa_6_cond1]).'),
 possibly_after_from([pa_6_fluentX], [[pa_6_action,[pa_6_g1, pa_6_g2]]], [pa_6_cond1]), passed; failed), nl,
 
-write('Test case 7 - Should be false - defined causes gives differend result than the one that is queried\n'),
-(write('not(possibly_after_from([pa_7_another_result], [[pa_7_action,[pa_7_g1, pa_7_g2]]], [pa_7_cond])).'),
-not(possibly_after_from([pa_7_another_result], [[pa_7_action,[pa_7_g1, pa_7_g2]]], [pa_7_cond])), passed; failed), nl,
-
-
 write('Possibly After From - TESTS FINISHED'),nl.

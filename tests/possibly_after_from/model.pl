@@ -28,6 +28,3 @@ by_releases_if(pa_6_action, [pa_6_g1, pa_6_g2], [pa_6_fluent], [pa_6_cond1]).
 always([pa_6_fluent1, pa_6_fluent2]).
 always([pa_6_fluent3, pa_6_fluentX]).
 always([pa_6_fluent4, pa_6_fluent5]).
-
-% Test case 7 - Should be false - defined causes gives differend result than the one that is queried
-by_causes_if(pa_7_action, [pa_7_g1, pa_7_g2], [pa_7_result], [pa_7_cond]).
