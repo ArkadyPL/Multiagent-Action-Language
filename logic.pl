@@ -115,8 +115,9 @@ possibly_executable(Program):-
 necessary_after_from(State, [[Action, Group] | Program], CurrentState):-
 	(
 		(
-			findall(X, always(X), AlwaysStates),
-			subset(State, AlwaysStates)
+			findall(X, always(X), AlwaysList),
+			
+			is_subset_of_any_list(State, AlwaysList)
 		)
 			;
 		(
@@ -127,6 +128,12 @@ necessary_after_from(State, [[Action, Group] | Program], CurrentState):-
 
 necessary_after(State, Program):-
 	necessary_after_from(State, Program, []), !.
+
+is_subset_of_any_list(State, [Always | AlwaysList]):-
+	subset(State, Always);
+	is_subset_of_any_list(State, AlwaysList).
+is_subset_of_any_list(_, [[] | []]):- fail.
+
 
 possibly_after_from(State, [[Action, Group] | Program], CurrentState):-	
 %TODO rozważyć odpalenie possibly_executable_from
