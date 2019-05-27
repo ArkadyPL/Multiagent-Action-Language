@@ -143,10 +143,7 @@ namespace MultiAgentLanguageGUI
                 Output.Print("Now attempting to parse the received token list...");
                 Query q = Parser.ParseQuerry(list, state);
                 state.Q = q;
-                foreach(var str in q.ToProlog())
-                {
-                    Output.Print($"Created query: {str}");
-                }
+                Output.Print($"Created query.");
                 Output.Print("Done.");
                 if(prologService is null)
                 {
