@@ -38,10 +38,10 @@
                 </Grid.RowDefinitions>
                 <TextBox x:Name="TextBox_Story" TextChanged="TextBox_Story_TextChanged"/>
                 <DockPanel Grid.Row="1" LastChildFill="False">
-                    <Button x:Name="Button_StoryParse" DockPanel.Dock="Left" Width="200" Click="Button_StoryParse_Click">Parse</Button>
-                    <Button x:Name="Button_StorySave" DockPanel.Dock="Right" Width="100" Click="Button_StorySave_Click">Save</Button>
-                    <Button x:Name="Button_StoryLoad" DockPanel.Dock="Right" Width="100" Click="Button_StoryLoad_Click">Load</Button>
-                    <Button x:Name="Button_StoryClear" DockPanel.Dock="Right" Width="100" Click="Button_StoryClear_Click">Clear</Button>
+                    <Button x:Name="Button_StoryParse" DockPanel.Dock="Right" Width="200" Click="Button_StoryParse_Click">Parse</Button>
+                    <Button x:Name="Button_StorySave" DockPanel.Dock="Left" Width="100" Click="Button_StorySave_Click">Save</Button>
+                    <Button x:Name="Button_StoryLoad" DockPanel.Dock="Left" Width="100" Click="Button_StoryLoad_Click">Load</Button>
+                    <Button x:Name="Button_StoryClear" DockPanel.Dock="Left" Width="100" Click="Button_StoryClear_Click">Clear</Button>
                 </DockPanel>
             </Grid>
         </GroupBox>
