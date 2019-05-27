@@ -1,9 +1,12 @@
 ﻿using Microsoft.Win32;
+using MultiAgentLanguageModels;
 using MultiAgentLanguageModels.Queries;
+using Ninject;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -23,6 +26,7 @@ namespace MultiAgentLanguageGUI
     /// </summary>
     public partial class MainWindow : Window
     {
+        IPrologService prologService;
         ParserState state;
         bool parsed = false;
         public MainWindow()
@@ -144,6 +148,21 @@ namespace MultiAgentLanguageGUI
                     Output.Print($"Created query: {str}");
                 }
                 Output.Print("Done.");
+                if(prologService is null)
+                {
+                    StandardKernel kernel = new StandardKernel();
+                    kernel.Load(Assembly.GetExecutingAssembly());
+                    prologService = kernel.Get<IPrologService>();
+                }
+                var result = prologService.GetSolution(state.Story, state.Q);
+                if (result)
+                {
+                    Output.Print("true.");
+                }
+                else
+                {
+                    Output.Print("false.");
+                }
             }
             catch (Exception ex)
             {
