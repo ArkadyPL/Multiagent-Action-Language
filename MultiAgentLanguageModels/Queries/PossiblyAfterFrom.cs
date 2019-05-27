@@ -5,9 +5,9 @@ namespace MultiAgentLanguageModels.Queries
 {
     public class PossiblyAfterFrom : Query
     {
-        LogicExpression Result { get; }
-        Instruction Instructions { get; }
-        LogicExpression Condition { get; }
+        public LogicExpression Result { get; }
+        public Instruction Instructions { get; }
+        public LogicExpression Condition { get; }
 
         public PossiblyAfterFrom(Instruction instructions, LogicExpression finaly, LogicExpression condition)
         {
