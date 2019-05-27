@@ -134,7 +134,8 @@ possibly_after_from(State, [[Action, Group] | Program], CurrentState):-
 %TODO rozważyć odpalenie possibly_executable_from
 	(
 		%Bierzemy stan do którego musimy przejść i idziemy do następnej instrukcji. Jeżeli to się nie powiedzie to zwracamy false bo musimy przejść do ResultingState(!)
-		by_causes_if(Action, Group, ResultingState, CurrentState),
+		by_causes_if(Action, Group, ResultingState, X),
+		((not(is_empty(X)),subset(X, CurrentState)) ; (is_empty(X),is_empty(CurrentState))),
 		apply_resulting_state(ResultingState, CurrentState, NewCurrentState),
 		possibly_after_from(State, Program, NewCurrentState), !
 	)
@@ -149,16 +150,28 @@ possibly_after_from_without_causes(State, [[Action, Group] | Program], CurrentSt
 	%by_releases_if(Action, Group, ReleasedFluent, CurrentState), % sprawdzamy, czy możemy w ogóle wykonać releases
 	(
 		%Sprawdzamy dalszy przebieg dla obecnego stanu		
-		by_releases_if(Action, Group, ReleasedFluent, CurrentState),
+		by_releases_if(Action, Group, ReleasedFluent, X), %czy akcja w ogóle możliwa
+		((not(is_empty(X)),subset(X, CurrentState)) ; (is_empty(X),is_empty(CurrentState))),
 		possibly_after_from(State, Program, CurrentState)
 	)
 		;
 	(
 		%Generujemy nowy stan usuwając jeden z uwolnionych fluentów i sprawdzamy dalszy przebieg rekurencyjnie		
-		by_releases_if(Action, Group, ReleasedFluent, CurrentState),
-		subset([ReleasedFluent], CurrentState),
-		subtract(CurrentState, [ReleasedFluent], NewCurrentState),
-		possibly_after_from_without_causes(State, [[Action, Group] | Program], NewCurrentState)
+		by_releases_if(Action, Group, ReleasedFluent, X),
+		((not(is_empty(X)),subset(X, CurrentState)) ; (is_empty(X),is_empty(CurrentState))),	
+		subtract(CurrentState, [ReleasedFluent], CurrentStateWithoutPositiveReleased),
+		subtract(CurrentStateWithoutPositiveReleased, [\ReleasedFluent], CurrentStateWithoutAnyReleased),
+		(
+			(
+				append([ReleasedFluent], CurrentStateWithoutAnyReleased, NewCurrentStateWithPositiveReleased),
+				possibly_after_from_without_causes(State, [[Action, Group] | Program], NewCurrentStateWithPositiveReleased)
+			)
+				;
+			(
+				append([\ReleasedFluent], CurrentStateWithoutAnyReleased, NewCurrentStateWithNegativeReleased),
+				possibly_after_from_without_causes(State, [[Action, Group] | Program], NewCurrentStateWithNegativeReleased)		
+			)
+		)
 	).
 
 possibly_after_from_without_causes(State, [], CurrentState):-
@@ -166,7 +179,8 @@ possibly_after_from_without_causes(State, [], CurrentState):-
 	
 possibly_after_from(State,[], CurrentState):-
 	negate_list(State, NegatedRequiredState),
-	not(subset(NegatedRequiredState, State)), !.	
+	intersection(NegatedRequiredState, CurrentState, Common),
+	is_empty(Common), !.	
 
 possibly_after(State, Program):-
 	possibly_after_from(State, Program, []), !.
