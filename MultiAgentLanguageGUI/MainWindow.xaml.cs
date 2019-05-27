@@ -36,8 +36,8 @@ namespace MultiAgentLanguageGUI
                 "Action y\n" +
                 "f1 && f2 after (x,[a,b]),(y,[b])\n" +
                 "initially f1\n" +
-                "x not by [a,b] if f1 && f2" +
-                "y not by [b]" +
+                "x not by [a,b] if f1 && f2\n" +
+                "y not by [b]\n" +
                 "y by [a,b] causes ~f1 if f2\n" +
                 "y causes ~f1 if f2\n" +
                 "y by [a,b] causes ~f1\n" +

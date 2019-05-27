@@ -562,10 +562,6 @@ namespace MultiAgentLanguageGUI
                         condition = C1(state);
                         state.Expression.Add(new NotByIf(actt, agents, condition));
                     }
-                    else
-                    {
-                        firstToken.ThrowException("unexpected token after agents list in not by if expression");
-                    }
                     break;
                 case "after":
                     LogicElement observable = C1(state);
