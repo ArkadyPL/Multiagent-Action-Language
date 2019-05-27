@@ -10,8 +10,8 @@ namespace MultiAgentLanguageModels
     public class PrologEngine : IDisposable
     {
         readonly string[] paths;
-        private TaskCompletionSource<bool> taskCompletionSource;
         private StreamWriter streamWriter;
+        private StreamReader streamReader;
         private Process prologProcess;
 
         public PrologEngine(string prologPath=null)
@@ -33,9 +33,9 @@ namespace MultiAgentLanguageModels
             prologProcess.ErrorDataReceived += PrologProcess_ErrorDataReceived;
 
             streamWriter = prologProcess.StandardInput;
+            streamReader = prologProcess.StandardOutput;
 
-            prologProcess.BeginOutputReadLine();
-            //prologProcess.BeginErrorReadLine();
+            prologProcess.BeginErrorReadLine();
         }
 
         private void PrologProcess_ErrorDataReceived(object sender, DataReceivedEventArgs e)
@@ -44,42 +44,30 @@ namespace MultiAgentLanguageModels
                 throw new Exception(e.Data);
         }
 
-        public async Task<bool> ConsultAsync(string filePath)
+        public bool ConsultAsync(string filePath)
         {
-            return await WriteLineAsync($"consult('{filePath}').");
+            return WriteLine($"consult('{filePath}').");
         }
 
-        public async Task<bool> WriteLineAsync(string line)
+        public bool WriteLine(string line)
         {
-            taskCompletionSource = new TaskCompletionSource<bool>();
-
-            prologProcess.OutputDataReceived += OutputDataHandler;
-
             streamWriter?.WriteLine($"{line.TrimEnd('.')}, !.");
-
-            //streamWriter?.WriteLine(line);
-
-            return await taskCompletionSource.Task;
-        }
-
-        private void OutputDataHandler(object sender, DataReceivedEventArgs e)
-        {
-            if (!string.IsNullOrEmpty(e.Data))
+            string data;
+            do
             {
-                if (!(e.Data.Contains("true") || e.Data.Contains("false")))
-                {
-                    taskCompletionSource.SetException(new Exception($"Something went wrong. Message: {e.Data}"));
-                }
+                data = streamReader.ReadLine();
+            } while (string.IsNullOrEmpty(data));
 
-                prologProcess.OutputDataReceived -= OutputDataHandler;
-
-                taskCompletionSource.SetResult(e.Data.Contains("true"));
+            if (!(data.Contains("true") || data.Contains("false")))
+            {
+                throw new Exception($"Something went wrong. Message: {data}");
             }
+
+            return data.Contains("true");
         }
 
         public void Dispose()
         {
-
             streamWriter.Dispose();
             prologProcess.Dispose();
         }

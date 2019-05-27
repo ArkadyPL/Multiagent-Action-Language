@@ -29,18 +29,18 @@ namespace MultiAgentLanguageModels
             using (var prologEngine = new PrologEngine())
             {
                 var logicConsult= prologEngine.ConsultAsync(logicPath);
-                logicConsult.Wait();
-                if (!logicConsult.Result)
+                
+                if (!logicConsult)
                 {
                     throw new Exception("Something went wrong with logic.pl file.");
                 }
                 var storyConsult = prologEngine.ConsultAsync(storyPath);
-                storyConsult.Wait();
-                if (!storyConsult.Result)
+                
+                if (!storyConsult)
                 {
                     throw new Exception("Something went wrong with story.pl file.");
                 }
-                IEnumerable<bool> allPossibilities = query.ToProlog().Select(q => { var temp = prologEngine.WriteLineAsync(q); temp.Wait(); return temp.Result; });
+                IEnumerable<bool> allPossibilities = query.ToProlog().Select(q => { var temp = prologEngine.WriteLine(q); return temp; });
 
                 return query.Interpret(allPossibilities);
             }

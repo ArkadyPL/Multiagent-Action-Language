@@ -155,14 +155,16 @@ namespace MultiAgentLanguageGUI
                     prologService = kernel.Get<IPrologService>();
                 }
                 var result = prologService.GetSolution(state.Story, state.Q);
+                Output.PrintNLine();
                 if (result)
                 {
-                    Output.Print("true.");
+                    Output.Print("Query: True.");
                 }
                 else
                 {
-                    Output.Print("false.");
+                    Output.Print("Query: False.");
                 }
+                Output.PrintNLine();
             }
             catch (Exception ex)
             {
