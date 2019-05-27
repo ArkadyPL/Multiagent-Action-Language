@@ -124,19 +124,22 @@ necessary_after(State, Program):-
 	necessary_after_from(State, Program, []), !.
 
 possibly_after_from(State, [[Action, Group] | Program], CurrentState):-	
-	apply_alwayses(CurrentState, FullCurrentState)
+	is_always(State)
 	;
+	(apply_alwayses(CurrentState, FullCurrentState) ; true),	
 	(
-		%Bierzemy stan do którego musimy przejść i idziemy do następnej instrukcji. Jeżeli to się nie powiedzie to zwracamy false bo musimy przejść do ResultingState(!)
-		by_causes_if(Action, Group, ResultingState, X),
-		((not(is_empty(X)),subset(X, FullCurrentState)) ; (is_empty(X),is_empty(FullCurrentState))),
-		apply_resulting_state(ResultingState, FullCurrentState, NewCurrentState),
-		possibly_after_from(State, Program, NewCurrentState), !
-	)
-		;
-	(	
-		% Nie mamy stanu, do którego musimy przejść, generujemy stany usuwając poszczególne fluenty i sprawdzamy
-		possibly_after_from_without_causes(State, [[Action, Group] | Program], FullCurrentState)
+		(
+			%Bierzemy stan do którego musimy przejść i idziemy do następnej instrukcji. Jeżeli to się nie powiedzie to zwracamy false bo musimy przejść do ResultingState(!)
+			by_causes_if(Action, Group, ResultingState, X),
+			((not(is_empty(X)),subset(X, FullCurrentState)) ; (is_empty(X),is_empty(FullCurrentState))),
+			apply_resulting_state(ResultingState, FullCurrentState, NewCurrentState),
+			possibly_after_from(State, Program, NewCurrentState), !
+		)
+			;
+		(	
+			% Nie mamy stanu, do którego musimy przejść, generujemy stany usuwając poszczególne fluenty i sprawdzamy
+			possibly_after_from_without_causes(State, [[Action, Group] | Program], FullCurrentState)
+		)
 	).
 	
 possibly_after_from_without_causes(State, [[Action, Group] | Program], CurrentState):-
@@ -235,10 +238,12 @@ is_subset_of_any_always(State, [Always | AlwaysList]):-
 is_subset_of_any_always(_, [[] | []]):- fail.
 
 apply_alwayses(CurrentState, NewState):-
-	always(X),
-	not(subset([X],CurrentState)),
-	append([X], CurrentState, NewStateWithX),
-	apply_alwayses(NewStateWithX, NewState).
+	not(always(X));
+	(
+		not(subset([X],CurrentState)),
+		append([X], CurrentState, NewStateWithX),
+		apply_alwayses(NewStateWithX, NewState)
+	).
 
 apply_resulting_state(ResultingState, CurrentState, NewState):-
 	subtract(CurrentState, ResultingState, ListWithoutResultingState),
