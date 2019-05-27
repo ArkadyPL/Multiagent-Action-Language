@@ -2,7 +2,7 @@
 To do:
 
 ### Prolog ###
-- [ ] Obsługa listy fluentów przez *always*
+- [x] Obsługa listy fluentów przez *always*
 - [ ] Napisanie testów dla bardziej zaawansowanych historyjek, w szczególności z wykorzystaniem *releases*, *initially*, *after* i *always*
 - [ ] Ujednolicenie sposobu wpisywania wyrażeń logicznych
 - [ ] Testy do *Possibly executable from*

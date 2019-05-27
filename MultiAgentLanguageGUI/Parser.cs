@@ -335,7 +335,8 @@ namespace MultiAgentLanguageGUI
             else if (t.Name == "~")
             {
                 Token name = state.PopToken();
-                if (!state.Fluent.ContainsKey(name.Name)) name.ThrowException("Expected fluent name");
+                if (!state.Fluent.ContainsKey(name.Name) && !state.Noninertial.ContainsKey(name.Name))
+                    name.ThrowException("Expected fluent name");
                 Fluent f = new Fluent(name.Name);
                 f.Value = false;
                 return f;
