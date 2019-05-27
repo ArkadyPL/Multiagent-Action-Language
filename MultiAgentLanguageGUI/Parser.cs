@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using MultiAgentLanguageModels;
 using MultiAgentLanguageModels.Expressions;
+using MultiAgentLanguageModels.Queries;
 
 namespace MultiAgentLanguageGUI
 {
@@ -16,6 +17,8 @@ namespace MultiAgentLanguageGUI
         public Dictionary<string, MultiAgentLanguageModels.Action> Action { get; set; }
         public Dictionary<string, MultiAgentLanguageModels.Expressions.Noninertial> Noninertial { get; set; }
         public List<MultiAgentLanguageModels.Expressions.Expression> Expression { get; set; }
+
+        public Query Q { get; set; }
 
         public ParserState(List<Token> tokenList)
         {
@@ -103,6 +106,26 @@ namespace MultiAgentLanguageGUI
             foreach (string key in Action.Keys)
             {
                 output += key + ", ";
+            }
+            return output;
+        }
+
+        public string NoninertialList()
+        {
+            string output = "";
+            foreach (string key in Noninertial.Keys)
+            {
+                output += key + ", ";
+            }
+            return output;
+        }
+
+        public string ExpressionList()
+        {
+            string output = "";
+            foreach (var exp in Expression)
+            {
+                output += exp.ToProlog() + "\n";
             }
             return output;
         }
@@ -616,6 +639,56 @@ namespace MultiAgentLanguageGUI
                 inst.Add(new Tuple<MultiAgentLanguageModels.Action, AgentsList>(a1, g));
             } while (state.PeepToken() != null && state.PeepToken().Name == ",");
             return inst;
+        }
+
+        public static Query ParseQuerry(List<Token> tokenList, ParserState story)
+        {
+            ParserState state = new ParserState(tokenList);
+            state.Action = story.Action;
+            state.Agent = story.Agent;
+            state.Noninertial = story.Noninertial;
+            state.Fluent = story.Fluent;
+            if(tokenList.Count == 0)
+            {
+                throw new Exception("Empty querry");
+            }
+
+            Token first = state.PopToken();
+            if(first.Name == "necessary")
+            {
+                Token t = state.PopToken();
+                if (t == null) first.ThrowException("Expected: executable, [ or logic expression.");
+                if(t.Name == "executable") // necessary executable
+                {
+                    if (state.PeepToken() == null) t.ThrowException("Expected program");
+                    Instruction inst = GetInstructions(state, t);
+                    Token from = state.PopToken();
+                    if (from == null)
+                    {
+                        return new NecessaryExecutable(inst);
+                    }
+                    if(from.Name != "from") t.ThrowException("Expected from after program.");
+                    LogicElement cond = C1(state);
+                    return new NecessaryExecutableFrom(inst, cond);
+                }
+                else if(t.Name == "[") // necessary engaged
+                {
+
+                }
+                else // necessary value
+                {
+
+                }
+            }
+            else if(first.Name == "possibly")
+            {
+
+            }
+            else
+            {
+                first.ThrowException("Expected necessary or possibly");
+            }
+            return null;
         }
 
         public static ParserState Parse(List<Token> tokenList)
