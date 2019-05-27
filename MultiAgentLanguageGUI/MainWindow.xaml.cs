@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MultiAgentLanguageModels.Queries;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,10 +21,12 @@ namespace MultiAgentLanguageGUI
     /// </summary>
     public partial class MainWindow : Window
     {
+        ParserState state;
+        bool parsed = false;
         public MainWindow()
         {
             InitializeComponent();
-
+            state = new ParserState(null);
             Output.Target = TextBox_Output;
 
             TextBox_Story.Text =
@@ -34,28 +37,26 @@ namespace MultiAgentLanguageGUI
                 "Fluent f2\n" +
                 "Action x\n" +
                 "Action y\n" +
-                "f1 && f2 after (x,[a,b]),(y,[b])\n" +
-                "initially f1\n" +
-                "x not by [a,b] if f1 && f2" +
-                "y not by [b]" +
-                "y by [a,b] causes ~f1 if f2\n" +
-                "y causes ~f1 if f2\n" +
-                "y by [a,b] causes ~f1\n" +
-                "y causes f1\n" +
-                "x by [a,b] releases ~f1 if f2\n" +
-                "x releases ~f1 if f2\n" +
-                "x by [a,b] releases ~f1\n" +
-                "x causes f1\n" +
-                "impossible x by [a] if f1 && f2\n" +
-                "impossible x if f1 && f2\n" +
-                "always f1 || f2\n" +
+                "[f1 && f2] after (x,[a,b]),(y,[b])\n" +
+                "initially [f1]\n" +
+                "y by [a,b] causes [~f1] if [f2]\n" +
+                "y causes [~f1] if [f2]\n" +
+                "y by [a,b] causes [~f1]\n" +
+                "y causes [f1]\n" +
+                "x by [a,b] releases [~f1] if [f2]\n" +
+                "x releases [~f1] if [f2]\n" +
+                "x by [a,b] releases [~f1]\n" +
+                "x causes [f1]\n" +
+                "impossible x by [a] if [f1 && f2]\n" +
+                "impossible x if [f1 && f2]\n" +
+                "always [f1 || f2]\n" +
                 "noninertial f3\n" +
-                "observable f3 after (x,[a,b]),(y,[b])";
+                "observable [f3] after (x,[a,b]),(y,[b])";
         }
 
         private void TextBox_Story_TextChanged(object sender, TextChangedEventArgs e)
         {
-
+            parsed = false;
         }
 
         private void Button_StoryParse_Click(object sender, RoutedEventArgs e)
@@ -73,11 +74,14 @@ namespace MultiAgentLanguageGUI
                 }
                 Output.PrintNLine();
                 Output.Print("Now attempting to parse the received token list...");
-                ParserState parsed = Parser.Parse(list);
-                Output.Print($"Created agents: {parsed.AgentList()}");
-                Output.Print($"Created fluents: {parsed.FluentList()}");
-                Output.Print($"Created actions: {parsed.ActionList()}");
+                state = Parser.Parse(list);
+                Output.Print($"Created agents: {state.AgentList()}");
+                Output.Print($"Created fluents: {state.FluentList()}");
+                Output.Print($"Created actions: {state.ActionList()}");
+                Output.Print($"Created noninertial fluents: {state.NoninertialList()}\n");
+                Output.Print($"Created expressions: {state.ExpressionList()}");
                 Output.Print("Done.");
+                parsed = true;
             }
             catch(Exception ex)
             {
@@ -88,6 +92,8 @@ namespace MultiAgentLanguageGUI
         private void Button_StoryClear_Click(object sender, RoutedEventArgs e)
         {
             TextBox_Story.Text = "";
+            parsed = false;
+            state = new ParserState(null);
         }
 
         private void Button_StoryLoad_Click(object sender, RoutedEventArgs e)
@@ -102,11 +108,41 @@ namespace MultiAgentLanguageGUI
 
         private void TextBox_Query_TextChanged(object sender, TextChangedEventArgs e)
         {
-
+            
         }
 
         private void Button_QueryExecute_Click(object sender, RoutedEventArgs e)
         {
+            if(parsed == false)
+            {
+                Output.Print("First parse the story.");
+                return;
+            }
+            Output.PrintSeparator();
+            Output.Print("Attempting a tokenize the query...");
+            try
+            {
+                List<Token> list = Tokenizer.Tokenize(TextBox_Query.Text);
+                Output.Print("Tokenize procedure finished without explicit failure.");
+                Output.Print("Tokens created:");
+                for (int i = 0; i < list.Count; i++)
+                {
+                    Output.Print($"{i + 1} - {list[i].Type.ToString()}: {list[i].Name}");
+                }
+                Output.PrintNLine();
+                Output.Print("Now attempting to parse the received token list...");
+                Query q = Parser.ParseQuerry(list, state);
+                state.Q = q;
+                foreach(var str in q.ToProlog())
+                {
+                    Output.Print($"Created query: {str}");
+                }
+                Output.Print("Done.");
+            }
+            catch (Exception ex)
+            {
+                Output.Print($"an error occurred\n{ex.ToString()}");
+            }
         }
 
         private void TextBox_Output_TextChanged(object sender, TextChangedEventArgs e)
