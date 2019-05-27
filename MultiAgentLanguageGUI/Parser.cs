@@ -697,7 +697,8 @@ namespace MultiAgentLanguageGUI
             if(first.Name == "necessary" || first.Name == "possibly")
             {
                 Token t = state.PopToken();
-                if (t == null) first.ThrowException("Expected: executable, '[' or logic expression.");
+                Token next = state.PeepToken();
+                if (t == null) first.ThrowException("Expected: executable, agents list or logic expression.");
                 if(t.Name == "executable") // necessary executable
                 {
                     if (state.PeepToken() == null) t.ThrowException("Expected program.");
@@ -713,7 +714,7 @@ namespace MultiAgentLanguageGUI
                     if (first.Name == "necessary") return new NecessaryExecutableFrom(inst,cond);
                     else return new PossiblyExecutableFrom(inst,cond);
                 }
-                else if(t.Name == "[") // necessary engaged
+                else if(state.Agent.ContainsKey(next.Name)) // necessary engaged
                 {
                     state.TokenList.Insert(0, t);
                     AgentsList agents = GetAgentList(state);
@@ -721,6 +722,11 @@ namespace MultiAgentLanguageGUI
                     if (engaged == null || engaged.Name != "engaged") 
                     {
                         t.ThrowException("Expected engaged after agents list.");
+                    }
+                    Token in_token = state.PopToken();
+                    if (in_token == null || in_token.Name != "in")
+                    {
+                        t.ThrowException("Expected in after engaged.");
                     }
                     List<MultiAgentLanguageModels.Action> actions = GetActionList(state);
                     Token from = state.PopToken();
@@ -734,8 +740,10 @@ namespace MultiAgentLanguageGUI
                     if (first.Name == "necessary") return new NecessaryEngagedFrom(agents,actions,cond);
                     else return new PossiblyEngagedFrom(agents, actions, cond);
                 }
-                else // necessary value
+                else if(state.Fluent.ContainsKey(next.Name) || state.Noninertial.ContainsKey(next.Name)
+                    || next.Name == "(" || next.Name == "~") // necessary value
                 {
+                    state.TokenList.Insert(0, t);
                     LogicElement result = EntryC1(state);
                     Token after = state.PopToken();
                     if (after == null || after.Name != "after")
@@ -753,6 +761,10 @@ namespace MultiAgentLanguageGUI
                     LogicElement cond = EntryC1(state);
                     if (first.Name == "necessary") return new NecessaryAfterFrom(inst,result,cond);
                     else return new PossiblyAfterFrom(inst, result, cond);
+                }
+                else
+                {
+                    throw new Exception("Incorrect query.");
                 }
             }
             else
