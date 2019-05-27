@@ -5,9 +5,9 @@ namespace MultiAgentLanguageModels.Queries
 {
     public class PossiblyAfterFrom : Query
     {
-        LogicExpression Result { get; }
-        Instruction Instructions { get; }
-        LogicExpression Condition { get; }
+        public LogicExpression Result { get; }
+        public Instruction Instructions { get; }
+        public LogicExpression Condition { get; }
 
         public PossiblyAfterFrom(Instruction instructions, LogicExpression finaly, LogicExpression condition)
         {
@@ -30,6 +30,21 @@ namespace MultiAgentLanguageModels.Queries
         public override bool Interpret(IEnumerable<bool> allPossibilities)
         {
             return allPossibilities.Any(x => x);
+        }
+    }
+    public class PossiblyAfter : PossiblyAfterFrom
+    {
+        public PossiblyAfter(Instruction instructions, LogicExpression finaly)
+            : base(instructions, finaly, new True())
+        {
+        }
+
+        public override List<string> ToProlog()
+        {
+            var possibleResults = Result.EvaluateLogicExpression().ToListOfStrings();
+            var results = possibleResults.Select(
+                alpha => $"possibly_after({alpha}, {Instructions.ToProlog()}).").ToList();
+            return results;
         }
     }
 }
