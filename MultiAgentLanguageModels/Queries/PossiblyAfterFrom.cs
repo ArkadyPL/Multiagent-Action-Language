@@ -32,4 +32,19 @@ namespace MultiAgentLanguageModels.Queries
             return allPossibilities.Any(x => x);
         }
     }
+    public class PossiblyAfter : PossiblyAfterFrom
+    {
+        public PossiblyAfter(Instruction instructions, LogicExpression finaly)
+            : base(instructions, finaly, new True())
+        {
+        }
+
+        public override List<string> ToProlog()
+        {
+            var possibleResults = Result.EvaluateLogicExpression().ToListOfStrings();
+            var results = possibleResults.Select(
+                alpha => $"possibly_after({alpha}, {Instructions.ToProlog()}).").ToList();
+            return results;
+        }
+    }
 }
