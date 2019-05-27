@@ -50,10 +50,6 @@ by_releases_if(Action, _, Result, State):-
 % Executability queries - TODO: fix possibly_executable_from query
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-check_always([Element | List]):-
-	(always(Element) ; check_always(List)), !.
-check_always([]):- fail.
-
 necessary_executable_from([[Action, Group] | Program], CurrentState):-
 	private_necessary_executable_from([[Action, Group] | Program], CurrentState, _), !.
 
@@ -64,7 +60,7 @@ private_necessary_executable_from([[Action, Group] | Program], CurrentState, Fin
 		(		
 			not(is_empty(RequiredState)),
 			(
-				check_always(RequiredState)
+				is_always(RequiredState)
 					;
 				subset(RequiredState, CurrentState)
 			)

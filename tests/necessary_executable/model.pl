@@ -39,14 +39,14 @@ by_causes_if(nex_7a_action1, [nex_7a_g1, nex_7a_g2], [nex_7a_result], [nex_7a_pi
 by_causes(nex_7a_action2, [nex_7a_g1, nex_7a_g2], [nex_7a_another]).
 
 % Test case 8 - action_8_2 is possible because of always statement
-by_causes_if(a_8_1, [g_8_1], [beta_8], [alpha_8]).
-by_causes_if(a_8_2, [g_8_1], [other_8], [beta_8]).
-always(alpha_8).
+by_causes_if(nex_8_a1, [nex_8_g1], [nex_8_beta], [nex_8_alpha]).
+by_causes_if(nex_8_a2, [nex_8_g1], [nex_8_other], [nex_8_beta]).
+always([nex_8_alpha]).
 
 
-% Test case 9 - action_9_2 is not possible, always statement only for gamma_9
-by_causes_if(a_9_1, [g_9_1], [beta_9], [alpha_9]).
-by_causes_if(a_9_2, [g_9_1], [other_9], [beta_9]).
-always(gamma_9).
+% Test case 9 - nex_9_a1 is not possible, always statement only for gamma_9
+by_causes_if(nex_9_a1, [nex_9_g1], [nex_9_beta], [nex_9_alpha]).
+by_causes_if(nex_9_a2, [nex_9_g1], [nex_9_other], [nex_9_beta]).
+always([nex_9_gamma]).
 
 
