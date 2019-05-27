@@ -54,7 +54,7 @@ write('Test case 5 - should fail, needs always statement\n'),
 not(necessary_engaged_from([anna],[talks],[is_bored])), passed; failed), nl,
 
 write('Test case 6 - should be fine, there is always statement \n'),
-(write('necessary_engaged_from([george],[goes_to_sleep],[on_monday]) => '),
-necessary_engaged_from([george],[goes_to_sleep],[on_monday]), passed; failed), nl,
+(write('necessary_engaged_from([nex_6_george],[new_6_goes_to_sleep],[nex_6_on_monday]) => '),
+necessary_engaged_from([nex_6_george],[new_6_goes_to_sleep],[nex_6_on_monday]), passed; failed), nl,
 
 write('Necessary Engaged - TESTS FINISHED'),nl.
