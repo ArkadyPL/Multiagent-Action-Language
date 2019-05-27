@@ -86,10 +86,8 @@ private_necessary_executable_from([], NewCurrentState, FinalState):-
 
 necessary_executable(Program):-
 	necessary_executable_from(Program, []), !.
+	
 
-
-% TODO: create more tests and fix that query
-% Remember that action must be defined to be executable!!!
 
 % CurrentState means "initialState" in the first call, and then set of all changes states
 possibly_executable_from([[Action, Group] | Program], CurrentState):-
