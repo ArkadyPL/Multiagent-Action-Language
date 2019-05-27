@@ -644,6 +644,22 @@ namespace MultiAgentLanguageGUI
             return inst;
         }
 
+        public static List<MultiAgentLanguageModels.Action> GetActionsList(ParserState state)
+        {
+            List<MultiAgentLanguageModels.Action> al = new List<MultiAgentLanguageModels.Action>();
+            do
+            {
+                if (state.PeepToken().Name == ",") state.PopToken();
+                Token a = state.PopToken();
+                if (a == null || state.Action.ContainsKey(a.Name) == false)
+                {
+                    throw new Exception("Expected action");
+                }
+                al.Add(new MultiAgentLanguageModels.Action(a.Name));
+            } while (state.PeepToken() != null && state.PeepToken().Name == ",");
+            return al;
+        }
+
         public static Query ParseQuerry(List<Token> tokenList, ParserState story)
         {
             ParserState state = new ParserState(tokenList);
@@ -657,7 +673,7 @@ namespace MultiAgentLanguageGUI
             }
 
             Token first = state.PopToken();
-            if(first.Name == "necessary")
+            if(first.Name == "necessary" || first.Name == "possibly")
             {
                 Token t = state.PopToken();
                 if (t == null) first.ThrowException("Expected: executable, [ or logic expression.");
@@ -668,25 +684,53 @@ namespace MultiAgentLanguageGUI
                     Token from = state.PopToken();
                     if (from == null)
                     {
-                        return new NecessaryExecutable(inst);
+                        if (first.Name == "necessary") new NecessaryExecutable(inst);
+                        else new PossiblyExecutable(inst);
                     }
                     if(from.Name != "from") t.ThrowException("Expected from after program.");
                     LogicElement cond = C1(state);
-                    return new NecessaryExecutableFrom(inst, cond);
+                    if (first.Name == "necessary") return new NecessaryExecutableFrom(inst, cond);
+                    else return new PossiblyExecutableFrom(inst, cond);
                 }
                 else if(t.Name == "[") // necessary engaged
                 {
-
+                    state.TokenList.Insert(0, t);
+                    AgentsList agents = GetAgentList(state);
+                    Token in_token = state.PopToken();
+                    if (in_token == null)
+                    {
+                        t.ThrowException("Expected in after the list of agents.");
+                    }
+                    List<MultiAgentLanguageModels.Action> actions = GetActionsList(state);
+                    Token from = state.PopToken();
+                    if (from == null)
+                    {
+                        if (first.Name == "necessary") return new NecessaryEngaged(agents, actions);
+                        else return new PossiblyEngaged(agents, actions);
+                    }
+                    if (from.Name != "from") t.ThrowException("Expected from after program.");
+                    LogicElement cond = C1(state);
+                    if (first.Name == "necessary") return new NecessaryEngagedFrom(agents, actions, cond);
+                    else return new PossiblyEngagedFrom(agents, actions, cond);
                 }
-                else // necessary value
+                else // necessary after
                 {
-
+                    LogicElement result = C1(state);
+                    Token after = state.PopToken();
+                    if (after == null || after.Name != "after") t.ThrowException("Expected 'after' after alpha");
+                    Instruction inst = GetInstructions(state, t);
+                    Token from = state.PopToken();
+                    if (from == null)
+                    {
+                        if (first.Name == "necessary") return new NecessaryAfter(inst, result);
+                        else throw new NotImplementedException(); //TODO
+                    }
+                    if (from.Name != "from") t.ThrowException("Expected from after program.");
+                    LogicElement cond = C1(state);
+                    if (first.Name == "necessary") return new NecessaryAfterFrom(inst, result, cond);
+                    else return new PossiblyAfterFrom(inst, result, cond);
                 }
-            }
-            else if(first.Name == "possibly")
-            {
-
-            }
+            }           
             else
             {
                 first.ThrowException("Expected necessary or possibly");
