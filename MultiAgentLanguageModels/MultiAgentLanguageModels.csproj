@@ -51,6 +51,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Expressions\ByReleasesIf.cs" />
+    <Compile Include="Expressions\NotByIf.cs" />
     <Compile Include="Other\Agent.cs" />
     <Compile Include="Other\Action.cs" />
     <Compile Include="Bindings.cs" />
