@@ -20,6 +20,16 @@ namespace MultiAgentLanguageGUI
 
         public Query Q { get; set; }
 
+        public LanguageStructure Story
+        { get
+            {
+                var s = new LanguageStructure();
+                s.AddRange(Noninertial.Values);
+                s.AddRange(Expression);
+                return s;
+            }
+        }
+
         public ParserState(List<Token> tokenList)
         {
             TokenList = tokenList;
@@ -568,6 +578,7 @@ namespace MultiAgentLanguageGUI
                         Token cond_st = state.PeepToken();
                         if (cond_st.Name == "if")
                         {
+                            state.PopToken();
                             LogicElement c = EntryC1(state);
                             state.Expression.Add(new ImpossibleByIf(ac, agentsList, c));
                         }
