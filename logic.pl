@@ -115,9 +115,7 @@ possibly_executable(Program):-
 necessary_after_from(State, [[Action, Group] | Program], CurrentState):-
 	(
 		(
-			findall(X, always(X), AlwaysList),
-			
-			is_subset_of_any_list(State, AlwaysList)
+			is_always(State)
 		)
 			;
 		(
@@ -128,11 +126,6 @@ necessary_after_from(State, [[Action, Group] | Program], CurrentState):-
 
 necessary_after(State, Program):-
 	necessary_after_from(State, Program, []), !.
-
-is_subset_of_any_list(State, [Always | AlwaysList]):-
-	subset(State, Always);
-	is_subset_of_any_list(State, AlwaysList).
-is_subset_of_any_list(_, [[] | []]):- fail.
 
 
 possibly_after_from(State, [[Action, Group] | Program], CurrentState):-	
@@ -198,7 +191,7 @@ possibly_after(State, Program):-
 
 check_state(Action,[FirstEngaged | _ ], States):-
 	by_causes_if(Action, FirstEngaged, _, RequiredState),
-	(subset(RequiredState, States); always(RequiredState)).
+	(subset(RequiredState, States); write('here'), is_always(RequiredState), write('there')).
 
 necessary_engaged_from(Group, [Action|List], States):-
 	not(impossible_by_if(Action, Group, RequiredState)),
@@ -236,6 +229,16 @@ possibly_engaged(Group, [Action|List]):-
 	
 	
 % Utils
+is_always(State):-
+	findall(X, always(X), AlwaysList),
+	is_subset_of_any_always(State, AlwaysList).
+
+is_subset_of_any_always(State, [Always | AlwaysList]):-
+	subset(State, Always);
+	is_subset_of_any_always(State, AlwaysList).
+is_subset_of_any_always(_, [[] | []]):- fail.
+
+
 apply_resulting_state(ResultingState, CurrentState, NewState):-
 	subtract(CurrentState, ResultingState, ListWithoutResultingState),
 	negate_list(ResultingState, NotResultingState),	

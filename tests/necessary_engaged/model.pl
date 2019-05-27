@@ -20,5 +20,7 @@ by_causes_if(eat, [john],[], [is_hungry]).
 by_causes_if(talks, [anna], [],[is_ready]).
 
 % Test case 6
-by_causes_if(goes_to_sleep, [george], [],[is_tired]).
-always([is_tired]).
+by_causes_if(new_6_goes_to_sleep, [nex_6_george], [], [nex_6_is_tired]).
+always([nex_6_some_noise1, nex_6_some_noise2]).
+always([nex_6_is_tired, nex_6_some_noise]).
+always([nex_6_some_noise3]).
