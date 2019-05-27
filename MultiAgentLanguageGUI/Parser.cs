@@ -568,6 +568,7 @@ namespace MultiAgentLanguageGUI
                         Token cond_st = state.PeepToken();
                         if (cond_st.Name == "if")
                         {
+                            state.PopToken();
                             LogicElement c = EntryC1(state);
                             state.Expression.Add(new ImpossibleByIf(ac, agentsList, c));
                         }
