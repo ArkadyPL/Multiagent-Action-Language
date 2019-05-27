@@ -345,7 +345,8 @@ namespace MultiAgentLanguageGUI
             else if (t.Name == "~")
             {
                 Token name = state.PopToken();
-                if (!state.Fluent.ContainsKey(name.Name)) name.ThrowException("Expected fluent name");
+                if (!state.Fluent.ContainsKey(name.Name) && !state.Noninertial.ContainsKey(name.Name))
+                    name.ThrowException("Expected fluent name");
                 Fluent f = new Fluent(name.Name);
                 f.Value = false;
                 return f;
@@ -574,11 +575,17 @@ namespace MultiAgentLanguageGUI
                     if (key.Name == "by")
                     {
                         agentsList = GetAgentList(state);
-                        Token cond_st = state.PopToken();
-                        if (cond_st == null || cond_st.Name != "if")
-                            key.ThrowException("Expected 'if' after the list of agents.");
-                        LogicElement c = EntryC1(state);
-                        state.Expression.Add(new ImpossibleByIf(ac, agentsList, c));
+                        Token cond_st = state.PeepToken();
+                        if (cond_st.Name == "if")
+                        {
+                            state.PopToken();
+                            LogicElement c = EntryC1(state);
+                            state.Expression.Add(new ImpossibleByIf(ac, agentsList, c));
+                        }
+                        else
+                        {
+                            state.Expression.Add(new ImpossibleBy(ac, agentsList));
+                        }
                     }
                     else if (key.Name == "if")
                     {
