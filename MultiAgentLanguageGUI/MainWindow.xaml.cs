@@ -36,6 +36,8 @@ namespace MultiAgentLanguageGUI
                 "Action y\n" +
                 "f1 && f2 after (x,[a,b]),(y,[b])\n" +
                 "initially f1\n" +
+                "x not by [a,b] if f1 && f2" +
+                "y not by [b]" +
                 "y by [a,b] causes ~f1 if f2\n" +
                 "y causes ~f1 if f2\n" +
                 "y by [a,b] causes ~f1\n" +
@@ -105,7 +107,6 @@ namespace MultiAgentLanguageGUI
 
         private void Button_QueryExecute_Click(object sender, RoutedEventArgs e)
         {
-
         }
 
         private void TextBox_Output_TextChanged(object sender, TextChangedEventArgs e)
