@@ -12,6 +12,8 @@ To do:
 - [x] Pierwsza wersja kwerendy *Necessary executable from*
 - [ ] Pierwsza wersja kwerendy *Possibly after from*
 - [x] Pierwsza wersja kwerendy *Necessary after from*
+- [ ] Dodać testy języka AR (przykłady z wykładu)
+- [ ] Dodać kwerendy z pustego programu
 
 ### C# GUI ###
 - [ ] Parser na wyrażenie *not by if*
@@ -40,3 +42,58 @@ To do:
 - [x] Wrappery na kwerendę zaangażowania *engaged*
 - [x] Parser wyrażeń logicznych do formatu prologowego, z uwzględnieniem wszystkich kombinacji fluentów spełniających dane wyrażenie
 - [x] Dodanie stanów początkowych
+- [ ] Dodać testy języka AR (przykłady z wykładu)
+- [ ] Dodać kwerendy z pustego programu
+
+### Conclusions after deadline meeting ###
+- kwerendy mogą też dostać wyrażenie logiczne jako resultat - co wtedy?
+- akcja niewykonalna -> necessary true
+- niedeterminizm - releases itp nie działa
+
+
+Przykład niedziałającego modelu:
+a by [x] causes [f]
+a by [y] causes [g]
+initially [~f && ~g]
+Query:
+necessary (f && g) after  (a, [x]), (b, [y])
+Should be: true
+
+
+Przykład niedziałającego modelu:
+a causes [f]
+a causes [g]
+initially [~f && ~g]
+Query:
+necessary (f && g) after  (a, [x]), (b, [y])
+Should be: true
+
+
+Przykład działającego modelu:
+a by [x] causes [f]
+b by [x] causes [g]
+initially [~f && ~g]
+Query:
+necessary (f && g) after  (a, [x]), (b, [x])
+Should be: true
+
+
+Przykład niedziałającego modelu:
+fire causes [~loaded]
+fire causes [~alive] if [loaded]
+initially [alive]
+[~alive] after (fire, [x]) % tu powinno być bez agenta
+Query:
+necessary <coś> after [] % to powinno być możliwe do sprawdzenia
+Should be: true
+
+
+Przykład niedziałającego modelu:
+cos causes [ble]
+fire causes [~loaded]
+fire causes [~alive] if [loaded]
+initially [alive]
+[~alive] after (cos, [x])m (fire, [x])
+Query:
+necessary (loaded) after (cos, [x])
+Should be: true
