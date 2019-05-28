@@ -194,7 +194,7 @@ possibly_after(State, Program):-
 
 check_state(Action,[FirstEngaged | _ ], States):-
 	by_causes_if(Action, FirstEngaged, _, RequiredState),
-	(subset(RequiredState, States); write('here'), is_always(RequiredState), write('there')).
+	(subset(RequiredState, States); is_always(RequiredState)).
 
 necessary_engaged_from(Group, [Action|List], States):-
 	not(impossible_by_if(Action, Group, RequiredState)),
@@ -216,11 +216,20 @@ necessary_engaged(Group, Actions):-
 	necessary_engaged_from(Group, Actions, []), !.	
 
 
-possibly_engaged_from(Group, [Action|List], State):-
+possibly_engaged_from(Group, [Action|List], State):-	
 	not(impossible_by_if(Action, Group, State)),
-	(	by_causes_if(Action, X, _, State);
+	(	
+		by_causes_if(Action, X, _, State)
+		;
 		by_causes_if(Action, X, _, CheckedState),
 		always(CheckedState)
+		;
+		by_causes_if(Action, X, _, CheckedState),		
+		initially(Y),
+		subset(CheckedState,Y)
+		;
+		causes_if(Action, _, CheckedState),	
+		subset(State,CheckedState)
 	),
 	subset(X, Group),
 	possibly_engaged_from(Group, List, State), !.

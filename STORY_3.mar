@@ -1,0 +1,12 @@
+Agent Bercik
+Agent Filemon
+Action brew
+Fluent brewed
+Fluent destroyed
+initially [~brewed]
+initially [~destroyed]
+brew by [Bercik, Filemon] causes [brewed]
+brew by [Filemon] releases [brewed]
+brew by [Bercik] releases [brewed]
+brew by [Bercik] releases [destroyed]
+

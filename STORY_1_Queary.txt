@@ -1,7 +1,5 @@
 necessary executable (push,[a,b]) from [~isRunning]
 necessary executable (push,[a,c]) from [~isRunning]
-necessary [isRunning] after (push,[a,b]) from [~isRunning]
-necessary [isRunning] after (push,[a,c]) from [~isRunning]
 possibly [a] engaged in push
 possibly [b] engaged in push
 possibly [c] engaged in push
