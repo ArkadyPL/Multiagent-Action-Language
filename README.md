@@ -44,10 +44,19 @@ To do:
 - [x] Dodanie stanów początkowych
 - [ ] Dodać testy języka AR (przykłady z wykładu)
 - [ ] Dodać kwerendy z pustego programu
+- [ ] Dodać kwerendy dla pustej listy agentów
+
+### Requirements for the deadline ###
+- Dokumentacja teoretyczna
+- Dokumentacja techniczna
+- User Guide
+- Testy naszego programu zrobione przez inną grupę
+- Testy innego programu zrobione przez nas
+- Płytka CD
 
 ### Conclusions after deadline meeting ###
 - kwerendy mogą też dostać wyrażenie logiczne jako resultat - co wtedy?
-- akcja niewykonalna -> necessary true
+- program niewykonalny -> necessary true
 - niedeterminizm - releases itp nie działa
 
 
