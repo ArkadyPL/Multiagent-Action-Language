@@ -35,7 +35,7 @@ namespace MultiAgentLanguageModels
             streamWriter = prologProcess.StandardInput;
             streamReader = prologProcess.StandardOutput;
 
-            prologProcess.BeginErrorReadLine();
+            //prologProcess.BeginErrorReadLine();
         }
 
         private void PrologProcess_ErrorDataReceived(object sender, DataReceivedEventArgs e)

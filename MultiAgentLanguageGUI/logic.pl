@@ -47,30 +47,32 @@ by_releases_if(Action, _, Result, State):-
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Executability queries
+% Executability queries - TODO: fix possibly_executable_from query
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-check_always([Element | List]):-
-	(always(Element) ; check_always(List)), !.
-check_always([]):- fail.
 
 necessary_executable_from([[Action, Group] | Program], CurrentState):-
 	private_necessary_executable_from([[Action, Group] | Program], CurrentState, _), !.
 
 % CurrentState means "initialState" in the first call, and then set of all changes states
 private_necessary_executable_from([[Action, Group] | Program], CurrentState, FinalState):-
-	by_causes_if(Action, Group, ResultingState, RequiredState),
-	(
-		(
-			not(is_empty(RequiredState)),
-			(
-				check_always(RequiredState)
-					;
-				subset(RequiredState, CurrentState)
+	(	
+		(by_causes_if(Action, G, ResultingState, RequiredState);by_releases_if(Action, G, ResultingState, RequiredState)),
+		(	
+			subset(G,Group),			
+			(		
+				not(is_empty(RequiredState)),
+				(				
+					is_always(RequiredState)
+						;
+					subset(RequiredState, CurrentState)
+				)
 			)
+			;				
+			initially(Y),
+			(is_empty(RequiredState), subset(CurrentState,Y))		
+			;				
+			(is_empty(RequiredState),is_empty(CurrentState))
 		)
-			;
-		(is_empty(RequiredState),is_empty(CurrentState))
 	),
 	not(private_impossible_by_if(Action, Group, RequiredState)),
 	subtract(CurrentState, ResultingState, ListWithoutResultingState),
@@ -84,7 +86,7 @@ private_necessary_executable_from([], NewCurrentState, FinalState):-
 
 necessary_executable(Program):-
 	necessary_executable_from(Program, []), !.
-
+	
 
 
 % CurrentState means "initialState" in the first call, and then set of all changes states
@@ -107,14 +109,13 @@ possibly_executable(Program):-
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Value queries - TODO
+% Value queries - TODO: finish possibly_after_from implementation
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 necessary_after_from(State, [[Action, Group] | Program], CurrentState):-
 	(
 		(
-			findall(X, always(X), AlwaysStates),
-			subset(State, AlwaysStates)
+			is_always(State)
 		)
 			;
 		(
@@ -126,11 +127,61 @@ necessary_after_from(State, [[Action, Group] | Program], CurrentState):-
 necessary_after(State, Program):-
 	necessary_after_from(State, Program, []), !.
 
+possibly_after_from(State, [[Action, Group] | Program], CurrentState):-	
+	is_always(State)
+	;
+	(apply_alwayses(CurrentState, FullCurrentState) ; true),	
+	(
+		(
+			%Bierzemy stan do którego musimy przejść i idziemy do następnej instrukcji. Jeżeli to się nie powiedzie to zwracamy false bo musimy przejść do ResultingState(!)
+			by_causes_if(Action, Group, ResultingState, X),
+			((not(is_empty(X)),subset(X, FullCurrentState)) ; (is_empty(X),is_empty(FullCurrentState))),
+			apply_resulting_state(ResultingState, FullCurrentState, NewCurrentState),
+			possibly_after_from(State, Program, NewCurrentState), !
+		)
+			;
+		(	
+			% Nie mamy stanu, do którego musimy przejść, generujemy stany usuwając poszczególne fluenty i sprawdzamy
+			possibly_after_from_without_causes(State, [[Action, Group] | Program], FullCurrentState)
+		)
+	).
+	
+possibly_after_from_without_causes(State, [[Action, Group] | Program], CurrentState):-
+	%Ta reguła generuje nowe stany na podstawie reguł releases i weryfikuje dla nich działanie	
+	%by_releases_if(Action, Group, ReleasedFluent, CurrentState), % sprawdzamy, czy możemy w ogóle wykonać releases
+	(
+		%Sprawdzamy dalszy przebieg dla obecnego stanu		
+		by_releases_if(Action, Group, ReleasedFluent, X), %czy akcja w ogóle możliwa
+		((not(is_empty(X)),subset(X, CurrentState)) ; (is_empty(X),is_empty(CurrentState))),
+		possibly_after_from(State, Program, CurrentState)
+	)
+		;
+	(
+		%Generujemy nowy stan usuwając jeden z uwolnionych fluentów i sprawdzamy dalszy przebieg rekurencyjnie		
+		by_releases_if(Action, Group, ReleasedFluent, X),
+		((not(is_empty(X)),subset(X, CurrentState)) ; (is_empty(X),is_empty(CurrentState))),	
+		subtract(CurrentState, [ReleasedFluent], CurrentStateWithoutPositiveReleased),
+		subtract(CurrentStateWithoutPositiveReleased, [\ReleasedFluent], CurrentStateWithoutAnyReleased),
+		(
+			(
+				append([ReleasedFluent], CurrentStateWithoutAnyReleased, NewCurrentStateWithPositiveReleased),
+				possibly_after_from_without_causes(State, [[Action, Group] | Program], NewCurrentStateWithPositiveReleased)
+			)
+				;
+			(
+				append([\ReleasedFluent], CurrentStateWithoutAnyReleased, NewCurrentStateWithNegativeReleased),
+				possibly_after_from_without_causes(State, [[Action, Group] | Program], NewCurrentStateWithNegativeReleased)		
+			)
+		)
+	).
 
-possibly_after_from(State, Program, CurrentState).
-	% TODO - implement
-
-possibly_after_from_main(_,[], _).
+possibly_after_from_without_causes(State, [], CurrentState):-
+	possibly_after_from(State, [], CurrentState).
+	
+possibly_after_from(State,[], CurrentState):-
+	negate_list(State, NegatedRequiredState),
+	intersection(NegatedRequiredState, CurrentState, Common),
+	is_empty(Common), !.	
 
 possibly_after(State, Program):-
 	possibly_after_from(State, Program, []), !.
@@ -141,10 +192,15 @@ possibly_after(State, Program):-
 % Engagement queries
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-necessary_engaged_from(Group, [Action|List], State):-
-	not(impossible_by_if(Action, Group, State)),
-	findall(X, by_causes_if(Action, X, _, State), Engaged),
-	necessary_engaged_from(Group, List, State, Engaged), !.
+check_state(Action,[FirstEngaged | _ ], States):-
+	by_causes_if(Action, FirstEngaged, _, RequiredState),
+	(subset(RequiredState, States); write('here'), is_always(RequiredState), write('there')).
+
+necessary_engaged_from(Group, [Action|List], States):-
+	not(impossible_by_if(Action, Group, RequiredState)),
+	findall(X, by_causes_if(Action, X, _, RequiredState), Engaged),	
+	check_state(Action, Engaged,States),
+	necessary_engaged_from(Group, List, RequiredState, Engaged), !.
 
 necessary_engaged_from(Group, [Action|List], State, Engaged):-
 	not(impossible_by_if(Action, Group, State)),
@@ -162,7 +218,10 @@ necessary_engaged(Group, Actions):-
 
 possibly_engaged_from(Group, [Action|List], State):-
 	not(impossible_by_if(Action, Group, State)),
-	by_causes_if(Action, X, _, State),
+	(	by_causes_if(Action, X, _, State);
+		by_causes_if(Action, X, _, CheckedState),
+		always(CheckedState)
+	),
 	subset(X, Group),
 	possibly_engaged_from(Group, List, State), !.
 	
@@ -173,10 +232,34 @@ possibly_engaged(Group, [Action|List]):-
 	
 	
 % Utils
+is_always(State):-
+	findall(X, always(X), AlwaysList),
+	is_subset_of_any_always(State, AlwaysList).
+
+is_subset_of_any_always(State, [Always | AlwaysList]):-
+	subset(State, Always);
+	is_subset_of_any_always(State, AlwaysList).
+is_subset_of_any_always(_, [[] | []]):- fail.
+
+apply_alwayses(CurrentState, NewState):-
+	not(always(X));
+	(
+		not(subset([X],CurrentState)),
+		append([X], CurrentState, NewStateWithX),
+		apply_alwayses(NewStateWithX, NewState)
+	).
+
+apply_resulting_state(ResultingState, CurrentState, NewState):-
+	subtract(CurrentState, ResultingState, ListWithoutResultingState),
+	negate_list(ResultingState, NotResultingState),	
+	subtract(ListWithoutResultingState, NotResultingState, ListWithoutNotResultingState),	
+	append(ListWithoutNotResultingState, ResultingState, NewState).
+
 negate_list([Item|List], NegatedList):-
-	NegatedList = [\Item, NegatedList],
-	negate_list(List, NegatedList).
+	negate_list(List, NegatedSublist),
+	append([\Item], NegatedSublist, NegatedList).	
 negate_list([Item|[]], NegatedList):-
-	NegatedList = [\Item, NegatedList].
+	NegatedList = [\Item].	
+negate_list([],[]).
 
 is_empty([]).
