@@ -11,13 +11,6 @@ namespace MultiAgentLanguageModels.Expressions
             FinalCondition = finalCondition;
             Instructions = instructions;
         }
-        public override string ToProlog()
-        {
-            return FinalCondition.EvaluateLogicExpression()
-                .ToListOfStrings()
-                .Select(x => $"after({x},{Instructions.ToProlog()}).")
-                .Aggregate((a, b) => a + "\n" + b);
-        }
     }
 
     public class ObservableAfter : Expression
@@ -28,13 +21,6 @@ namespace MultiAgentLanguageModels.Expressions
         {
             FinalCondition = finalCondition;
             Instructions = instructions;
-        }
-        public override string ToProlog()
-        {
-            return FinalCondition.EvaluateLogicExpression()
-                .ToListOfStrings()
-                .Select(x => $"observable_after({x},{Instructions.ToProlog()}).")
-                .Aggregate((a, b) => a + "\n" + b);
         }
     }
 }

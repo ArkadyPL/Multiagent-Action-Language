@@ -20,10 +20,10 @@ namespace MultiAgentLanguageGUI
 
         public Query Q { get; set; }
 
-        public LanguageStructure Story
+        public ExpressionsList Story
         { get
             {
-                var s = new LanguageStructure();
+                var s = new ExpressionsList();
                 s.AddRange(Noninertial.Values);
                 s.AddRange(Expression);
                 return s;

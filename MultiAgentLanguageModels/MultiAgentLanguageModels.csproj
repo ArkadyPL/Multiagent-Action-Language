@@ -78,7 +78,9 @@
     <Compile Include="Queries\PossiblyEngagedFrom.cs" />
     <Compile Include="Queries\PossiblyExecutableFrom.cs" />
     <Compile Include="Queries\Query.cs" />
-    <Compile Include="Other\LanguageStructure.cs" />
+    <Compile Include="Expressions\ExpressionsList.cs" />
+    <Compile Include="Reasoning\ReasoningEngine.cs" />
+    <Compile Include="Reasoning\State.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="logic.pl">

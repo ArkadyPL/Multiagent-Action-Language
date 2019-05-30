@@ -8,10 +8,5 @@
         {
             Fluent = fluent;
         }
-
-        public override string ToProlog()
-        {
-            return $"noninertial({Fluent.Name})";
-        }
     }
 }

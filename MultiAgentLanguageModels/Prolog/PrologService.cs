@@ -1,4 +1,5 @@
-﻿using MultiAgentLanguageModels.Queries;
+﻿using MultiAgentLanguageModels.Expressions;
+using MultiAgentLanguageModels.Queries;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -12,7 +13,7 @@ namespace MultiAgentLanguageModels
         const string logicPath = @"logic.pl";
         const string storyPath = @"story.pl";
 
-        public bool GetSolution(LanguageStructure languageStructure, Query query)
+        public bool GetSolution(ExpressionsList languageStructure, Query query)
         {
             return query.Interpret(languageStructure.ToProlog().Select(x => GetSolutionOfStory(x, query)));
         }
