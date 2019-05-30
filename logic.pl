@@ -111,18 +111,35 @@ possibly_executable(Program):-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Value queries - TODO: finish possibly_after_from implementation
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-necessary_after_from(State, [[Action, Group] | Program], CurrentState):-
+necessary_after_from(State, Program, CurrentState):-
 	(
+			(after(State,Program),	
+			private_with_after_necessary_after_from(Program,CurrentState))
+		;
+			(private_necessary_after_from(State,Program,CurrentState))		
+	), !.
+	
+private_with_after_necessary_after_from(Program,CurrentState):-
+	necessary_executable_from(Program,CurrentState).
+	
+private_necessary_after_from(State, [[Action, Group] | Program], CurrentState):-
+	(
+		(is_always(State))
+		;
 		(
-			is_always(State)
-		)
-			;
-		(
-			private_necessary_executable_from([[Action, Group] | Program], CurrentState, StateAfterProgram),
-			(after(State, [[Action, Group] | Program]) ; subset(State, StateAfterProgram))
+			by_causes_if(Action,G,ResultingState, CurrentState),
+			subset(G,Group),
+			subset(ResultingState,State),
+			subtract(State,ResultingState,SetWithoutState),
+			private_necessary_after_from(SetWithoutState, Program, CurrentState)
 		)
 	), !.
+	
+private_necessary_after_from([], [],_):-
+	true, !.
+	
+private_necessary_after_from(State, [] ,_):-
+	initially(State).
 
 necessary_after(State, Program):-
 	necessary_after_from(State, Program, []), !.

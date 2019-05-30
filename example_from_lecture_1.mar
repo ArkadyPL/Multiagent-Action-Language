@@ -1,0 +1,11 @@
+Agent Bill
+Action shoot
+Action load
+Fluent loaded
+Fluent alive
+initially [~loaded]
+initially [alive]
+load causes [loaded]
+shoot causes [~loaded]
+shoot causes [~alive] if [loaded]
+
