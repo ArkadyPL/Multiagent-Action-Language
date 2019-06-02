@@ -17,6 +17,11 @@ namespace MultiAgentLanguageModels.Reasoning
             return other.Values.Keys.All(x => Values.ContainsKey(x) && Values[x] == other.Values[x]) &&
                 Values.Keys.All(x => other.Values.ContainsKey(x) && Values[x] == other.Values[x]);
         }
+
+        public new string ToString()
+        {
+            return $"[{Values.Keys.Select(t => Values[t] ? t : $"\\{t}").Aggregate((a, b) => a + ", " + b)}]";
+        }
     }
 
     public static class DicExt

@@ -36,6 +36,7 @@ namespace MultiAgentLanguageModels.Reasoning
 
         public Dictionary<Tuple<Action, State, AgentsList>, HashSet<State>> Res0(ExpressionsList expressions)
         {
+            //Pozbyć się podwójnych zmiennych  w słowniku
             Dictionary<Tuple<Action, State, AgentsList>, HashSet<State>> result = new Dictionary<Tuple<Action, State, AgentsList>, HashSet<State>>();
             foreach (var causes in expressions.Causes)
             {
@@ -60,12 +61,34 @@ namespace MultiAgentLanguageModels.Reasoning
                             result.Add(tuple, subsetOfFinalStates);
                         }
                     }
-                    
                 }
             }
             return result;
         }
 
-
+        public HashSet<string> New(ExpressionsList expressions, State from, State to, AgentsList agents, Action action)
+        {
+            return new HashSet<string>(from.Values.Where(x => !to.Values.Contains(x)).Select(x => x.Key)
+                .Except(expressions.Noninertial.Select(x => x.Fluent.Name))
+                .Except(expressions.Releases.Where(x => x.Action==action && x.Agents.HasSubset(agents)).Select(x => x.Fluent.Name)));
+        }
+        
+        public Dictionary<Tuple<Action, State, AgentsList>, HashSet<State>> Res(ExpressionsList expressions)
+        {
+            var results = new Dictionary<Tuple<Action, State, AgentsList>, HashSet<State>>();
+            var res0 = Res0(expressions);
+            var temp = res0.GroupBy(x => x.Key);
+            foreach(var key in res0.Keys)
+            {
+                var state = key.Item2;
+                var action = key.Item1;
+                var agents = key.Item3;
+                var min = res0[key].Select(x => New(expressions, state, x, agents, action).Count).Min();
+                var res = res0[key].Where(x => New(expressions, state, x, agents, action).Count == min);
+                results.Add(key, new HashSet<State>(res));
+            }
+            
+            return results;
+            }
     }
 }

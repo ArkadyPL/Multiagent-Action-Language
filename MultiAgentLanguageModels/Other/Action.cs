@@ -12,7 +12,7 @@ namespace MultiAgentLanguageModels
             Name = name;
         }
 
-        public string ToProlog()
+        public new string ToString()
         {
             return Name;
         }
