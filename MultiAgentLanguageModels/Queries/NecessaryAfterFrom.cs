@@ -17,17 +17,6 @@ namespace MultiAgentLanguageModels.Queries
             Condition = condition;
         }
 
-        public override List<string> ToProlog()
-        {
-            var possibleResults = Result.EvaluateLogicExpression().ToListOfStrings();
-            var possibleConditions = Condition.EvaluateLogicExpression().ToListOfStrings();
-            var results = possibleResults.Select(
-                alpha => possibleConditions.Select(pi =>
-                $"necessary_after_from({alpha}, {Instructions.ToProlog()}, {pi}).")
-                ).Aggregate((a,b) => a.Concat(b)).ToList();
-            return results;
-        }
-
         public override bool Interpret(IEnumerable<bool> allPossibilities)
         {
             return allPossibilities.All(x => x);
@@ -38,11 +27,6 @@ namespace MultiAgentLanguageModels.Queries
     {
         public NecessaryAfter(Instruction instructions, LogicExpression finaly) : base(instructions, finaly, null)
         {
-        }
-
-        public override List<string> ToProlog()
-        {
-            return Result.EvaluateLogicExpression().ToListOfStrings().Select(alpha => $"necessary_after({alpha}, {Instructions.ToProlog()}).").ToList();
         }
     }
 }

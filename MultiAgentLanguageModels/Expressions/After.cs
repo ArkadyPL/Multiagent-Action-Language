@@ -4,8 +4,8 @@ namespace MultiAgentLanguageModels.Expressions
 {
     public class After : Expression
     {
-        LogicExpression FinalCondition { get; }
-        Instruction Instructions { get; }
+        public LogicExpression FinalCondition { get; }
+        public Instruction Instructions { get; }
         public After(LogicExpression finalCondition, Instruction instructions)
         {
             FinalCondition = finalCondition;

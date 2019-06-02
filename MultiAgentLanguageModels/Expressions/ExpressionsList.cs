@@ -29,6 +29,11 @@ namespace MultiAgentLanguageModels.Expressions
                         var temp = ex as ObservableAfter;
                         actions.AddRange(temp.Instructions.Select(x => x.Item1));
                     }
+                    else if (ex as After != null)
+                    {
+                        var temp = ex as After;
+                        actions.AddRange(temp.Instructions.Select(x => x.Item1));
+                    }
                 }
                 return actions.Distinct().ToList();
             }
@@ -65,6 +70,11 @@ namespace MultiAgentLanguageModels.Expressions
                     else if (ex as ObservableAfter != null)
                     {
                         var temp = ex as ObservableAfter;
+                        fluents.AddRange(temp.FinalCondition.Fluents.Select(x => x.Key));
+                    }
+                    else if (ex as After != null)
+                    {
+                        var temp = ex as After;
                         fluents.AddRange(temp.FinalCondition.Fluents.Select(x => x.Key));
                     }
                     else
@@ -110,6 +120,49 @@ namespace MultiAgentLanguageModels.Expressions
             {
                 return this.Where(x => x as Always != null).Select(x => x as Always).ToList();
             }
+        }
+        public List<AgentsList> AgentsGroups()
+        {
+            AgentsList agents = new AgentsList();
+            foreach (Expression ex in this)
+            {
+                if (ex as ByCausesIf != null)
+                {
+                    var temp = ex as ByCausesIf;
+                    agents.AddRange(temp.G);
+                }
+                else if (ex as ByReleasesIf != null)
+                {
+                    var temp = ex as ByReleasesIf;
+                    agents.AddRange(temp.Agents);
+                }
+                else if (ex as ObservableAfter != null)
+                {
+                    var temp = ex as ObservableAfter;
+                    agents.AddRange(temp.Instructions.SelectMany(x => x.Item2));
+                }
+                else if (ex as After != null)
+                {
+                    var temp = ex as After;
+                    agents.AddRange(temp.Instructions.SelectMany(x => x.Item2));
+                }
+            }
+            var result = new List<AgentsList>();
+            for (int i = 0; i < Math.Pow(2, agents.Count); i++)
+            {
+                var binary = Convert.ToString(i, 2).PadLeft(agents.Count, '0').Select(x => x == '1' ? true : false).ToArray();
+                AgentsList temp = new AgentsList();
+                for (int j = 0; j < agents.Count; j++)
+                {
+                    if (binary[j])
+                    {
+                        temp.Add(agents[j]);
+                    }
+                }
+                result.Add(temp);
+            }
+            return result;
+
         }
     }
 }

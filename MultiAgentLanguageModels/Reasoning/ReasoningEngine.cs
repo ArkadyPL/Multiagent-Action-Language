@@ -34,6 +34,38 @@ namespace MultiAgentLanguageModels.Reasoning
             return result;
         }
 
+        public Dictionary<Tuple<Action, State, AgentsList>, HashSet<State>> Res0(ExpressionsList expressions)
+        {
+            Dictionary<Tuple<Action, State, AgentsList>, HashSet<State>> result = new Dictionary<Tuple<Action, State, AgentsList>, HashSet<State>>();
+            foreach (var causes in expressions.Causes)
+            {
+                foreach (var state in PossibleStates(expressions))
+                {
+                    foreach(var group in expressions.AgentsGroups())
+                    {
+                        if(causes.Pi.EvaluateLogicExpression().Any(x => state.Values.HasSubset(x)) &&
+                            group.HasSubset(causes.G) && causes.Alpha.EvaluateLogicExpression().Count !=0 )
+                        {
+                            Tuple<Action, State, AgentsList> tuple = new Tuple<Action, State, AgentsList>(
+                                causes.A, state, group);
+                            var subsetOfFinalStates = new HashSet<State>();
+                            var final = causes.Alpha.EvaluateLogicExpression();
+                            foreach (var s in PossibleStates(expressions))
+                            {
+                                if(final.Any(x => s.Values.HasSubset(x)))
+                                {
+                                    subsetOfFinalStates.Add(s);
+                                }
+                            }
+                            result.Add(tuple, subsetOfFinalStates);
+                        }
+                    }
+                    
+                }
+            }
+            return result;
+        }
+
 
     }
 }

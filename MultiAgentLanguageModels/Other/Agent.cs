@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace MultiAgentLanguageModels
 {
-    public class Agent
+    public class Agent : IEquatable<Agent>
     {
         public string Name { get; }
 
@@ -15,6 +16,11 @@ namespace MultiAgentLanguageModels
         public static implicit operator Agent(string str)
         {
             return new Agent(str);
+        }
+
+        public bool Equals(Agent other)
+        {
+            return Name == other.Name;
         }
     }
 
@@ -33,6 +39,11 @@ namespace MultiAgentLanguageModels
         public string ToProlog()
         {
             return $"[{this.OrderBy(x => x.Name).Select(x => x.Name).Aggregate((a,b) =>a+ ", " +b )}]";
+        }
+
+        public bool HasSubset(AgentsList subset)
+        {
+            return subset.All(x => this.Contains(x));
         }
     }
 }
