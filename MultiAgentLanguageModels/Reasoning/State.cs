@@ -22,6 +22,11 @@ namespace MultiAgentLanguageModels.Reasoning
         {
             return $"[{Values.Keys.Select(t => Values[t] ? t : $"\\{t}").Aggregate((a, b) => a + ", " + b)}]";
         }
+
+        public override int GetHashCode()
+        {
+            return ToString().GetHashCode();
+        }
     }
 
     public static class DicExt

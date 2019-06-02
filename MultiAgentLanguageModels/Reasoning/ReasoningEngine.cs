@@ -34,10 +34,10 @@ namespace MultiAgentLanguageModels.Reasoning
             return result;
         }
 
-        public Dictionary<Tuple<Action, State, AgentsList>, HashSet<State>> Res0(ExpressionsList expressions)
+        public Dictionary<Triple, HashSet<State>> Res0(ExpressionsList expressions)
         {
             //Pozbyć się podwójnych zmiennych  w słowniku
-            Dictionary<Tuple<Action, State, AgentsList>, HashSet<State>> result = new Dictionary<Tuple<Action, State, AgentsList>, HashSet<State>>();
+            Dictionary<Triple, HashSet<State>> result = new Dictionary<Triple, HashSet<State>>();
             foreach (var causes in expressions.Causes)
             {
                 foreach (var state in PossibleStates(expressions))
@@ -47,7 +47,7 @@ namespace MultiAgentLanguageModels.Reasoning
                         if(causes.Pi.EvaluateLogicExpression().Any(x => state.Values.HasSubset(x)) &&
                             group.HasSubset(causes.G) && causes.Alpha.EvaluateLogicExpression().Count !=0 )
                         {
-                            Tuple<Action, State, AgentsList> tuple = new Tuple<Action, State, AgentsList>(
+                            Triple tuple = new Triple(
                                 causes.A, state, group);
                             var subsetOfFinalStates = new HashSet<State>();
                             var final = causes.Alpha.EvaluateLogicExpression();
@@ -58,7 +58,17 @@ namespace MultiAgentLanguageModels.Reasoning
                                     subsetOfFinalStates.Add(s);
                                 }
                             }
-                            result.Add(tuple, subsetOfFinalStates);
+                            if (result.ContainsKey(tuple))
+                            {
+                                foreach(var s in subsetOfFinalStates)
+                                {
+                                    result[tuple].Add(s);
+                                }
+                            }
+                            else
+                            {
+                                result.Add(tuple, subsetOfFinalStates);
+                            }
                         }
                     }
                 }
@@ -73,9 +83,9 @@ namespace MultiAgentLanguageModels.Reasoning
                 .Except(expressions.Releases.Where(x => x.Action==action && x.Agents.HasSubset(agents)).Select(x => x.Fluent.Name)));
         }
         
-        public Dictionary<Tuple<Action, State, AgentsList>, HashSet<State>> Res(ExpressionsList expressions)
+        public Dictionary<Triple, HashSet<State>> Res(ExpressionsList expressions)
         {
-            var results = new Dictionary<Tuple<Action, State, AgentsList>, HashSet<State>>();
+            var results = new Dictionary<Triple, HashSet<State>>();
             var res0 = Res0(expressions);
             var temp = res0.GroupBy(x => x.Key);
             foreach(var key in res0.Keys)

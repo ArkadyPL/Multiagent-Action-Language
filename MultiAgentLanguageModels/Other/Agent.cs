@@ -27,6 +27,11 @@ namespace MultiAgentLanguageModels
         {
             return Name;
         }
+
+        public override int GetHashCode()
+        {
+            return Name.GetHashCode();
+        }
     }
 
     public class AgentsList : List<Agent>, IEquatable<AgentsList>
@@ -43,7 +48,7 @@ namespace MultiAgentLanguageModels
        
         public new string ToString()
         {
-            return $"[{this.OrderBy(x => x.Name).Select(x => x.Name).Aggregate((a,b) =>a+ ", " +b )}]";
+            return this.Count==0 ? "[]" : $"[{this.OrderBy(x => x.Name).Select(x => x.Name).Aggregate((a,b) =>a+ ", " +b )}]";
         }
 
         public bool HasSubset(AgentsList subset)
@@ -55,5 +60,11 @@ namespace MultiAgentLanguageModels
         {
             return this.Select(x => x.Name).All(t => other.Select(x => x.Name).Contains(t)) && other.Select(x => x.Name).All(t => this.Select(x => x.Name).Contains(t));
         }
+
+        public override int GetHashCode()
+        {
+            return ToString().GetHashCode();
+        }
+
     }
 }

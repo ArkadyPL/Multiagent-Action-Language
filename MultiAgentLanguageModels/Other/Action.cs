@@ -26,6 +26,11 @@ namespace MultiAgentLanguageModels
         {
             return new Action(str);
         }
+
+        public override int GetHashCode()
+        {
+            return Name.GetHashCode();
+        }
     }
 
     public static class ActionsList

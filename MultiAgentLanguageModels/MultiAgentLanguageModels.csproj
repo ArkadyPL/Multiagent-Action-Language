@@ -79,6 +79,7 @@
     <Compile Include="Expressions\ExpressionsList.cs" />
     <Compile Include="Reasoning\ReasoningEngine.cs" />
     <Compile Include="Reasoning\State.cs" />
+    <Compile Include="Reasoning\Triple.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="logic.pl">
