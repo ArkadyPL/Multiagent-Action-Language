@@ -59,4 +59,8 @@ write('Test case 9 - action_9_2 is not possible, always statement only for gamma
 (write('not(necessary_executable_from([[nex_9_a1,[nex_9_g1]],[nex_9_a2,[nex_9_g1]]], [nex_9_gamma])). => '),
 not(necessary_executable_from([[nex_9_a1,[nex_9_g1]],[nex_9_a2,[nex_9_g1]]], [nex_9_gamma])), passed; failed), nl,
 
+write('Test case 10 - action_9_2 is not possible, always statement only for gamma_8\n'),
+(write('not(necessary_executable_from([[nex_9_a1,[nex_9_g1]],[nex_9_a2,[nex_9_g1]]], [nex_9_gamma])). => '),
+necessary_executable_from([[washing,[]],[cooking,[]],[tyding,[]]], []), passed; failed), nl,
+
 write('Necessary Executable - TESTS FINISHED'),nl.

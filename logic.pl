@@ -111,30 +111,74 @@ possibly_executable(Program):-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Value queries - TODO: finish possibly_after_from implementation
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-necessary_after_from(State, Program, CurrentState):-
+necessary_after_from(State, Program, CurrentState):-	
+	(	
+		(after(State,ResultingProgram), 		
+		subset(ResultingProgram,Program),
+		are_necessary_connected(Program,CurrentState))	
+	;
+		(private_necessary_after_from(State,Program,CurrentState))	
+	).
+
+
+are_necessary_connected([[Action, Group] | Program], CurrentState):-
 	(
-			(after(State,Program),	
-			private_with_after_necessary_after_from(Program,CurrentState))
-		;
-			(private_necessary_after_from(State,Program,CurrentState))		
-	), !.
+		(				
+			by_causes_if(Action,G,ResultingState, S),		
+			subset(S,CurrentState),				
+			subset(G,Group)
+		)
+	;
+		(	
+			by_causes(Action,G,ResultingState),	
+			subset(G,Group)
+		)
+	),		
+	are_necessary_connected(Program, ResultingState).
+
+are_necessary_connected([],_):-
+	true.
 	
-private_with_after_necessary_after_from(Program,CurrentState):-
-	necessary_executable_from(Program,CurrentState).
-	
-private_necessary_after_from(State, [[Action, Group] | Program], CurrentState):-
+private_necessary_after_from( State, [[Action, Group] | Program], CurrentState):-
 	(
-		(is_always(State))
+		(is_always(State))		
 		;
 		(
-			by_causes_if(Action,G,ResultingState, CurrentState),
-			subset(G,Group),
-			subset(ResultingState,State),
-			subtract(State,ResultingState,SetWithoutState),
-			private_necessary_after_from(SetWithoutState, Program, CurrentState)
+			(
+				by_causes_if(Action,G,ResultingState, S),
+				(subset(S,CurrentState);initially(S);always(S)),			
+				subset(G,Group),								
+				(	
+					(
+					subset(ResultingState,State),	
+					subtract(State,ResultingState,SetWithoutState),					
+					private_necessary_after_from(SetWithoutState, Program, ResultingState)
+					)
+				;
+					(
+					private_necessary_after_from(State, Program, ResultingState)
+					)
+				)
+			)
+				
+			;
+			
+			(
+				by_causes(Action,G,ResultingState),						
+				subset(G,Group),	
+				(	
+					(subset(ResultingState,State),					
+					subtract(State,ResultingState,SetWithoutState),					
+					private_necessary_after_from(SetWithoutState, Program, ResultingState))
+				;
+					(private_necessary_after_from(State, Program, ResultingState))
+				)
+			)
+			
 		)
 	), !.
 	
+
 private_necessary_after_from([], [],_):-
 	true, !.
 	

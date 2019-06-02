@@ -49,4 +49,10 @@ by_causes_if(nex_9_a1, [nex_9_g1], [nex_9_beta], [nex_9_alpha]).
 by_causes_if(nex_9_a2, [nex_9_g1], [nex_9_other], [nex_9_beta]).
 always([nex_9_gamma]).
 
+% Test case 10 -
+
+by_causes(washing,[], [washed]).
+by_causes(cooking, [], [cooked]).
+by_causes(tyding, [], [tied]).
+after([clean],[[cooking,[]],[tyding,[]]]).
 

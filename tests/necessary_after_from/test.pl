@@ -18,6 +18,7 @@ necessary_after_from([na_3a_expected], [[na_3a_action1,[na_3a_g1, na_3a_g2]], [n
 write('Test case 4 a. - should be true because program is executable from initial state, and it is true that "na_4a_expected" after this program\n'),
 (write('necessary_after_from([na_4a_expected], [[na_4a_action1,[na_4a_g1, na_4a_g2]], [na_4a_action2, [na_4a_g1, na_4a_g2]]], []).'),
 necessary_after_from([na_4a_expected], [[na_4a_action1,[na_4a_g1, na_4a_g2]], [na_4a_action2, [na_4a_g1, na_4a_g2]]], []), passed; failed), nl,
+%necessary_after_from([expected], [[action1,[g1, g2]], [action2, [g1, g2]]], []), passed; failed), nl,
 
 write('Test case 5 a. - should be false because 2nd action is not executable from requested state\n'),
 (write('not(necessary_after_from([na_5a_expected], [[na_5a_action1,[na_5a_g1, na_5a_g2]], [na_5a_action2, [na_5a_g1, na_5a_g2]]], [na_5a_pi])).'),
@@ -42,5 +43,10 @@ necessary_after_from([na_9a_expected], [[na_9a_action1,[na_9a_g1, na_9a_g2]], [n
 write('Test case 10 a. - should be false because expected term is never true\n'),
 (write('not(necessary_after_from([na_10a_expected], [[na_10a_action1,[na_10a_g1, na_10a_g2]], [na_10a_action2, [na_10a_g1, na_10a_g2]]], [na_10a_pi])).'),
 not(necessary_after_from([na_10a_expected], [[na_10a_action1,[na_10a_g1, na_10a_g2]], [na_10a_action2, [na_10a_g1, na_10a_g2]]], [na_10a_pi])), passed; failed), nl,
+
+write('Test case 11 a. - should be false because expected term is never true\n'),
+(write('not(necessary_after_from([na_10a_expected], [[na_10a_action1,[na_10a_g1, na_10a_g2]], [na_10a_action2, [na_10a_g1, na_10a_g2]]], [na_10a_pi])).'),
+necessary_after_from([clean], [[washing,[]],[cooking,[]],[tyding,[]]], []), passed; failed), nl,
+
 
 write('Necessary After From - TESTS FINISHED'),nl.
