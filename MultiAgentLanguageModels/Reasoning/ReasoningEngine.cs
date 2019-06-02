@@ -93,6 +93,7 @@ namespace MultiAgentLanguageModels.Reasoning
                 var state = key.Item2;
                 var action = key.Item1;
                 var agents = key.Item3;
+                //should be minimal with respect to set inclusions.
                 var min = res0[key].Select(x => New(expressions, state, x, agents, action).Count).Min();
                 var res = res0[key].Where(x => New(expressions, state, x, agents, action).Count == min);
                 results.Add(key, new HashSet<State>(res));
