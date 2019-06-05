@@ -6,12 +6,7 @@
 
         public Initially(LogicExpression condition)
         {
-            Condition = condition;  
-        }
-        
-        public override string ToProlog()
-        {
-            return "";
+            Condition = condition;
         }
     }
 }

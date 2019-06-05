@@ -10,13 +10,5 @@ namespace MultiAgentLanguageModels.Expressions
         {
             Condition = condition;
         }
-
-        public override string ToProlog()
-        {
-            return Condition.EvaluateLogicExpression()
-                .ToListOfStrings()
-                .Select(x => $"always({x}).")
-                .Aggregate((a, b) => a + "\n" + b);
-        }
     }
 }

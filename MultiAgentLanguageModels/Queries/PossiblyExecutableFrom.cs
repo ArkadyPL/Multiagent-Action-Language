@@ -12,12 +12,6 @@ namespace MultiAgentLanguageModels.Queries
             Instructions = instructions;
             Condition = condition;
         }
-        public override List<string> ToProlog()
-        {
-            var possibleConditions = Condition.EvaluateLogicExpression().ToListOfStrings();
-            var result = possibleConditions.Select(pi => $"possibly_executable_from({Instructions.ToProlog()}, {pi}).").ToList();
-            return result;
-        }
         public override bool Interpret(IEnumerable<bool> allPossibilities)
         {
             return allPossibilities.Any(x => x);
@@ -29,11 +23,6 @@ namespace MultiAgentLanguageModels.Queries
         public PossiblyExecutable(Instruction instructions)
             : base(instructions, LogicExpression.Empty)
         {
-        }
-
-        public override List<string> ToProlog()
-        {
-            return new List<string>() { $"possibly_executable({Instructions.ToProlog()})." };
         }
     }
 }

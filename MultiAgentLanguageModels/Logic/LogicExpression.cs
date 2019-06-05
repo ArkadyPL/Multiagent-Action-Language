@@ -50,7 +50,7 @@ namespace MultiAgentLanguageModels
         private readonly bool empty = false;
 
         private static LogicExpression _empty;
-        
+
         public string StringExpression { get => Element.ToString(); }
 
         public static LogicExpression Empty {
@@ -65,20 +65,20 @@ namespace MultiAgentLanguageModels
         {
             empty = true;
         }
-        
+
         public LogicExpression(LogicElement element)
         {
             Element = element;
         }
-        
-        public List<List<Tuple<string, bool>>> EvaluateLogicExpression()
+
+        public List<Dictionary<string, bool>> EvaluateLogicExpression()
         {
             if (empty)
             {
                 return null;
             }
 
-            List<List<Tuple<string, bool>>> results = new List<List<Tuple<string, bool>>>();
+            List<Dictionary<string, bool>> results = new List<Dictionary<string, bool>>();
             var fluents = Fluents;
             for(int i=0; i < Math.Pow(2, fluents.Count); i++)
             {
@@ -89,9 +89,9 @@ namespace MultiAgentLanguageModels
                 }
                 if (Element.GetValue())
                 {
-                    results.Add(
-                            fluents.Select(x => new Tuple<string, bool>(x.Key, x.First().Value)).ToList()
-                        );
+                    Dictionary<string, bool> res = new Dictionary<string, bool>();
+                    fluents.ForEach(x => res.Add(x.Key, x.First().Value));
+                    results.Add(res);
                 }
             }
             return results;

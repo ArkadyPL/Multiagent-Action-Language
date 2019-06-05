@@ -21,69 +21,29 @@ namespace MultiAgentLanguageModels.Expressions
             Pi = condition;
             Alpha = result;
         }
-
-        public override string ToProlog()
-        {
-            var possibleAlpha = Alpha.EvaluateLogicExpression().ToListOfStrings();
-            var possiblePi = Pi.EvaluateLogicExpression().ToListOfStrings();
-            var results = possibleAlpha.Select(
-                alpha => possiblePi.Select(pi =>
-                $"by_causes_if({A.ToProlog()}, {G.ToProlog()}, {alpha}, {pi}).")
-                .Aggregate((a,b) => a+"\n"+b)).Aggregate((a,b) => a+"\n"+b);
-            return results;
-        }
     }
 
     public class ByCauses : ByCausesIf
     {
         public ByCauses(Action action, AgentsList agents, LogicExpression result)
             :base(action, agents, result, new True())
-        {  
-        }
-
-        public override string ToProlog()
         {
-            var possibleAlpha = Alpha.EvaluateLogicExpression().ToListOfStrings();
-            var results = possibleAlpha.Select(
-                alpha => $"by_causes({A.ToProlog()}, {G.ToProlog()}, {alpha}).")
-                .Aggregate((a, b) => a + "\n" + b);
-            return results;
         }
     }
 
     public class CausesIf : ByCausesIf
     {
-        public CausesIf(Action action, LogicExpression result, LogicExpression condition) 
-            : base(action, null, result, condition)
+        public CausesIf(Action action, LogicExpression result, LogicExpression condition)
+            : base(action, new AgentsList(), result, condition)
         {
-        }
-
-        public override string ToProlog() //Sprwadzic czy dobrze
-        {
-            var possibleAlpha = Alpha.EvaluateLogicExpression().ToListOfStrings();
-            var possiblePi = Pi.EvaluateLogicExpression().ToListOfStrings();
-            var results = possibleAlpha.Select(
-                alpha => possiblePi.Select(pi =>
-                $"causes_if({A.ToProlog()}, {alpha}, {pi}).")
-                .Aggregate((a, b) => a + "\n" + b)).Aggregate((a, b) => a + "\n" + b);
-            return results;
         }
     }
 
     public class Causes : ByCausesIf
     {
         public Causes(Action action, LogicExpression result)
-            : base(action, null, result, null)
+            : base(action, new AgentsList(), result, new True())
         {
-        }
-
-        public override string ToProlog() //Sprwadzic czy dobrze
-        {
-            var possibleAlpha = Alpha.EvaluateLogicExpression().ToListOfStrings();
-            var results = possibleAlpha.Select(
-               alpha => $"causes({A.ToProlog()}, {alpha}).")
-               .Aggregate((a, b) => a + "\n" + b);
-            return results;
         }
     }
 
@@ -92,15 +52,6 @@ namespace MultiAgentLanguageModels.Expressions
         public ImpossibleByIf(Action action, AgentsList agents, LogicExpression condition) : base(action, agents, new False(), condition)
         {
         }
-
-        public override string ToProlog()
-        {
-            var possiblePi = Pi.EvaluateLogicExpression().ToListOfStrings();
-            var results = possiblePi.Select(pi =>
-                $"impossible_by_if({A.ToProlog()}, {G.ToProlog()}, {pi}).")
-                .Aggregate((a, b) => a + "\n" + b);
-            return results;
-        }
     }
 
     public class ImpossibleBy : ByCausesIf
@@ -108,22 +59,12 @@ namespace MultiAgentLanguageModels.Expressions
         public ImpossibleBy(Action action, AgentsList agents) : base(action, agents, new False(), new True())
         {
         }
-
-        public override string ToProlog()
-        {
-            return $"impossible_by({A.ToProlog()}, {G.ToProlog()}).";
-        }
     }
 
     public class ImpossibleIf : ByCausesIf
     {
-        public ImpossibleIf(Action action, LogicExpression condition) : base(action, null, new False(), condition)
+        public ImpossibleIf(Action action, LogicExpression condition) : base(action, new AgentsList(), new False(), condition)
         {
-        }
-
-        public override string ToProlog()
-        {
-            return Pi.EvaluateLogicExpression().ToListOfStrings().Select(pi => $"impossible_if({A.ToProlog()}, {pi}).").Aggregate((a, b) => a + "\n" + b);
         }
     }
 }

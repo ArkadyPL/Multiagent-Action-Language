@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace MultiAgentLanguageModels
 {
-    public class Action
+    public class Action : IEquatable<Action>
     {
         public string Name { get; }
         public Action(string name)
@@ -11,14 +12,24 @@ namespace MultiAgentLanguageModels
             Name = name;
         }
 
-        public string ToProlog()
+        public new string ToString()
         {
             return Name;
+        }
+
+        public bool Equals(Action other)
+        {
+            return Name == other.Name;
         }
 
         public static implicit operator Action(string str)
         {
             return new Action(str);
+        }
+
+        public override int GetHashCode()
+        {
+            return Name.GetHashCode();
         }
     }
 

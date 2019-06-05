@@ -16,17 +16,6 @@ namespace MultiAgentLanguageModels.Queries
             Condition = condition;
         }
 
-        public override List<string> ToProlog()
-        {
-            var possibleResults = Result.EvaluateLogicExpression().ToListOfStrings();
-            var possibleConditions = Condition.EvaluateLogicExpression().ToListOfStrings();
-            var results = possibleResults.Select(
-                alpha => possibleConditions.Select(pi =>
-                $"possibly_after_from({alpha}, {Instructions.ToProlog()}, {pi}).")
-                ).Aggregate((a, b) => a.Concat(b)).ToList();
-            return results;
-        }
-
         public override bool Interpret(IEnumerable<bool> allPossibilities)
         {
             return allPossibilities.Any(x => x);
@@ -37,14 +26,6 @@ namespace MultiAgentLanguageModels.Queries
         public PossiblyAfter(Instruction instructions, LogicExpression finaly)
             : base(instructions, finaly, new True())
         {
-        }
-
-        public override List<string> ToProlog()
-        {
-            var possibleResults = Result.EvaluateLogicExpression().ToListOfStrings();
-            var results = possibleResults.Select(
-                alpha => $"possibly_after({alpha}, {Instructions.ToProlog()}).").ToList();
-            return results;
         }
     }
 }

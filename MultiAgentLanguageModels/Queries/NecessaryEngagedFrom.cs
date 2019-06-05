@@ -16,12 +16,6 @@ namespace MultiAgentLanguageModels.Queries
             Condition = condition;
         }
 
-        public override List<string> ToProlog()
-        {
-            var possibleConditions = Condition.EvaluateLogicExpression().ToListOfStrings();
-            var result = possibleConditions.Select(pi => $"necessary_engaged_from({Agents.ToProlog()}, {Actions.ToProlog()}, {pi}).").ToList();
-            return result;
-        }
         public override bool Interpret(IEnumerable<bool> allPossibilities)
         {
             return allPossibilities.All(x => x);
@@ -33,11 +27,6 @@ namespace MultiAgentLanguageModels.Queries
         public NecessaryEngaged(AgentsList agents, List<Action> actions)
             : base(agents, actions, LogicExpression.Empty)
         {
-        }
-
-        public override List<string> ToProlog()
-        {
-            return new List<string>() { $"necessary_engaged({Agents.ToProlog()}, {Actions.ToProlog()})." };
         }
     }
 }

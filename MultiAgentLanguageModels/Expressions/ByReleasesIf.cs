@@ -15,14 +15,6 @@ namespace MultiAgentLanguageModels.Expressions
             Fluent = fluent;
             Condition = condition;
         }
-
-        public override string ToProlog()
-        {
-            return Condition.EvaluateLogicExpression()
-                .ToListOfStrings()
-                .Select(pi => $"by_releases_if({Action.ToProlog()}, {Agents.ToProlog()}, {Fluent.ToProlog()}, {pi}).")
-                .Aggregate((a,b) => a+"\n"+b);
-        }
     }
 
     public class ByReleases : ByReleasesIf
@@ -32,38 +24,23 @@ namespace MultiAgentLanguageModels.Expressions
         {
 
         }
-        public override string ToProlog()
-        {
-            return $"by_releases({Action.ToProlog()}, {Agents.ToProlog()}, {Fluent.ToProlog()}).";
-        }
     }
 
     public class ReleasesIf : ByReleasesIf
     {
-        public ReleasesIf(Action action, Fluent fluent, LogicExpression condition) 
-            : base(action, null, fluent, condition) 
+        public ReleasesIf(Action action, Fluent fluent, LogicExpression condition)
+            : base(action, new AgentsList(), fluent, condition)
         {
 
-        }
-        public override string ToProlog()
-        {
-            return Condition.EvaluateLogicExpression()
-                .ToListOfStrings()
-                .Select(pi => $"releases_if({Action.ToProlog()}, {Fluent.ToProlog()}, {pi}).")
-                .Aggregate((a, b) => a + "\n" + b);
         }
     }
 
     public class Releases : ByReleasesIf
     {
         public Releases(Action action, Fluent fluent)
-            : base(action, null, fluent, null)
+            : base(action, new AgentsList(), fluent, new True())
         {
 
-        }
-        public override string ToProlog()
-        {
-            return $"releases({Action.ToProlog()}, {Fluent.ToProlog()}).";
         }
     }
 }

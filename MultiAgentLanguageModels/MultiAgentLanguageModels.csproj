@@ -68,8 +68,6 @@
     <Compile Include="Prolog\IPrologService.cs" />
     <Compile Include="Logic\LogicElement.cs" />
     <Compile Include="Logic\LogicExpression.cs" />
-    <Compile Include="Prolog\PrologEngine.cs" />
-    <Compile Include="Prolog\PrologService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Queries\NecessaryAfterFrom.cs" />
     <Compile Include="Queries\NecessaryEngagedFrom.cs" />
@@ -78,7 +76,10 @@
     <Compile Include="Queries\PossiblyEngagedFrom.cs" />
     <Compile Include="Queries\PossiblyExecutableFrom.cs" />
     <Compile Include="Queries\Query.cs" />
-    <Compile Include="Other\LanguageStructure.cs" />
+    <Compile Include="Expressions\ExpressionsList.cs" />
+    <Compile Include="Reasoning\ReasoningEngine.cs" />
+    <Compile Include="Reasoning\State.cs" />
+    <Compile Include="Reasoning\Triple.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="logic.pl">
