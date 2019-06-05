@@ -9,7 +9,7 @@ namespace MultiAgentLanguageModelsTests
     public class PossibleStatesTests
     {
         [Test]
-        public void Test1()
+        public void TestPossibleStates()
         {
             var loaded = new Fluent("loaded");
             var walking = new Fluent("walking");
@@ -29,7 +29,7 @@ namespace MultiAgentLanguageModelsTests
         }
 
         [Test]
-        public void Test3()
+        public void TestRes0()
         {
             var loaded = new Fluent("loaded");
             var walking = new Fluent("walking");
@@ -49,7 +49,7 @@ namespace MultiAgentLanguageModelsTests
         }
 
         [Test]
-        public void Test2()
+        public void TestRes()
         {
             var loaded = new Fluent("loaded");
             var walking = new Fluent("walking");

@@ -15,7 +15,9 @@ namespace MultiAgentLanguageModels.Reasoning
         public HashSet<State> PossibleStates(ExpressionsList expressions)
         {
             HashSet<State> result = new HashSet<State>();
+            //get all fluents
             var fluents = expressions.Fluents;
+            //with brute force method create every possible combination of 0 and 1 fluents
             for (int i = 0; i < Math.Pow(2, fluents.Count); i++)
             {
                 var binary = Convert.ToString(i, 2).PadLeft(fluents.Count, '0').Select(x => x == '1' ? true : false).ToArray();
@@ -26,9 +28,14 @@ namespace MultiAgentLanguageModels.Reasoning
                 }
                 result.Add(new State(stateValues));
             }
+            //now if there is at least one always statement cut impossible states
             if(expressions.Always.Count != 0)
             {
-                var always = expressions.Always.Select(x => x.Condition).Aggregate((a, b) => new And(a, b)).EvaluateLogicExpression();
+                            //get all always statements, then get conditions
+                var always = expressions.Always.Select(x => x.Condition)
+                    //aggregate them to one uber-always condition and finally evaluate logic expression
+                    .Aggregate((a, b) => new And(a, b)).EvaluateLogicExpression();
+                //if state is compliant to the always logic expression then add it to the set
                 result = new HashSet<State>(result.Where(s => always.Any(a => a.Intersect(s.Values).Count() == a.Count())));
             }
             return result;
@@ -36,40 +43,54 @@ namespace MultiAgentLanguageModels.Reasoning
 
         public Dictionary<Triple, HashSet<State>> Res0(ExpressionsList expressions)
         {
-            //Pozbyć się podwójnych zmiennych  w słowniku
             Dictionary<Triple, HashSet<State>> result = new Dictionary<Triple, HashSet<State>>();
-            foreach (var causes in expressions.Causes)
+            //For each group of Cause statements e.g.
+            //A causes alpha if pi
+            //A causes beta
+            //we want to group them together, so that we can examine them wrt to state and agents group
+            foreach (var causesGroup in expressions.Causes.GroupBy(x => x.A))
             {
+                //for each state in possible states
                 foreach (var state in PossibleStates(expressions))
                 {
+                    //for each group in possible agents group
                     foreach(var group in expressions.AgentsGroups())
                     {
-                        if(causes.Pi.EvaluateLogicExpression().Any(x => state.Values.HasSubset(x)) &&
-                            group.HasSubset(causes.G) && causes.Alpha.EvaluateLogicExpression().Count !=0 )
+                        //we want to create list of cause statements that works with specific state and agent group
+                        List<ByCausesIf> workingCauses = new List<ByCausesIf>();
+                        //now we iterate through the cause statements to find those
+                        foreach(var cause in causesGroup)
                         {
-                            Triple tuple = new Triple(
-                                causes.A, state, group);
-                            var subsetOfFinalStates = new HashSet<State>();
-                            var final = causes.Alpha.EvaluateLogicExpression();
-                            foreach (var s in PossibleStates(expressions))
+                                //if pi condition is ok with current state
+                            if(cause.Pi.EvaluateLogicExpression().Any(x => state.Values.HasSubset(x)) &&
+                                //if group is superset
+                                group.HasSubset(cause.G) &&
+                                //if alpha condition is not false
+                                cause.Alpha.EvaluateLogicExpression().Count != 0)
                             {
-                                if(final.Any(x => s.Values.HasSubset(x)))
-                                {
-                                    subsetOfFinalStates.Add(s);
-                                }
-                            }
-                            if (result.ContainsKey(tuple))
-                            {
-                                foreach(var s in subsetOfFinalStates)
-                                {
-                                    result[tuple].Add(s);
-                                }
-                            }
-                            else
-                            {
-                                result.Add(tuple, subsetOfFinalStates);
+                                //then we add new cause expression
+                                workingCauses.Add(cause);
                             }
                         }
+                        //now we need to create uber-alpha condition
+                        var uberAlpha = workingCauses.Select(x => x.Alpha).Aggregate((a, b) => new And(a, b));
+                        //final states should be compliant with our uberAlpha
+                        var final = uberAlpha.EvaluateLogicExpression();
+                        //create our A x sigma x G triple
+                        Triple tuple = new Triple(
+                                causesGroup.Key, state, group);
+                        //look through all possible states to find the ones that can end this action, and create set
+                        var setOfFinalStates = new HashSet<State>();
+                        foreach (var s in PossibleStates(expressions))
+                        {
+                            //if state s is compliant then add it to the set
+                            if (final.Any(x => s.Values.HasSubset(x)))
+                            {
+                                setOfFinalStates.Add(s);
+                            }
+                        }
+                        //add triple and set to dictionary
+                        result.Add(tuple, setOfFinalStates);
                     }
                 }
             }
@@ -78,9 +99,14 @@ namespace MultiAgentLanguageModels.Reasoning
 
         public HashSet<string> New(ExpressionsList expressions, State from, State to, AgentsList agents, Action action)
         {
-            return new HashSet<string>(from.Values.Where(x => !to.Values.Contains(x)).Select(x => x.Key)
+            return new HashSet<string>(
+                //find all fluents that differs
+                to.Values.Where(x => !from.Values.Contains(x)).Select(x => x.Key)
+                //except noninertial ones
                 .Except(expressions.Noninertial.Select(x => x.Fluent.Name))
-                .Except(expressions.Releases.Where(x => x.Action==action && x.Agents.HasSubset(agents)).Select(x => x.Fluent.Name)));
+                //add fluents from release statements
+                .Concat(expressions.Releases.Where(x => x.Action == action && x.Agents.HasSubset(agents)).Select(x=>x.Fluent.Name)));
+            //maybe except should be at the end of the query?
         }
         
         public Dictionary<Triple, HashSet<State>> Res(ExpressionsList expressions)
@@ -93,6 +119,7 @@ namespace MultiAgentLanguageModels.Reasoning
                 var state = key.Item2;
                 var action = key.Item1;
                 var agents = key.Item3;
+                var t = res0[key].Select(x => New(expressions, state, x, agents, action)).ToList();
                 //should be minimal with respect to set inclusions.
                 var min = res0[key].Select(x => New(expressions, state, x, agents, action).Count).Min();
                 var res = res0[key].Where(x => New(expressions, state, x, agents, action).Count == min);
