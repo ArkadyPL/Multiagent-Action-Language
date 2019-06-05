@@ -67,5 +67,23 @@ namespace MultiAgentLanguageModelsTests
 
             Assert.AreEqual(resp, resp);
         }
+
+
+        [Test]
+        public void TestRes_Releases()
+        {
+            var hasA = new Fluent("hasA");
+            var hasB = new Fluent("hasB");
+            var reasoning = new ReasoningEngine();
+            var ExpressionsList = new ExpressionsList()
+            {
+                new Causes("buypaper", new Or(hasA, hasB)),
+                new ReleasesIf("buypaper", hasA, new Not(hasA)),
+                new ReleasesIf("buypaper", hasB, new Not(hasB))
+            };
+            var resp = reasoning.Res(ExpressionsList);
+
+            Assert.AreEqual(resp, resp);
+        }
     }
 }

@@ -99,13 +99,17 @@ namespace MultiAgentLanguageModels.Reasoning
 
         public HashSet<string> New(ExpressionsList expressions, State from, State to, AgentsList agents, Action action)
         {
-            return new HashSet<string>(
-                //find all fluents that differs
-                to.Values.Where(x => !from.Values.Contains(x)).Select(x => x.Key)
-                //except noninertial ones
-                .Except(expressions.Noninertial.Select(x => x.Fluent.Name))
-                //add fluents from release statements
-                .Concat(expressions.Releases.Where(x => x.Action == action && x.Agents.HasSubset(agents)).Select(x=>x.Fluent.Name)));
+            //find all fluents that differs
+            var diff = to.Values.Where(x => !from.Values.Contains(x)).Select(x => x.Key);
+            //except noninertial ones
+            diff = diff.Except(expressions.Noninertial.Select(x => x.Fluent.Name));
+            //add fluents from release statements
+            diff = diff.Concat(expressions.Releases.Where(
+                x => x.Action.Name == action.Name && 
+                x.Agents.HasSubset(agents) &&
+                x.Condition.EvaluateLogicExpression().Any(e => from.Values.HasSubset(e))).Select(x => x.Fluent.Name));
+
+            return new HashSet<string>(diff);
             //maybe except should be at the end of the query?
         }
         
@@ -122,6 +126,7 @@ namespace MultiAgentLanguageModels.Reasoning
                 var t = res0[key].Select(x => New(expressions, state, x, agents, action)).ToList();
                 //should be minimal with respect to set inclusions.
                 var min = res0[key].Select(x => New(expressions, state, x, agents, action).Count).Min();
+                var temp2 = res0[key].Select(x => New(expressions, state, x, agents, action));
                 var res = res0[key].Where(x => New(expressions, state, x, agents, action).Count == min);
                 results.Add(key, new HashSet<State>(res));
             }
