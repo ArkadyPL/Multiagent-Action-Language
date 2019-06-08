@@ -732,9 +732,52 @@ shoot causes [~alive] if [loaded]
 
             var res = q.Solve(expressions);
 
-            Assert.AreEqual(false, res);
-        }
-    }
+						Assert.AreEqual(false, res);
+				}
+
+
+				[Test]
+				public void YSPDrunkenAgents_CanChickenSurvive()
+				{
+						string story = @"
+Fluent drunk
+Fluent alive
+
+
+initially [alive]
+initially [~drunk]
+
+Agent bill
+
+Action shoot
+shoot by[bill] causes[~alive] if [~drunk]
+
+Action drink
+drink by [bill] causes [drunk] if [~drunk]
+
+
+
+";
+						
+						var tokens = Tokenizer.Tokenize(story);
+						var parserState = Parser.Parse(tokens);
+						var expressions = new ExpressionsList();
+						expressions.AddRange(parserState.Expression);
+						expressions.AddRange(parserState.Noninertial.Values);
+
+						string query = @"
+								possibly [alive] after (drink, [bill]),(shoot, [bill])
+								";
+
+						Query q = Parser.ParseQuery(
+										Tokenizer.Tokenize(query),
+										parserState);
+
+						var res = q.Solve(expressions);
+
+						Assert.AreEqual(true, res);
+				}
+		}
 
 }
 
