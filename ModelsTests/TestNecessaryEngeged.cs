@@ -5,7 +5,7 @@ using NUnit.Framework;
 
 namespace MultiAgentLanguageModelsTests
 {
-    public class TestPossiblyEngeged
+    public class TestNecessaryEngeged
     {
 
         [Test]
@@ -32,14 +32,15 @@ A2 by [g3, g4] causes [R2]
             expressions.AddRange(parserState.Noninertial.Values);
 
             string query = @"
-possibly [g2] engaged in (A1, [g1, g2, g3, g4]),(A2, [g2, g3, g4])
+necessary [g2] engaged in (A1, [g1, g2, g3, g4]),(A2, [g2, g3, g4])
 ";
 
             Query q = Parser.ParseQuery(Tokenizer.Tokenize(query), parserState);
 
             var res = q.Solve(expressions);
 
-            Assert.AreEqual(false, res);
+            // TODO: Check hypothesis: should be true because it is always necessary when not possible
+            Assert.AreEqual(true, res);
         }
 
         [Test]
@@ -66,7 +67,7 @@ A2 by [g2, g3, g4] causes [R2]
             expressions.AddRange(parserState.Noninertial.Values);
 
             string query = @"
-possibly [g2] engaged in (A1, [g1, g2, g3]),(A2, [g2, g3, g4])
+necessary [g2] engaged in (A1, [g1, g2, g3]),(A2, [g2, g3, g4])
 ";
 
             Query q = Parser.ParseQuery(Tokenizer.Tokenize(query), parserState);
@@ -101,26 +102,26 @@ A2 by [g1, g4] causes [R2]
             expressions.AddRange(parserState.Noninertial.Values);
 
             string query = @"
-possibly [g2] engaged in (A1, [g1, g2, g3]),(A2, [g2, g3, g4])
+necessary [g2] engaged in (A1, [g1, g2, g3]),(A2, [g2, g3, g4])
 ";
 
             Query q = Parser.ParseQuery(Tokenizer.Tokenize(query), parserState);
 
             var res = q.Solve(expressions);
 
-            Assert.AreEqual(true, res);
+            Assert.AreEqual(false, res);
         }
 
         [Test]
         public void Test1()
         {
             string story = @"
-Fluent hasA
-Fluent hasB
-Agent g
-Action buypaper
-buypaper by [g] causes [hasA || hasB]
-";
+        Fluent hasA
+        Fluent hasB
+        Agent g
+        Action buypaper
+        buypaper by [g] causes [hasA || hasB]
+        ";
             var tokens = Tokenizer.Tokenize(story);
             var parserState = Parser.Parse(tokens);
             var expressions = new ExpressionsList();
@@ -128,8 +129,8 @@ buypaper by [g] causes [hasA || hasB]
             expressions.AddRange(parserState.Noninertial.Values);
 
             string query = @"
-possibly [g] engaged in (buypaper, [g])
-";
+        necessary [g] engaged in (buypaper, [g])
+        ";
 
             Query q = Parser.ParseQuery(
                 Tokenizer.Tokenize(query),
@@ -144,24 +145,24 @@ possibly [g] engaged in (buypaper, [g])
         public void Test2()
         {
             string story = @"
-Fluent hasA
-Fluent hasB
-Agent g
-Agent h
-Action buypaper
-Action buyOtherPaper
-buypaper by [g] causes [hasA]
-buypaper by [h] causes [hasA]
-buyOtherPaper by [g] causes [hasB]
-buyOtherPaper by [h] causes [hasB]
-";
+        Fluent hasA
+        Fluent hasB
+        Agent g
+        Agent h
+        Action buypaper
+        Action buyOtherPaper
+        buypaper by [g] causes [hasA]
+        buypaper by [h] causes [hasA]
+        buyOtherPaper by [g] causes [hasB]
+        buyOtherPaper by [h] causes [hasB]
+        ";
             var tokens = Tokenizer.Tokenize(story);
             var parserState = Parser.Parse(tokens);
             var expressions = parserState.Story;
 
             string query = @"
-possibly [g] engaged in buypaper
-";
+        necessary [g] engaged in buypaper
+        ";
 
             Query q = Parser.ParseQuery(
                 Tokenizer.Tokenize(query),
@@ -176,16 +177,16 @@ possibly [g] engaged in buypaper
         public void Test3()
         {
             string story = @"
-Fluent hasA
-Fluent hasB
-Agent c
-Agent d
-Action sing
-Action fly
-sing by [d] causes [hasA]
-sing by [c] causes [hasA]
-fly by [d] causes [hasB]
-";
+        Fluent hasA
+        Fluent hasB
+        Agent c
+        Agent d
+        Action sing
+        Action fly
+        sing by [d] causes [hasA]
+        sing by [c] causes [hasA]
+        fly by [d] causes [hasB]
+        ";
             var tokens = Tokenizer.Tokenize(story);
             var parserState = Parser.Parse(tokens);
             var expressions = new ExpressionsList();
@@ -193,8 +194,8 @@ fly by [d] causes [hasB]
             expressions.AddRange(parserState.Noninertial.Values);
 
             string query = @"
-possibly [d] engaged in fly, sing
-";
+        necessary [d] engaged in fly, sing
+        ";
 
             Query q = Parser.ParseQuery(Tokenizer.Tokenize(query), parserState);
 
