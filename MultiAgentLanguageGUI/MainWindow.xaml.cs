@@ -77,6 +77,10 @@ namespace MultiAgentLanguageGUI
                     Output.Print($"Created noninertial fluents: {state.NoninertialList()}\n");
                     Output.Print($"Created expressions: {state.ExpressionList()}");
                 }
+                else
+                {
+                    state = Parser.Parse(list);
+                }
                 Output.Print("Done.");
                 parsed = true;
             }
