@@ -32,6 +32,7 @@ SHOOT causes [~alive] if [loaded]
             var expressions = new ExpressionsList();
             expressions.AddRange(parserState.Expression);
             expressions.AddRange(parserState.Noninertial.Values);
+            expressions.Agent = parserState.Agent;
 
             // WHEN
             string query = @"
