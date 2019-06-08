@@ -14,15 +14,16 @@ namespace MultiAgentLanguageModelsTests
             string story = @"
 Fluent R1
 Fluent R2
+Fluent R3
 Agent g1
 Agent g2
 Agent g3
 Agent g4
 Action A1
 Action A2
-A1 by [g1, g2, g3] causes R1
-A1 by [g1, g3] causes R1
-A2 by [g2, g3, g4] causes R2
+A1 by [g1, g2, g3] causes [R1]
+A1 by [g1, g3] causes [R3]
+A2 by [g2, g3, g4] causes [R2]
 ";
             var tokens = Tokenizer.Tokenize(story);
             var parserState = Parser.Parse(tokens);
