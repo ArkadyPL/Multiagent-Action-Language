@@ -2,6 +2,7 @@
 To do:
 
 ### C# GUI ###
+- [ ] BŁĄD w Test3_PARSER_ERROR brak parsowania dla *impossible by*
 - [ ] Podmiana *not by if* na odpowiednik *impossible*
 - [ ] Parser na wyrażenie *not by if*
 - [ ] Parser na kwerendę wykonywalności *executable*
