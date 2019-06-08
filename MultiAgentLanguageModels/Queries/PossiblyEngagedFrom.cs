@@ -107,7 +107,6 @@ namespace MultiAgentLanguageModels.Queries
                     }
                     currentStates = newCurrentStates;
                 }
-                resultsForEachInitiallState.Add()
             }
             return resultsForEachInitiallState.All(x => x);
         }
