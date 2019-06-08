@@ -30,7 +30,7 @@ SHOOT causes [~alive] if [loaded]
             string query = @"
 necessary executable (SHOOT, [a]) from [~loaded]
 ";
-            Query q = Parser.ParseQuerry(Tokenizer.Tokenize(query), parserState);
+            Query q = Parser.ParseQuery(Tokenizer.Tokenize(query), parserState);
             var res = q.Solve(expressions);
 
             // THEN
@@ -63,7 +63,7 @@ SHOOT causes [~alive] if [loaded]
             string query = @"
 necessary executable (LOAD, [a]), (SHOOT, [a]) from [~loaded]
 ";
-            Query q = Parser.ParseQuerry(Tokenizer.Tokenize(query), parserState);
+            Query q = Parser.ParseQuery(Tokenizer.Tokenize(query), parserState);
             var res = q.Solve(expressions);
 
             // THEN
@@ -95,7 +95,7 @@ SHOOT causes [~alive] if [loaded]
             string query = @"
 necessary executable (LOAD, [a]), (SHOOT, [a]) from [~loaded]
 ";
-            Query q = Parser.ParseQuerry(Tokenizer.Tokenize(query), parserState);
+            Query q = Parser.ParseQuery(Tokenizer.Tokenize(query), parserState);
             var res = q.Solve(expressions);
 
             // THEN

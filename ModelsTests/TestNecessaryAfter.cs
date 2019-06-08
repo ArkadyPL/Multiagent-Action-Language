@@ -27,7 +27,7 @@ buypaper by [g] causes [hasA || hasB]
 necessary [hasA] after (buypaper, [g])
 ";
 
-            Query q = Parser.ParseQuerry(
+            Query q = Parser.ParseQuery(
                 Tokenizer.Tokenize(query),
                 parserState);
 
@@ -56,7 +56,7 @@ buypaper by [g] causes [hasA || hasB]
 necessary [hasA || hasB] after (buypaper, [g])
 ";
 
-            Query q = Parser.ParseQuerry(
+            Query q = Parser.ParseQuery(
                 Tokenizer.Tokenize(query),
                 parserState);
 
@@ -88,7 +88,7 @@ buypaper by [g] releases [hasB]
 necessary [hasA] after (buypaper, [g])
 ";
 
-            Query q = Parser.ParseQuerry(
+            Query q = Parser.ParseQuery(
                 Tokenizer.Tokenize(query),
                 parserState);
 
@@ -120,7 +120,7 @@ buypaper by [g] releases [hasB]
 necessary [hasA || hasB] after (buypaper, [g])
 ";
 
-            Query q = Parser.ParseQuerry(
+            Query q = Parser.ParseQuery(
                 Tokenizer.Tokenize(query),
                 parserState);
 

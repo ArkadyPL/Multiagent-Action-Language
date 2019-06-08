@@ -707,7 +707,7 @@ namespace MultiAgentLanguageGUI
             return actions;
         }
 
-        public static Query ParseQuerry(List<Token> tokenList, ParserState story)
+        public static Query ParseQuery(List<Token> tokenList, ParserState story)
         {
             ParserState state = new ParserState(tokenList);
             state.Action = story.Action;
