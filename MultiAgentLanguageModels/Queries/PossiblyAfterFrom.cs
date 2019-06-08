@@ -85,6 +85,7 @@ namespace MultiAgentLanguageModels.Queries
             return resultsForEachInitiallState.All(x => x);
         }
     }
+
     public class PossiblyAfter : PossiblyAfterFrom
     {
         public PossiblyAfter(Instruction instructions, LogicExpression finaly)
