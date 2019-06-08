@@ -346,6 +346,7 @@ load by [g] causes [loaded]
             var expressions = new ExpressionsList();
             expressions.AddRange(parserState.Expression);
             expressions.AddRange(parserState.Noninertial.Values);
+            expressions.Agent = parserState.Agent;
 
             var query10 = @"
 possibly [loaded] after (load, [g]),(load, [g]),(shoot, [g]),(load, [g]),(shoot, [g])

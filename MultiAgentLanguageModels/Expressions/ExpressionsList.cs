@@ -7,6 +7,8 @@ namespace MultiAgentLanguageModels.Expressions
 {
     public class ExpressionsList : List<Expression>
     {
+        public Dictionary<string, Agent> Agent { get; set; }
+        public Dictionary<string, Fluent> Fluent { get; set; }
         public List<Action> Actions
         {
             get
@@ -123,7 +125,16 @@ namespace MultiAgentLanguageModels.Expressions
         }
         public List<AgentsList> AgentsGroups()
         {
-            AgentsList agents = new AgentsList();
+            AgentsList agents;
+            if (Agent is null)
+            {
+                agents = new AgentsList();
+            }
+            else
+            {
+                agents = new AgentsList(Agent.Values.ToList());
+            }
+            
             foreach (Expression ex in this)
             {
                 if (ex as ByCausesIf != null)
