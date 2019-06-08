@@ -28,36 +28,62 @@ namespace MultiAgentLanguageModels.Queries
             var piCondition = Condition.EvaluateLogicExpression();
             var alphaCondition = Result.EvaluateLogicExpression();
 
+            //we want that list to hold result of query for each initial state
+            //could be done prettier but it's easier to read
+            List<bool> resultsForEachInitiallState = new List<bool>();
+
+            //for each initiall state
             foreach(var initialState in initialStates)
             {
-                foreach(var state in allStates)
+                HashSet<State> currentStates = new HashSet<State>();
+                //if condition is always true then our current state is initial state
+                if (Condition.Element is True)
                 {
-                    if(piCondition.Any(x => state.Values.HasSubset(x)))
+                    currentStates.Add(initialState);
+                }
+                //else we have to find all states that are ok
+                else
+                {
+                    foreach (var state in allStates)
                     {
-                        HashSet<State> currentStates = new HashSet<State>();
-                        currentStates.Add(state);
-                        for(int i = 0; i< Instructions.Count; i++)
+                        if (piCondition.Any(x => state.Values.HasSubset(x)))
                         {
-                            var action = Instructions[i].Item1;
-                            var agents = Instructions[i].Item2;
-                            HashSet<State> newCurrentStates = new HashSet<State>();
-                            foreach (var currentState in currentStates)
-                            {
-                                var triple = new Triple(action, currentState, agents);
-                                if (res.ContainsKey(triple))
-                                {
-                                    res[triple].ToList().ForEach(s => newCurrentStates.Add(s));
-                                }
-                            }
-                            currentStates = newCurrentStates;
+                            currentStates.Add(state);
                         }
-                        return currentStates
-                            .All(finallState => 
-                                alphaCondition.Any(aCon => finallState.Values.HasSubset(aCon)));
                     }
                 }
+                //now we iterate through instructions
+                for (int i = 0; i < Instructions.Count; i++)
+                {
+                    var action = Instructions[i].Item1;
+                    var agents = Instructions[i].Item2;
+                    HashSet<State> newCurrentStates = new HashSet<State>();
+                    //for each state in current states we want to move forward in graph
+                    foreach (var currentState in currentStates)
+                    {
+                        var triple = new Triple(action, currentState, agents);
+                        //if we can find good edge in graph 
+                        //from currentState, specific action and agents group then
+                        if (res.ContainsKey(triple))
+                        {
+                            //add all next states to the newCurrentStates
+                            res[triple].ToList().ForEach(s => newCurrentStates.Add(s));
+                        }
+                    }
+                    //do it again for new action and agents group
+                    currentStates = newCurrentStates;
+                }
+                //finally we are in the last nodes after the whole instruction
+                //for each initial state we want see if all of states (last nodes) are compliant with alpha
+                //therefore we need to add result to resultsForEachInitiallState list
+                resultsForEachInitiallState.Add(
+                    currentStates
+                    .All(finallState => alphaCondition
+                                        .Any(aCon => finallState.Values.HasSubset(aCon))
+                    )
+                );
             }
-            return true;
+            return resultsForEachInitiallState.All(x => x);
         }
     }
 
