@@ -22,7 +22,7 @@ LOAD causes [loaded]
 SHOOT causes [~loaded]
 SHOOT causes [~alive] if [loaded]
 ";
-        
+
         [Test]
         public void Test1()
         {

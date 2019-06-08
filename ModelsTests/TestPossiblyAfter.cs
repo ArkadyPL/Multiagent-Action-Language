@@ -282,18 +282,18 @@ load by [g] causes [loaded]
             expressions.AddRange(parserState.Expression);
             expressions.AddRange(parserState.Noninertial.Values);
 
-						var query7 = @"
+            var query7 = @"
             possibly [loaded]  after ()
             ";
 
-						var q7 = Parser.ParseQuery(
-							 Tokenizer.Tokenize(query7),
-							 parserState);
+            var q7 = Parser.ParseQuery(
+                 Tokenizer.Tokenize(query7),
+                 parserState);
 
-						var res7 = q7.Solve(expressions);
+            var res7 = q7.Solve(expressions);
 
-						Assert.AreEqual(true, res7);
-				}
+            Assert.AreEqual(true, res7);
+        }
         [Test]
         public void YSPNotPossiblyLoaded_AfterLoadShoot()
         {
@@ -624,10 +624,10 @@ load by [g] causes [loaded]
         }
 
 
-				[Test]
-				public void YSPNotPossiblyWalking_AfterShoot()
-				{
-						string story = @"
+        [Test]
+        public void YSPNotPossiblyWalking_AfterShoot()
+        {
+            string story = @"
 Fluent loaded
 Fluent walking
 Fluent alive
@@ -644,30 +644,30 @@ load by [g] causes [loaded]
 Action entice
 entice by [g] causes [walking] if [alive]
 ";
-						var tokens = Tokenizer.Tokenize(story);
-						var parserState = Parser.Parse(tokens);
-						var expressions = new ExpressionsList();
-						expressions.AddRange(parserState.Expression);
-						expressions.AddRange(parserState.Noninertial.Values);
+            var tokens = Tokenizer.Tokenize(story);
+            var parserState = Parser.Parse(tokens);
+            var expressions = new ExpressionsList();
+            expressions.AddRange(parserState.Expression);
+            expressions.AddRange(parserState.Noninertial.Values);
 
-						string query = @"
+            string query = @"
 								possibly [walking] after (shoot, [g]), (entice, [g])
 								";
 
-						Query q = Parser.ParseQuery(
-										Tokenizer.Tokenize(query),
-										parserState);
+            Query q = Parser.ParseQuery(
+                            Tokenizer.Tokenize(query),
+                            parserState);
 
-						var res = q.Solve(expressions);
+            var res = q.Solve(expressions);
 
-						Assert.AreEqual(false, res);
-				}
+            Assert.AreEqual(false, res);
+        }
 
 
-				[Test]
-				public void YSPNOAgents()
-				{
-						string story = @"
+        [Test]
+        public void YSPNOAgents()
+        {
+            string story = @"
 Fluent loaded
 Fluent walking
 Fluent alive
@@ -683,29 +683,29 @@ load  causes [loaded]
 Action entice
 entice causes [walking] if [alive]
 ";
-						var tokens = Tokenizer.Tokenize(story);
-						var parserState = Parser.Parse(tokens);
-						var expressions = new ExpressionsList();
-						expressions.AddRange(parserState.Expression);
-						expressions.AddRange(parserState.Noninertial.Values);
+            var tokens = Tokenizer.Tokenize(story);
+            var parserState = Parser.Parse(tokens);
+            var expressions = new ExpressionsList();
+            expressions.AddRange(parserState.Expression);
+            expressions.AddRange(parserState.Noninertial.Values);
 
-						string query = @"
+            string query = @"
 								possibly [walking] after (shoot, []), (entice, [])
 								";
 
-						Query q = Parser.ParseQuery(
-										Tokenizer.Tokenize(query),
-										parserState);
+            Query q = Parser.ParseQuery(
+                            Tokenizer.Tokenize(query),
+                            parserState);
 
-						var res = q.Solve(expressions);
+            var res = q.Solve(expressions);
 
-						Assert.AreEqual(false, res);
-				}
+            Assert.AreEqual(false, res);
+        }
 
-				[Test]
-				public void YSPNOAgents_CanKillWalkingChicken()
-				{
-						string story = @"
+        [Test]
+        public void YSPNOAgents_CanKillWalkingChicken()
+        {
+            string story = @"
 Fluent loaded
 Fluent walking
 Fluent alive
@@ -716,25 +716,25 @@ initially [loaded]
 Action shoot
 shoot causes [~alive] if [loaded]
 ";
-						var tokens = Tokenizer.Tokenize(story);
-						var parserState = Parser.Parse(tokens);
-						var expressions = new ExpressionsList();
-						expressions.AddRange(parserState.Expression);
-						expressions.AddRange(parserState.Noninertial.Values);
+            var tokens = Tokenizer.Tokenize(story);
+            var parserState = Parser.Parse(tokens);
+            var expressions = new ExpressionsList();
+            expressions.AddRange(parserState.Expression);
+            expressions.AddRange(parserState.Noninertial.Values);
 
-						string query = @"
+            string query = @"
 								possibly [alive] after (shoot, [])
 								";
 
-						Query q = Parser.ParseQuery(
-										Tokenizer.Tokenize(query),
-										parserState);
+            Query q = Parser.ParseQuery(
+                            Tokenizer.Tokenize(query),
+                            parserState);
 
-						var res = q.Solve(expressions);
+            var res = q.Solve(expressions);
 
-						Assert.AreEqual(false, res);
-				}
-		}
+            Assert.AreEqual(false, res);
+        }
+    }
 
 }
 
