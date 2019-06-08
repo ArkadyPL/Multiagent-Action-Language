@@ -43,8 +43,8 @@ namespace MultiAgentLanguageGUI
                 "Action x\n" +
                 "Action y\n" +
                 "[f1 && f2] after (x,[a,b]),(y,[b])\n" +
-                "initially [f1]\n" +
-                "y by [a,b] causes [~f1] if [f2]\n" +
+                "\n" +
+                "y by [a,b] cinitially [f1]auses [~f1] if [f2]\n" +
                 "y causes [~f1] if [f2]\n" +
                 "y by [a,b] causes [~f1]\n" +
                 "y causes [f1]\n" +

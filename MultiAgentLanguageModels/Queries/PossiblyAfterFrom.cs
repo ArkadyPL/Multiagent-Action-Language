@@ -22,6 +22,7 @@ namespace MultiAgentLanguageModels.Queries
             throw new System.NotImplementedException();
         }
     }
+
     public class PossiblyAfter : PossiblyAfterFrom
     {
         public PossiblyAfter(Instruction instructions, LogicExpression finaly)
