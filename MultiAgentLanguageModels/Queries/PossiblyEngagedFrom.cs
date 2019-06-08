@@ -8,13 +8,13 @@ namespace MultiAgentLanguageModels.Queries
     public class PossiblyEngagedFrom : Query
     {
         public AgentsList Agents { get; }
-        public List<Action> Actions { get; }
+        public Instruction Instructions { get; }
         public LogicExpression Condition { get; }
 
-        public PossiblyEngagedFrom(AgentsList agents, List<Action> actions, LogicExpression condition)
+        public PossiblyEngagedFrom(AgentsList agents, Instruction instructions, LogicExpression condition)
         {
             Agents = agents;
-            Actions = actions;
+            Instructions = instructions;
             Condition = condition;
         }
 
@@ -26,96 +26,16 @@ namespace MultiAgentLanguageModels.Queries
             var allStates = reasoningEngine.PossibleStates(expressions);
             var piCondition = Condition.EvaluateLogicExpression();
 
-            //we want that list to hold result of query for each initial state
-            //could be done prettier but it's easier to read
-            List<bool> resultsForEachInitiallState = new List<bool>();
+            // TODO: implement
 
-            //for each initiall state
-            foreach (var initialState in initialStates)
-            {
-                HashSet<State> currentStates = new HashSet<State>();
-                //if condition is always true then our current state is initial state
-                if (Condition.Element is True)
-                {
-                    currentStates.Add(initialState);
-                }
-                //else we have to find all states that are ok
-                else
-                {
-                    foreach (var state in allStates)
-                    {
-                        if (piCondition.Any(x => state.Values.HasSubset(x)))
-                        {
-                            currentStates.Add(state);
-                        }
-                    }
-                }
-
-                //now we iterate through actions to see if there exists path "with Agents"
-                for (int i = 0; i < Actions.Count; i++)
-                {
-                    var action = Actions[i];
-                    HashSet<State> newCurrentStates = new HashSet<State>();
-                    //for each state in current states we want to move forward in graph
-                    foreach(var state in currentStates)
-                    {
-                        foreach(var agents in expressions.AgentsGroups())
-                        {
-                            var triple = new Triple(action, state, agents);
-                            if (res.ContainsKey(triple))
-                            {
-                                res[triple].ToList().ForEach(x => newCurrentStates.Add(x));
-                            }
-                        }
-                    }
-                    currentStates = newCurrentStates;
-                }
-                var endPathWithAgents = currentStates;
-
-                //if condition is always true then our current state is initial state
-                if (Condition.Element is True)
-                {
-                    currentStates.Add(initialState);
-                }
-                //else we have to find all states that are ok
-                else
-                {
-                    foreach (var state in allStates)
-                    {
-                        if (piCondition.Any(x => state.Values.HasSubset(x)))
-                        {
-                            currentStates.Add(state);
-                        }
-                    }
-                }
-                for (int i = 0; i < Actions.Count; i++)
-                {
-                    var action = Actions[i];
-                    HashSet<State> newCurrentStates = new HashSet<State>();
-                    //for each state in current states we want to move forward in graph
-                    foreach (var state in currentStates)
-                    {
-                        foreach (var agents in expressions.AgentsGroups())
-                        {
-                            var agentsWithout = new AgentsList(agents.Except(Agents).ToList());
-                            var triple = new Triple(action, state, agentsWithout);
-                            if (res.ContainsKey(triple))
-                            {
-                                res[triple].ToList().ForEach(x => newCurrentStates.Add(x));
-                            }
-                        }
-                    }
-                    currentStates = newCurrentStates;
-                }
-            }
-            return resultsForEachInitiallState.All(x => x);
+            return true;
         }
     }
 
     public class PossiblyEngaged : PossiblyEngagedFrom
     {
-        public PossiblyEngaged(AgentsList agents, List<Action> actions)
-            : base(agents, actions, new True())
+        public PossiblyEngaged(AgentsList agents, Instruction instructions)
+            : base(agents, instructions, new True())
         {
         }
     }

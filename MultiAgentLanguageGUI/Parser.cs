@@ -749,13 +749,13 @@ namespace MultiAgentLanguageGUI
                     Token from = state.PopToken();
                     if (from == null)
                     {
-                        if (first.Name == "necessary") return new NecessaryEngaged(agents,actions);
-                        else return new PossiblyEngaged(agents, actions);
+                        if (first.Name == "necessary") return new NecessaryEngaged(agents, null); // TODO: put instructions here instead of "null"
+                        else return new PossiblyEngaged(agents, null); // TODO: put instructions here instead of "null"
                     }
                     if (from.Name != "from") t.ThrowException("Expected from after action list.");
                     LogicElement cond = EntryC1(state);
-                    if (first.Name == "necessary") return new NecessaryEngagedFrom(agents,actions,cond);
-                    else return new PossiblyEngagedFrom(agents, actions, cond);
+                    if (first.Name == "necessary") return new NecessaryEngagedFrom(agents, null, cond); // TODO: put instructions here instead of "null"
+                    else return new PossiblyEngagedFrom(agents, null, cond); // TODO: put instructions here instead of "null"
                 }
                 else if(state.Fluent.ContainsKey(next.Name) || state.Noninertial.ContainsKey(next.Name)
                     || next.Name == "(" || next.Name == "~") // necessary value
