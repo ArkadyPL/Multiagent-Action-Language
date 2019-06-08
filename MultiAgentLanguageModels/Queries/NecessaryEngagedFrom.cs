@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using MultiAgentLanguageModels.Expressions;
 
 namespace MultiAgentLanguageModels.Queries
 {
@@ -16,9 +17,9 @@ namespace MultiAgentLanguageModels.Queries
             Condition = condition;
         }
 
-        public override bool Interpret(IEnumerable<bool> allPossibilities)
+        public override bool Solve(ExpressionsList expressions)
         {
-            return allPossibilities.All(x => x);
+            throw new System.NotImplementedException();
         }
     }
 

@@ -54,7 +54,6 @@
     <Compile Include="Expressions\NotByIf.cs" />
     <Compile Include="Other\Agent.cs" />
     <Compile Include="Other\Action.cs" />
-    <Compile Include="Bindings.cs" />
     <Compile Include="Expressions\After.cs" />
     <Compile Include="Expressions\Always.cs" />
     <Compile Include="Expressions\ByCausesIf.cs" />
@@ -65,7 +64,6 @@
     <Compile Include="Other\Edge.cs" />
     <Compile Include="Other\Instruction.cs" />
     <Compile Include="Other\Node.cs" />
-    <Compile Include="Prolog\IPrologService.cs" />
     <Compile Include="Logic\LogicElement.cs" />
     <Compile Include="Logic\LogicExpression.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
