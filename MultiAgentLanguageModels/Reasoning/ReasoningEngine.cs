@@ -61,12 +61,15 @@ namespace MultiAgentLanguageModels.Reasoning
                         //now we iterate through the cause statements to find those
                         foreach(var cause in causesGroup)
                         {
+                            var w1 = cause.Pi.EvaluateLogicExpression().Any(x => state.Values.HasSubset(x));
+                            var w2 = group.HasSubset(cause.G);
+                            var w3 = cause.Alpha.EvaluateLogicExpression().Count != 0;
                                 //if pi condition is ok with current state
-                            if(cause.Pi.EvaluateLogicExpression().Any(x => state.Values.HasSubset(x)) &&
+                            if (cause.Pi.EvaluateLogicExpression().Any(x => state.Values.HasSubset(x))
                                 //if group is superset
-                                group.HasSubset(cause.G) &&
+                                && group.HasSubset(cause.G))
                                 //if alpha condition is not false
-                                cause.Alpha.EvaluateLogicExpression().Count != 0)
+                                //&& cause.Alpha.EvaluateLogicExpression().Count != 0)
                             {
                                 //then we add new cause expression
                                 workingCauses.Add(cause);
@@ -125,12 +128,15 @@ namespace MultiAgentLanguageModels.Reasoning
                 var state = key.Item2;
                 var action = key.Item1;
                 var agents = key.Item3;
-                var t = res0[key].Select(x => New(expressions, state, x, agents, action)).ToList();
-                //should be minimal with respect to set inclusions.
-                var min = res0[key].Select(x => New(expressions, state, x, agents, action).Count).Min();
-                var temp2 = res0[key].Select(x => New(expressions, state, x, agents, action));
-                var res = res0[key].Where(x => New(expressions, state, x, agents, action).Count == min);
-                results.Add(key, new HashSet<State>(res));
+                var newBasedOnRes0 = res0[key].Select(x => New(expressions, state, x, agents, action)).ToList();
+                if (newBasedOnRes0.Count != 0)
+                {
+                    //should be minimal with respect to set inclusions.
+                    var min = newBasedOnRes0.Min(x => x.Count); //res0[key].Select(x => New(expressions, state, x, agents, action).Count).Min();
+                    //var temp2 = res0[key].Select(x => New(expressions, state, x, agents, action));
+                    var res = res0[key].Where(x => New(expressions, state, x, agents, action).Count == min);
+                    results.Add(key, new HashSet<State>(res));
+                }
             }
             
             return results;

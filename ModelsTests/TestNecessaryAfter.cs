@@ -128,5 +128,35 @@ necessary [hasA || hasB] after (buypaper, [g])
 
             Assert.AreEqual(true, res);
         }
+        [Test]
+        public void Test5()
+        {
+            string str = @"
+Agent a
+Fluent loaded
+Fluent alive
+Action LOAD
+Action SHOOT
+initially [~loaded]
+initially [alive]
+impossible LOAD by [a] if [loaded || ~loaded]
+SHOOT causes [~loaded] if [loaded]
+SHOOT causes [~alive] if [loaded]
+";
+            // GIVEN
+            var tokens = Tokenizer.Tokenize(str);
+            var parserState = Parser.Parse(tokens);
+            var expressions = parserState.Story;
+
+            // WHEN
+            string query = @"
+necessary [loaded] after (LOAD, [a]), (SHOOT, [a]) from [~loaded]
+";
+            Query q = Parser.ParseQuery(Tokenizer.Tokenize(query), parserState);
+            var res = q.Solve(expressions);
+
+            // THEN
+            Assert.AreEqual(true, res);
+        }
     }
 }

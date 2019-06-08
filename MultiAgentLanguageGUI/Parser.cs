@@ -766,8 +766,8 @@ namespace MultiAgentLanguageGUI
                     if (first.Name == "necessary") return new NecessaryEngagedFrom(agents, inst, cond); 
                     else return new PossiblyEngagedFrom(agents, inst, cond); 
                 }
-                else if(state.Fluent.ContainsKey(next.Name) || state.Noninertial.ContainsKey(next.Name)
-                    || next.Name == "(" || next.Name == "~") // necessary value
+                else if(next != null && (state.Fluent.ContainsKey(next.Name) || 
+                    state.Noninertial.ContainsKey(next.Name) || next.Name == "(" || next.Name == "~")) // necessary value
                 {
                     state.TokenList.Insert(0, t);
                     LogicElement result = EntryC1(state);
