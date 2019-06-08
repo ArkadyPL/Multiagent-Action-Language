@@ -132,6 +132,6 @@ namespace MultiAgentLanguageModels.Reasoning
             }
             
             return results;
-            }
+        }
     }
 }
