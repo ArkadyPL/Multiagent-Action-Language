@@ -30,7 +30,7 @@ buypaper by [g] releases [hasB]
 possibly [hasA] after (buypaper, [g])
 ";
 
-            Query q = Parser.ParseQuerry(
+            Query q = Parser.ParseQuery(
                 Tokenizer.Tokenize(query),
                 parserState);
 
@@ -60,7 +60,7 @@ buypaper by [g] causes [hasA || hasB]
 possibly [hasA] after (buypaper, [g])
 ";
 
-            Query q = Parser.ParseQuerry(
+            Query q = Parser.ParseQuery(
                 Tokenizer.Tokenize(query),
                 parserState);
 
@@ -89,7 +89,7 @@ buypaper by [g] causes [hasA || hasB]
 possibly [hasA || hasB] after (buypaper, [g])
 ";
 
-            Query q = Parser.ParseQuerry(
+            Query q = Parser.ParseQuery(
                 Tokenizer.Tokenize(query),
                 parserState);
 
@@ -122,7 +122,7 @@ load by [g] causes [loaded]
 								possibly [loaded] after (load, [g])
 								";
 
-            Query q = Parser.ParseQuerry(
+            Query q = Parser.ParseQuery(
                     Tokenizer.Tokenize(query),
                     parserState);
 
@@ -156,7 +156,7 @@ load by [g] causes [loaded]
 								possibly [loaded] after (load, [g]),(load, [g]),(load, [g])
 								";
 
-            var q4 = Parser.ParseQuerry(
+            var q4 = Parser.ParseQuery(
                  Tokenizer.Tokenize(query4),
                  parserState);
 
@@ -190,7 +190,7 @@ load by [g] causes [loaded]
 								possibly [loaded] after (load, [g]),(load, [g]),(load, [g])
 								";
 
-            var q5 = Parser.ParseQuerry(
+            var q5 = Parser.ParseQuery(
                  Tokenizer.Tokenize(query5),
                  parserState);
 
@@ -222,7 +222,7 @@ load by [g] causes [loaded]
 								possibly [loaded] after (load, [g]),(shoot, [g]),(load, [g])
 								";
 
-            var q6 = Parser.ParseQuerry(
+            var q6 = Parser.ParseQuery(
                  Tokenizer.Tokenize(query6),
                  parserState);
 
@@ -238,6 +238,7 @@ Fluent loaded
 Fluent walking
 Fluent alive
 Agent g
+initially [loaded]
 Action shoot
 shoot by [g] causes [~alive] if [loaded]
 shoot by [g] causes [~loaded]
@@ -250,19 +251,18 @@ load by [g] causes [loaded]
             expressions.AddRange(parserState.Expression);
             expressions.AddRange(parserState.Noninertial.Values);
 
-#warning MO : todo
-            //						var query7 = @"
-            //possibly [loaded] from NULL
-            //";
+						var query7 = @"
+            possibly [loaded]  after ()
+            ";
 
-            //						var q7 = Parser.ParseQuerry(
-            //							 Tokenizer.Tokenize(query7),
-            //							 parserState);
+						var q7 = Parser.ParseQuery(
+							 Tokenizer.Tokenize(query7),
+							 parserState);
 
-            //						var res7 = q6.Solve(expressions);
+						var res7 = q7.Solve(expressions);
 
-            //						Assert.AreEqual(true, res7);
-        }
+						Assert.AreEqual(true, res7);
+				}
         [Test]
         public void YSPNotPossiblyLoaded_AfterLoadShoot()
         {
@@ -287,7 +287,7 @@ load by [g] causes [loaded]
 possibly [loaded] after (load, [g]),(shoot, [g])
 ";
 
-            var q8 = Parser.ParseQuerry(
+            var q8 = Parser.ParseQuery(
                  Tokenizer.Tokenize(query8),
                  parserState);
 
@@ -319,7 +319,7 @@ load by [g] causes [loaded]
 possibly [loaded] after (load, [g]),(load, [g]),(shoot, [g])
 ";
 
-            var q9 = Parser.ParseQuerry(
+            var q9 = Parser.ParseQuery(
                  Tokenizer.Tokenize(query9),
                  parserState);
 
@@ -349,7 +349,7 @@ load by [g] causes [loaded]
 possibly [loaded] after (load, [g]),(load, [g]),(shoot, [g]),(load, [g]),(shoot, [g])
 ";
 
-            var q10 = Parser.ParseQuerry(
+            var q10 = Parser.ParseQuery(
                  Tokenizer.Tokenize(query10),
                  parserState);
 
@@ -384,7 +384,7 @@ load by [g] causes [loaded]
 								possibly [~alive] after (load, [g])
 								";
 
-            Query q = Parser.ParseQuerry(
+            Query q = Parser.ParseQuery(
                     Tokenizer.Tokenize(query),
                     parserState);
 
@@ -416,7 +416,7 @@ load by [g] causes [loaded]
 possibly [alive] after (load, [g])
 			";
 
-            Query q = Parser.ParseQuerry(
+            Query q = Parser.ParseQuery(
                                         Tokenizer.Tokenize(query),
                                         parserState);
 
@@ -449,7 +449,7 @@ load by [g] causes [loaded]
 possibly [~alive] after (shoot, [g])
 								";
 
-            Query q = Parser.ParseQuerry(
+            Query q = Parser.ParseQuery(
                     Tokenizer.Tokenize(query),
                     parserState);
 
@@ -481,7 +481,7 @@ load by [g] causes [loaded]
 possibly [alive] after (shoot, [g])
 ";
 
-            Query q = Parser.ParseQuerry(
+            Query q = Parser.ParseQuery(
                     Tokenizer.Tokenize(query),
                     parserState);
 
@@ -516,7 +516,7 @@ load by [g] causes [loaded]
 								possibly [~alive] after (shoot, [g])
 								";
 
-            Query q = Parser.ParseQuerry(
+            Query q = Parser.ParseQuery(
                     Tokenizer.Tokenize(query),
                     parserState);
 
@@ -550,7 +550,7 @@ load by [g] causes [loaded]
 								possibly [~alive] after (shoot, [g])
 								";
 
-            Query q = Parser.ParseQuerry(
+            Query q = Parser.ParseQuery(
                     Tokenizer.Tokenize(query),
                     parserState);
 
@@ -583,7 +583,7 @@ load by [g] causes [loaded]
 								possibly [alive] after (shoot, [g])
 								";
 
-            Query q = Parser.ParseQuerry(
+            Query q = Parser.ParseQuery(
                     Tokenizer.Tokenize(query),
                     parserState);
 
@@ -591,7 +591,86 @@ load by [g] causes [loaded]
 
             Assert.AreEqual(false, res);
         }
-    }
+
+
+				[Test]
+				public void YSPNotPossiblyWalking_AfterShoot()
+				{
+						string story = @"
+Fluent loaded
+Fluent walking
+Fluent alive
+initially [alive]
+initially [~walking]
+initially [loaded]
+
+Agent g
+Action shoot
+shoot by [g] causes [~alive] if [loaded]
+shoot by [g] causes [~loaded]
+Action load
+load by [g] causes [loaded]
+Action entice
+entice by [g] causes [walking] if [alive]
+";
+						var tokens = Tokenizer.Tokenize(story);
+						var parserState = Parser.Parse(tokens);
+						var expressions = new ExpressionsList();
+						expressions.AddRange(parserState.Expression);
+						expressions.AddRange(parserState.Noninertial.Values);
+
+						string query = @"
+								possibly [walking] after (shoot, [g]), (entice, [g])
+								";
+
+						Query q = Parser.ParseQuery(
+										Tokenizer.Tokenize(query),
+										parserState);
+
+						var res = q.Solve(expressions);
+
+						Assert.AreEqual(false, res);
+				}
+
+
+				[Test]
+				public void YSPNOAgents()
+				{
+						string story = @"
+Fluent loaded
+Fluent walking
+Fluent alive
+initially [alive]
+initially [~walking]
+initially [loaded]
+
+Action shoot
+shoot causes [~alive] if [loaded]
+shoot  causes [~loaded]
+Action load
+load  causes [loaded]
+Action entice
+entice causes [walking] if [alive]
+";
+						var tokens = Tokenizer.Tokenize(story);
+						var parserState = Parser.Parse(tokens);
+						var expressions = new ExpressionsList();
+						expressions.AddRange(parserState.Expression);
+						expressions.AddRange(parserState.Noninertial.Values);
+
+						string query = @"
+								possibly [walking] after (shoot, []), (entice, [])
+								";
+
+						Query q = Parser.ParseQuery(
+										Tokenizer.Tokenize(query),
+										parserState);
+
+						var res = q.Solve(expressions);
+
+						Assert.AreEqual(false, res);
+				}
+		}
 
 }
 

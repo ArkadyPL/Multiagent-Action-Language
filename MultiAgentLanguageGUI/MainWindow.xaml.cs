@@ -139,7 +139,7 @@ namespace MultiAgentLanguageGUI
                     Output.PrintNLine();
                     Output.Print("Now attempting to parse the received token list...");
                 }
-                Query q = Parser.ParseQuerry(list, state);
+                Query q = Parser.ParseQuery(list, state);
                 state.Q = q;
                 Output.Print($"Created query.");
                 Output.Print("Done.");

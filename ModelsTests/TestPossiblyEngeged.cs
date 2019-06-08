@@ -7,6 +7,40 @@ namespace MultiAgentLanguageModelsTests
 {
     public class TestPossiblyEngeged
     {
+
+        [Test]
+        public void Test0()
+        {
+            string story = @"
+Fluent R1
+Fluent R2
+Agent g1
+Agent g2
+Agent g3
+Agent g4
+Action A1
+Action A2
+A1 by [g1, g2, g3] causes R1
+A1 by [g1, g3] causes R1
+A2 by [g2, g3, g4] causes R2
+";
+            var tokens = Tokenizer.Tokenize(story);
+            var parserState = Parser.Parse(tokens);
+            var expressions = new ExpressionsList();
+            expressions.AddRange(parserState.Expression);
+            expressions.AddRange(parserState.Noninertial.Values);
+
+            string query = @"
+possibly [g2] engaged in (A1, [g1, g2, g3]),(A2, [g2, g3, g4])
+";
+
+            Query q = Parser.ParseQuery(Tokenizer.Tokenize(query), parserState);
+
+            var res = q.Solve(expressions);
+
+            Assert.AreEqual(true, res);
+        }
+
         [Test]
         public void Test1()
         {
@@ -24,10 +58,10 @@ buypaper by [g] causes [hasA || hasB]
             expressions.AddRange(parserState.Noninertial.Values);
 
             string query = @"
-possibly [g] engaged in buypaper
+possibly [g] engaged in (buypaper, [g])
 ";
 
-            Query q = Parser.ParseQuerry(
+            Query q = Parser.ParseQuery(
                 Tokenizer.Tokenize(query),
                 parserState);
 
@@ -53,15 +87,13 @@ buyOtherPaper by [h] causes [hasB]
 ";
             var tokens = Tokenizer.Tokenize(story);
             var parserState = Parser.Parse(tokens);
-            var expressions = new ExpressionsList();
-            expressions.AddRange(parserState.Expression);
-            expressions.AddRange(parserState.Noninertial.Values);
+            var expressions = parserState.Story;
 
             string query = @"
 possibly [g] engaged in buypaper
 ";
 
-            Query q = Parser.ParseQuerry(
+            Query q = Parser.ParseQuery(
                 Tokenizer.Tokenize(query),
                 parserState);
 
@@ -94,13 +126,11 @@ fly by [d] causes [hasB]
 possibly [d] engaged in fly, sing
 ";
 
-            Query q = Parser.ParseQuerry(
-                Tokenizer.Tokenize(query),
-                parserState);
+            Query q = Parser.ParseQuery(Tokenizer.Tokenize(query), parserState);
 
             var res = q.Solve(expressions);
 
-            Assert.AreEqual(false, res);
+            Assert.AreEqual(true, res);
         }
     }
 }
