@@ -3,28 +3,20 @@ To do:
 
 ### C# GUI ###
 - [ ] BŁĄD w Test3_PARSER_ERROR brak parsowania dla *impossible by*
-- [ ] Podmiana *not by if* na odpowiednik *impossible*
+- [ ] Podmiana *not by if* na odpowiednik *impossible by if*
 - [ ] Parser na wyrażenie *not by if*
-- [ ] Parser na kwerendę wykonywalności *executable*
-- [ ] Parser na kwerendę wartości *after*
-- [ ] Parser na kwerendę zaangażowania *engaged*
-- [x] Parser na wyrażenia wartości *after*, *observable after*, *initially*
-- [x] Parser na wyrażenia efektu akcji *by causes if*, *impossible by if*
-- [x] Parser na wyrażenia uwolnienia fluentu *by releases if*
-- [x] Parser na wyrażenia integralności *always*
-- [x] Parser na wyrażenie zachowania fluentów *noninertial*
-- [x] Parser wyrażeń logicznych do obiektów
-- [x] Widoki dla kontrolek
-- [x] Parser tworzenia agentów
+- [ ] Pusta lista agentów
+- [ ] Dodać *initially [alpha]* jako *[alpha] after ()* (chodzi o puste wykonanie programu)
 
 ### C# reasoning ###
+- [ ] Dodanie obsługi *[alpha] observable after ...* i *[alpha] after ...*
 - [ ] Testy generowania grafu
-- [ ] Dodać kwerendę wykonywalności *executable*
-- [ ] Dodać kwerendę wartości *after*
+- [x] Dodać kwerendę wykonywalności *executable*
+- [x] Dodać kwerendę wartości *after*
 - [ ] Dodać kwerendę zaangażowania *engaged*
-- [ ] Dodać testy języka AR (przykłady z wykładu)
-- [ ] Dodać kwerendy z pustego programu
-- [ ] Dodać kwerendy dla pustej listy agentów
+- [x] Dodać testy języka AR (przykłady z wykładu)
+- [x] Dodać kwerendy z pustego programu
+- [x] Dodać kwerendy dla pustej listy agentów
 
 ### App tests ###
 - [ ] 4 historyjki po 3-4 kwerendy dla grupy 1 **na poniedziałek musi być gotowe**

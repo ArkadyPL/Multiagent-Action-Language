@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace MultiAgentLanguageGUI
 {
@@ -13,8 +14,20 @@ namespace MultiAgentLanguageGUI
     /// </summary>
     public partial class MainWindow : Window
     {
+        private bool _parsed;
         ParserState state;
-        bool parsed = false;
+        public bool Parsed {
+            get => _parsed;
+            set
+            {
+                if(_parsed != value)
+                {
+                    _parsed = value;
+                    Label_Parse.Content = _parsed ? "Parsed" : "Not parsed";
+                    Label_Parse.Foreground = _parsed ? Brushes.Green : Brushes.Red;
+                }
+            }
+        }
         public bool Verbose { get; set; }
         public MainWindow()
         {
@@ -50,7 +63,7 @@ namespace MultiAgentLanguageGUI
 
         private void TextBox_Story_TextChanged(object sender, TextChangedEventArgs e)
         {
-            parsed = false;
+            Parsed = false;
         }
 
         private void Button_StoryParse_Click(object sender, RoutedEventArgs e)
@@ -82,7 +95,7 @@ namespace MultiAgentLanguageGUI
                     state = Parser.Parse(list);
                 }
                 Output.Print("Done.");
-                parsed = true;
+                Parsed = true;
             }
             catch(Exception ex)
             {
@@ -93,7 +106,7 @@ namespace MultiAgentLanguageGUI
         private void Button_StoryClear_Click(object sender, RoutedEventArgs e)
         {
             TextBox_Story.Text = "";
-            parsed = false;
+            Parsed = false;
             state = new ParserState(null);
         }
 
@@ -118,22 +131,21 @@ namespace MultiAgentLanguageGUI
 
         private void Button_QueryExecute_Click(object sender, RoutedEventArgs e)
         {
-            if(parsed == false)
+            Output.Clear();
+            if (Parsed == false)
             {
                 Output.Print("First parse the story.");
                 return;
             }
-            else
-            {
-                Output.Clear();
-            }
             Output.PrintSeparator();
             Output.Print("Attempting a tokenize the query...");
+            Output.PrintSeparator();
             try
             {
                 List<Token> list = Tokenizer.Tokenize(TextBox_Query.Text);
                 if (Verbose)
                 {
+                    Output.PrintSeparator();
                     Output.Print("Tokenize procedure finished without explicit failure.");
                     Output.Print("Tokens created:");
                     for (int i = 0; i < list.Count; i++)
@@ -142,24 +154,31 @@ namespace MultiAgentLanguageGUI
                     }
                     Output.PrintNLine();
                     Output.Print("Now attempting to parse the received token list...");
+                    Output.PrintSeparator();
                 }
+                Output.PrintSeparator();
+
                 Query q = Parser.ParseQuery(list, state);
                 state.Q = q;
-                Output.Print($"Created query.");
-                Output.Print("Done.");
-
+                Output.Clear();
+                Output.PrintSeparator();
+                Output.Print($"Query: {TextBox_Query.Text}");
+                Output.PrintSeparator();
+                Output.Print("Wait...");
+                
                 var result = q.Solve(state.Story);
-
-                Output.PrintNLine();
+                Output.Clear();
+                Output.PrintSeparator();
+                Output.Print($"Query: {TextBox_Query.Text}");
+                Output.PrintSeparator();
                 if (result)
                 {
-                    Output.Print("Query: True.");
+                    Output.Print("Answer: True.");
                 }
                 else
                 {
-                    Output.Print("Query: False.");
+                    Output.Print("Answer: False.");
                 }
-                Output.PrintNLine();
             }
             catch (Exception ex)
             {
