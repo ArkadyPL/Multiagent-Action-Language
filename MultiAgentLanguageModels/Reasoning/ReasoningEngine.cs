@@ -75,15 +75,18 @@ namespace MultiAgentLanguageModels.Reasoning
                                 workingCauses.Add(cause);
                             }
                         }
+                        //create our A x sigma x G triple
+                        Triple tuple = new Triple(
+                                causesGroup.Key, state, group);
                         if (workingCauses.Count == 0)
+                        {
+                            result.Add(tuple, PossibleStates(expressions));
                             continue;
+                        } 
                         //now we need to create uber-alpha condition
                         var uberAlpha = workingCauses.Select(x => x.Alpha).Aggregate((a, b) => new And(a, b));
                         //final states should be compliant with our uberAlpha
                         var final = uberAlpha.EvaluateLogicExpression();
-                        //create our A x sigma x G triple
-                        Triple tuple = new Triple(
-                                causesGroup.Key, state, group);
                         //look through all possible states to find the ones that can end this action, and create set
                         var setOfFinalStates = new HashSet<State>();
                         foreach (var s in PossibleStates(expressions))
