@@ -147,6 +147,7 @@ namespace MultiAgentLanguageModels.Expressions
                     agents.AddRange(temp.Instructions.SelectMany(x => x.Item2));
                 }
             }
+            agents = new AgentsList(agents.Distinct().ToList());
             var result = new List<AgentsList>();
             for (int i = 0; i < Math.Pow(2, agents.Count); i++)
             {

@@ -67,7 +67,7 @@ possibly [loaded] after (load, [g])
 
 						var res = q.Solve(expressions);
 
-						Assert.AreEqual(false, res);
+						Assert.AreEqual(true, res);
 				}
 		}
 }
