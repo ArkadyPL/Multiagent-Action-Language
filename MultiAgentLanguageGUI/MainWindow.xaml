@@ -49,6 +49,12 @@
                               DockPanel.Dock="Left" 
                               Width="110" 
                               IsChecked="{Binding Verbose}"/>
+                    <Label x:Name="Label_Parse"
+                           DockPanel.Dock="Right"
+                           Content="Not parsed"
+                           VerticalAlignment="Center"
+                           FontWeight="Bold"
+                           Foreground="Red"/>
                 </DockPanel>
             </Grid>
         </GroupBox>
