@@ -112,7 +112,7 @@ namespace MultiAgentLanguageModels.Reasoning
             return new HashSet<string>(diff);
             //maybe except should be at the end of the query?
         }
-        
+
         public Dictionary<Triple, HashSet<State>> Res(ExpressionsList expressions)
         {
             var results = new Dictionary<Triple, HashSet<State>>();
@@ -132,6 +132,27 @@ namespace MultiAgentLanguageModels.Reasoning
             }
             
             return results;
+        }
+
+        public HashSet<State> InitialStates(ExpressionsList expressions)
+        {
+            var allStates = PossibleStates(expressions);
+            if (expressions.Initially.Count == 0)
+                return allStates;
+
+            var initialConditions = expressions.Initially
+                .Select(x => x.Condition)
+                .Aggregate((a, b) => new And(a, b))
+                .EvaluateLogicExpression();
+
+            HashSet<State> initialStates = new HashSet<State>();
+            foreach(var state in allStates)
+            {
+                if(initialConditions.Any(x => state.Values.HasSubset(x))){
+                    initialStates.Add(state);
+                }
+            }
+            return initialStates;
         }
     }
 }
