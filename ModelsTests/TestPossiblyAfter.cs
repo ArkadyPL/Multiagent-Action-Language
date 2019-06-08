@@ -701,6 +701,39 @@ entice causes [walking] if [alive]
 
 						Assert.AreEqual(false, res);
 				}
+
+				[Test]
+				public void YSPNOAgents_CanKillWalkingChicken()
+				{
+						string story = @"
+Fluent loaded
+Fluent walking
+Fluent alive
+initially [alive]
+initially [walking]
+initially [loaded]
+
+Action shoot
+shoot causes [~alive] if [loaded]
+";
+						var tokens = Tokenizer.Tokenize(story);
+						var parserState = Parser.Parse(tokens);
+						var expressions = new ExpressionsList();
+						expressions.AddRange(parserState.Expression);
+						expressions.AddRange(parserState.Noninertial.Values);
+
+						string query = @"
+								possibly [alive] after (shoot, [])
+								";
+
+						Query q = Parser.ParseQuery(
+										Tokenizer.Tokenize(query),
+										parserState);
+
+						var res = q.Solve(expressions);
+
+						Assert.AreEqual(false, res);
+				}
 		}
 
 }
