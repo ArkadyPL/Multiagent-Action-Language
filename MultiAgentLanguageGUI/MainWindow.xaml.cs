@@ -1,23 +1,10 @@
 ﻿using Microsoft.Win32;
-using MultiAgentLanguageModels;
 using MultiAgentLanguageModels.Queries;
-using Ninject;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace MultiAgentLanguageGUI
 {
@@ -28,6 +15,7 @@ namespace MultiAgentLanguageGUI
     {
         ParserState state;
         bool parsed = false;
+        public bool Verbose { get; set; }
         public MainWindow()
         {
             InitializeComponent();
@@ -72,20 +60,23 @@ namespace MultiAgentLanguageGUI
             try
             {
                 List<Token> list = Tokenizer.Tokenize(TextBox_Story.Text);
-                Output.Print("Tokenize procedure finished without explicit failure.");
-                Output.Print("Tokens created:");
-                for(int i = 0; i < list.Count; i ++)
+                if (Verbose)
                 {
-                    Output.Print($"{i + 1} - {list[i].Type.ToString()}: {list[i].Name}");
+                    Output.Print("Tokenize procedure finished without explicit failure.");
+                    Output.Print("Tokens created:");
+                    for (int i = 0; i < list.Count; i++)
+                    {
+                        Output.Print($"{i + 1} - {list[i].Type.ToString()}: {list[i].Name}");
+                    }
+                    Output.PrintNLine();
+                    Output.Print("Now attempting to parse the received token list...");
+                    state = Parser.Parse(list);
+                    Output.Print($"Created agents: {state.AgentList()}");
+                    Output.Print($"Created fluents: {state.FluentList()}");
+                    Output.Print($"Created actions: {state.ActionList()}");
+                    Output.Print($"Created noninertial fluents: {state.NoninertialList()}\n");
+                    Output.Print($"Created expressions: {state.ExpressionList()}");
                 }
-                Output.PrintNLine();
-                Output.Print("Now attempting to parse the received token list...");
-                state = Parser.Parse(list);
-                Output.Print($"Created agents: {state.AgentList()}");
-                Output.Print($"Created fluents: {state.FluentList()}");
-                Output.Print($"Created actions: {state.ActionList()}");
-                Output.Print($"Created noninertial fluents: {state.NoninertialList()}\n");
-                Output.Print($"Created expressions: {state.ExpressionList()}");
                 Output.Print("Done.");
                 parsed = true;
             }
@@ -128,35 +119,42 @@ namespace MultiAgentLanguageGUI
                 Output.Print("First parse the story.");
                 return;
             }
+            else
+            {
+                Output.Clear();
+            }
             Output.PrintSeparator();
             Output.Print("Attempting a tokenize the query...");
             try
             {
                 List<Token> list = Tokenizer.Tokenize(TextBox_Query.Text);
-                Output.Print("Tokenize procedure finished without explicit failure.");
-                Output.Print("Tokens created:");
-                for (int i = 0; i < list.Count; i++)
+                if (Verbose)
                 {
-                    Output.Print($"{i + 1} - {list[i].Type.ToString()}: {list[i].Name}");
+                    Output.Print("Tokenize procedure finished without explicit failure.");
+                    Output.Print("Tokens created:");
+                    for (int i = 0; i < list.Count; i++)
+                    {
+                        Output.Print($"{i + 1} - {list[i].Type.ToString()}: {list[i].Name}");
+                    }
+                    Output.PrintNLine();
+                    Output.Print("Now attempting to parse the received token list...");
                 }
-                Output.PrintNLine();
-                Output.Print("Now attempting to parse the received token list...");
                 Query q = Parser.ParseQuerry(list, state);
                 state.Q = q;
                 Output.Print($"Created query.");
                 Output.Print("Done.");
 
-
+                var result = q.Solve(state.Story);
 
                 Output.PrintNLine();
-                //if (result)
-                //{
-                //    Output.Print("Query: True.");
-                //}
-                //else
-                //{
-                //    Output.Print("Query: False.");
-                //}
+                if (result)
+                {
+                    Output.Print("Query: True.");
+                }
+                else
+                {
+                    Output.Print("Query: False.");
+                }
                 Output.PrintNLine();
             }
             catch (Exception ex)

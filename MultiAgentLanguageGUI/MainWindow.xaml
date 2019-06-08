@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MultiAgentLanguageGUI"
         mc:Ignorable="d"
+        DataContext="{Binding RelativeSource={RelativeSource Self}}"
         Title="Multiagent Action Language" MinHeight="600" MinWidth="800" Height="600" Width="800">
     <Window.Resources>
         <Style TargetType="TextBox">
@@ -42,6 +43,12 @@
                     <Button x:Name="Button_StorySave" DockPanel.Dock="Left" Width="100" Click="Button_StorySave_Click">Save</Button>
                     <Button x:Name="Button_StoryLoad" DockPanel.Dock="Left" Width="100" Click="Button_StoryLoad_Click">Load</Button>
                     <Button x:Name="Button_StoryClear" DockPanel.Dock="Left" Width="100" Click="Button_StoryClear_Click">Clear</Button>
+                    <CheckBox Content="Verbose output" 
+                              VerticalAlignment="Center"
+                              HorizontalAlignment="Center"
+                              DockPanel.Dock="Left" 
+                              Width="110" 
+                              IsChecked="{Binding Verbose}"/>
                 </DockPanel>
             </Grid>
         </GroupBox>

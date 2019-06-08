@@ -27,5 +27,11 @@ namespace MultiAgentLanguageGUI
             if(Target != null)
                 Target.Text += text + '\n';
         }
+
+        public static void Clear()
+        {
+            if(!(Target is null))
+                Target.Text = "";
+        }
     }
 }
