@@ -34,7 +34,7 @@ necessary executable (SHOOT, [a]) from [~loaded]
             var res = q.Solve(expressions);
 
             // THEN
-            Assert.AreEqual(false, res);
+            Assert.AreEqual(true, res);
         }
 
 
