@@ -94,5 +94,38 @@ possibly [hasA || hasB] after (buypaper, [g])
 
             Assert.AreEqual(true, res);
         }
+
+        [Test]
+        public void ShootTurkey()
+        {
+            string story = @"
+Fluent loaded
+Fluent walking
+Fluent alive
+Agent g
+Action shoot
+shoot by [g] causes [\alive] if [loaded]
+shoot by [g] causes [\loaded]
+Action load
+load by [g] causes [loaded]
+";
+            var tokens = Tokenizer.Tokenize(story);
+            var parserState = Parser.Parse(tokens);
+            var expressions = new ExpressionsList();
+            expressions.AddRange(parserState.Expression);
+            expressions.AddRange(parserState.Noninertial.Values);
+
+            string query = @"
+possibly [loaded] after (load, [g])
+";
+
+            Query q = Parser.ParseQuerry(
+                    Tokenizer.Tokenize(query),
+                    parserState);
+
+            var res = q.Solve(expressions);
+
+            Assert.AreEqual(true, res);
+        }
     }
 }
