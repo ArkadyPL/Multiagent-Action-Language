@@ -23,7 +23,7 @@ namespace MultiAgentLanguageGUI
         public ExpressionsList Story
         { get
             {
-                var s = new ExpressionsList();
+                var s = new ExpressionsList(Agent.Values, Fluent.Values);
                 s.AddRange(Noninertial.Values);
                 s.AddRange(Expression);
                 return s;

@@ -29,10 +29,7 @@ SHOOT causes [~alive] if [loaded]
             // GIVEN
             var tokens = Tokenizer.Tokenize(YaleShootingProblemStory);
             var parserState = Parser.Parse(tokens);
-            var expressions = new ExpressionsList();
-            expressions.AddRange(parserState.Expression);
-            expressions.AddRange(parserState.Noninertial.Values);
-            expressions.Agent = parserState.Agent;
+            var expressions = parserState.Story;
 
             // WHEN
             string query = @"
