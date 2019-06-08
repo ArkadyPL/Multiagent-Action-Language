@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using MultiAgentLanguageModels.Expressions;
+using MultiAgentLanguageModels.Reasoning;
 
 namespace MultiAgentLanguageModels.Queries
 {
@@ -26,7 +27,7 @@ namespace MultiAgentLanguageModels.Queries
     public class NecessaryEngaged : NecessaryEngagedFrom
     {
         public NecessaryEngaged(AgentsList agents, List<Action> actions)
-            : base(agents, actions, LogicExpression.Empty)
+            : base(agents, actions, new True())
         {
         }
     }
