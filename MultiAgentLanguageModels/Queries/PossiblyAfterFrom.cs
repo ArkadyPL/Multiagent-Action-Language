@@ -82,7 +82,7 @@ namespace MultiAgentLanguageModels.Queries
                     )
                 );
             }
-            return resultsForEachInitiallState.All(x => x);
+            return resultsForEachInitiallState.Any(x => x);
         }
     }
 
