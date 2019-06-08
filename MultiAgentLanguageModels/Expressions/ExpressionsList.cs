@@ -7,6 +7,16 @@ namespace MultiAgentLanguageModels.Expressions
 {
     public class ExpressionsList : List<Expression>
     {
+        public ExpressionsList()
+        {
+        }
+        public ExpressionsList(IEnumerable<Agent> agents, IEnumerable<Fluent> fluents)
+        {
+            Agent = agents;
+            Fluent = fluents;
+        }
+        private IEnumerable<Agent> Agent { get; set; }
+        private IEnumerable<Fluent> Fluent { get; set; }
         public List<Action> Actions
         {
             get
@@ -43,6 +53,11 @@ namespace MultiAgentLanguageModels.Expressions
             get
             {
                 List<string> fluents = new List<string>();
+                if(!(Fluent is null))
+                {
+                    fluents.AddRange(Fluent.Select(x => x.Name));
+                    return fluents.Distinct().ToList();
+                }
                 foreach (Expression ex in this)
                 {
                     if (ex as ByCausesIf != null)
@@ -123,7 +138,16 @@ namespace MultiAgentLanguageModels.Expressions
         }
         public List<AgentsList> AgentsGroups()
         {
-            AgentsList agents = new AgentsList();
+            AgentsList agents;
+            if (Agent is null)
+            {
+                agents = new AgentsList();
+            }
+            else
+            {
+                agents = new AgentsList(Agent.ToList());
+            }
+            
             foreach (Expression ex in this)
             {
                 if (ex as ByCausesIf != null)

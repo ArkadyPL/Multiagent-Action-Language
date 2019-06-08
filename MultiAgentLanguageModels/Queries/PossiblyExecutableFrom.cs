@@ -24,7 +24,11 @@ namespace MultiAgentLanguageModels.Queries
             var initialStates = reasoningEngine.InitialStates(expressions);
             var allStates = reasoningEngine.PossibleStates(expressions);
             var piCondition = Condition.EvaluateLogicExpression();
-            
+
+            //we want that list to hold result of query for each initial state
+            //could be done prettier but it's easier to read
+            List<bool> resultsForEachInitiallState = new List<bool>();
+
             //for each initiall state
             foreach (var initialState in initialStates)
             {
@@ -63,12 +67,12 @@ namespace MultiAgentLanguageModels.Queries
                             res[triple].ToList().ForEach(s => newCurrentStates.Add(s));
                         }
                     }
-                    if (newCurrentStates.Count == 0) return false;
                     //do it again for new action and agents group
                     currentStates = newCurrentStates;
                 }
+                resultsForEachInitiallState.Add(currentStates.Count != 0);
             }
-            return true;
+            return resultsForEachInitiallState.All(x =>x);
         }
     }
 

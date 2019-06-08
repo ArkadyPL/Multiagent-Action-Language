@@ -23,7 +23,7 @@ namespace MultiAgentLanguageGUI
         public ExpressionsList Story
         { get
             {
-                var s = new ExpressionsList();
+                var s = new ExpressionsList(Agent.Values, Fluent.Values);
                 s.AddRange(Noninertial.Values);
                 s.AddRange(Expression);
                 return s;
@@ -745,17 +745,17 @@ namespace MultiAgentLanguageGUI
                     {
                         t.ThrowException("Expected in after engaged.");
                     }
-                    List<MultiAgentLanguageModels.Action> actions = GetActionList(state);
+                    Instruction inst = GetInstructions(state,in_token);
                     Token from = state.PopToken();
                     if (from == null)
                     {
-                        if (first.Name == "necessary") return new NecessaryEngaged(agents,actions);
-                        else return new PossiblyEngaged(agents, actions);
+                        if (first.Name == "necessary") return new NecessaryEngaged(agents, inst); 
+                        else return new PossiblyEngaged(agents, inst); 
                     }
                     if (from.Name != "from") t.ThrowException("Expected from after action list.");
                     LogicElement cond = EntryC1(state);
-                    if (first.Name == "necessary") return new NecessaryEngagedFrom(agents,actions,cond);
-                    else return new PossiblyEngagedFrom(agents, actions, cond);
+                    if (first.Name == "necessary") return new NecessaryEngagedFrom(agents, inst, cond); 
+                    else return new PossiblyEngagedFrom(agents, inst, cond); 
                 }
                 else if(state.Fluent.ContainsKey(next.Name) || state.Noninertial.ContainsKey(next.Name)
                     || next.Name == "(" || next.Name == "~") // necessary value
