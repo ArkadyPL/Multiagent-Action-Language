@@ -139,7 +139,7 @@ namespace MultiAgentLanguageGUI
             string output = "";
             foreach (var exp in Expression)
             {
-                output += exp.ToProlog() + "\n";
+                //output += exp.ToProlog() + "\n";
             }
             return output;
         }

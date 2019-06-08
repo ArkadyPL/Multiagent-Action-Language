@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using MultiAgentLanguageModels.Expressions;
 
 namespace MultiAgentLanguageModels.Queries
 {
@@ -14,6 +15,11 @@ namespace MultiAgentLanguageModels.Queries
             Agents = agents;
             Actions = actions;
             Condition = condition;
+        }
+
+        public override bool Solve(ExpressionsList expressions)
+        {
+            throw new System.NotImplementedException();
         }
     }
 

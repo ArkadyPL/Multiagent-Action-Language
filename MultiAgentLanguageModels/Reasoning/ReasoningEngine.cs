@@ -72,6 +72,8 @@ namespace MultiAgentLanguageModels.Reasoning
                                 workingCauses.Add(cause);
                             }
                         }
+                        if (workingCauses.Count == 0)
+                            continue;
                         //now we need to create uber-alpha condition
                         var uberAlpha = workingCauses.Select(x => x.Alpha).Aggregate((a, b) => new And(a, b));
                         //final states should be compliant with our uberAlpha

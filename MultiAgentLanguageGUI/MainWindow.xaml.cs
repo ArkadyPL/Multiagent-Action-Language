@@ -26,7 +26,6 @@ namespace MultiAgentLanguageGUI
     /// </summary>
     public partial class MainWindow : Window
     {
-        IPrologService prologService;
         ParserState state;
         bool parsed = false;
         public MainWindow()
@@ -145,22 +144,18 @@ namespace MultiAgentLanguageGUI
                 state.Q = q;
                 Output.Print($"Created query.");
                 Output.Print("Done.");
-                if(prologService is null)
-                {
-                    StandardKernel kernel = new StandardKernel();
-                    kernel.Load(Assembly.GetExecutingAssembly());
-                    prologService = kernel.Get<IPrologService>();
-                }
-                var result = prologService.GetSolution(state.Story, state.Q);
+
+
+
                 Output.PrintNLine();
-                if (result)
-                {
-                    Output.Print("Query: True.");
-                }
-                else
-                {
-                    Output.Print("Query: False.");
-                }
+                //if (result)
+                //{
+                //    Output.Print("Query: True.");
+                //}
+                //else
+                //{
+                //    Output.Print("Query: False.");
+                //}
                 Output.PrintNLine();
             }
             catch (Exception ex)

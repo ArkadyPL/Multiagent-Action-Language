@@ -46,7 +46,7 @@ namespace MultiAgentLanguageModels.Queries
                                 var triple = new Triple(action, currentState, agents);
                                 if (res.ContainsKey(triple))
                                 {
-                                    newCurrentStates.Concat(res[triple]);
+                                    res[triple].ToList().ForEach(s => newCurrentStates.Add(s));
                                 }
                             }
                             currentStates = newCurrentStates;
