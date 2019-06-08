@@ -24,7 +24,7 @@ SHOOT causes [~alive] if [loaded]
 ";
         
         [Test]
-        public void YaleShootingProblem_LoadByAny_FromInitiallState()
+        public void YaleShootingProblem_LoadByAny_FromLoaded()
         {
             // GIVEN
             var tokens = Tokenizer.Tokenize(YaleShootingProblemStory);
@@ -35,7 +35,7 @@ SHOOT causes [~alive] if [loaded]
 
             // WHEN
             string query = @"
-possibly executable (LOAD, [a])
+possibly executable (LOAD, [a]) from [~loaded]
 ";
             Query q = Parser.ParseQuerry(Tokenizer.Tokenize(query), parserState);
             var res = q.Solve(expressions);

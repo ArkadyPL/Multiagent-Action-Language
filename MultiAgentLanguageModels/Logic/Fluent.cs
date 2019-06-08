@@ -22,7 +22,8 @@ namespace MultiAgentLanguageModels
 
         public string ToProlog()
         {
-            return $"[{Name}]";
+            if(Value == true) return $"[{Name}]";
+            else return $"[\\{Name}]";
         }
 
         public override bool GetValue()
