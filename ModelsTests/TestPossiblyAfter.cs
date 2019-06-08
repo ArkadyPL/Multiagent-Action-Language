@@ -30,7 +30,7 @@ buypaper by [g] releases [hasB]
 possibly [hasA] after (buypaper, [g])
 ";
 
-            Query q = Parser.ParseQuerry(
+            Query q = Parser.ParseQuery(
                 Tokenizer.Tokenize(query),
                 parserState);
 
@@ -60,7 +60,7 @@ buypaper by [g] causes [hasA || hasB]
 possibly [hasA] after (buypaper, [g])
 ";
 
-            Query q = Parser.ParseQuerry(
+            Query q = Parser.ParseQuery(
                 Tokenizer.Tokenize(query),
                 parserState);
 
@@ -89,7 +89,7 @@ buypaper by [g] causes [hasA || hasB]
 possibly [hasA || hasB] after (buypaper, [g])
 ";
 
-            Query q = Parser.ParseQuerry(
+            Query q = Parser.ParseQuery(
                 Tokenizer.Tokenize(query),
                 parserState);
 
@@ -122,7 +122,7 @@ load by [g] causes [loaded]
 								possibly [loaded] after (load, [g])
 								";
 
-            Query q = Parser.ParseQuerry(
+            Query q = Parser.ParseQuery(
                     Tokenizer.Tokenize(query),
                     parserState);
 
@@ -156,7 +156,7 @@ load by [g] causes [loaded]
 								possibly [loaded] after (load, [g]),(load, [g]),(load, [g])
 								";
 
-            var q4 = Parser.ParseQuerry(
+            var q4 = Parser.ParseQuery(
                  Tokenizer.Tokenize(query4),
                  parserState);
 
@@ -190,7 +190,7 @@ load by [g] causes [loaded]
 								possibly [loaded] after (load, [g]),(load, [g]),(load, [g])
 								";
 
-            var q5 = Parser.ParseQuerry(
+            var q5 = Parser.ParseQuery(
                  Tokenizer.Tokenize(query5),
                  parserState);
 
@@ -222,7 +222,7 @@ load by [g] causes [loaded]
 								possibly [loaded] after (load, [g]),(shoot, [g]),(load, [g])
 								";
 
-            var q6 = Parser.ParseQuerry(
+            var q6 = Parser.ParseQuery(
                  Tokenizer.Tokenize(query6),
                  parserState);
 
@@ -255,7 +255,7 @@ load by [g] causes [loaded]
             possibly [loaded]  after ()
             ";
 
-						var q7 = Parser.ParseQuerry(
+						var q7 = Parser.ParseQuery(
 							 Tokenizer.Tokenize(query7),
 							 parserState);
 
@@ -287,7 +287,7 @@ load by [g] causes [loaded]
 possibly [loaded] after (load, [g]),(shoot, [g])
 ";
 
-            var q8 = Parser.ParseQuerry(
+            var q8 = Parser.ParseQuery(
                  Tokenizer.Tokenize(query8),
                  parserState);
 
@@ -319,7 +319,7 @@ load by [g] causes [loaded]
 possibly [loaded] after (load, [g]),(load, [g]),(shoot, [g])
 ";
 
-            var q9 = Parser.ParseQuerry(
+            var q9 = Parser.ParseQuery(
                  Tokenizer.Tokenize(query9),
                  parserState);
 
@@ -349,7 +349,7 @@ load by [g] causes [loaded]
 possibly [loaded] after (load, [g]),(load, [g]),(shoot, [g]),(load, [g]),(shoot, [g])
 ";
 
-            var q10 = Parser.ParseQuerry(
+            var q10 = Parser.ParseQuery(
                  Tokenizer.Tokenize(query10),
                  parserState);
 
@@ -384,7 +384,7 @@ load by [g] causes [loaded]
 								possibly [~alive] after (load, [g])
 								";
 
-            Query q = Parser.ParseQuerry(
+            Query q = Parser.ParseQuery(
                     Tokenizer.Tokenize(query),
                     parserState);
 
@@ -416,7 +416,7 @@ load by [g] causes [loaded]
 possibly [alive] after (load, [g])
 			";
 
-            Query q = Parser.ParseQuerry(
+            Query q = Parser.ParseQuery(
                                         Tokenizer.Tokenize(query),
                                         parserState);
 
@@ -449,7 +449,7 @@ load by [g] causes [loaded]
 possibly [~alive] after (shoot, [g])
 								";
 
-            Query q = Parser.ParseQuerry(
+            Query q = Parser.ParseQuery(
                     Tokenizer.Tokenize(query),
                     parserState);
 
@@ -481,7 +481,7 @@ load by [g] causes [loaded]
 possibly [alive] after (shoot, [g])
 ";
 
-            Query q = Parser.ParseQuerry(
+            Query q = Parser.ParseQuery(
                     Tokenizer.Tokenize(query),
                     parserState);
 
@@ -516,7 +516,7 @@ load by [g] causes [loaded]
 								possibly [~alive] after (shoot, [g])
 								";
 
-            Query q = Parser.ParseQuerry(
+            Query q = Parser.ParseQuery(
                     Tokenizer.Tokenize(query),
                     parserState);
 
@@ -550,7 +550,7 @@ load by [g] causes [loaded]
 								possibly [~alive] after (shoot, [g])
 								";
 
-            Query q = Parser.ParseQuerry(
+            Query q = Parser.ParseQuery(
                     Tokenizer.Tokenize(query),
                     parserState);
 
@@ -583,7 +583,7 @@ load by [g] causes [loaded]
 								possibly [alive] after (shoot, [g])
 								";
 
-            Query q = Parser.ParseQuerry(
+            Query q = Parser.ParseQuery(
                     Tokenizer.Tokenize(query),
                     parserState);
 
@@ -623,7 +623,7 @@ entice by [g] causes [walking] if [alive]
 								possibly [walking] after (shoot, [g]), (entice, [g])
 								";
 
-						Query q = Parser.ParseQuerry(
+						Query q = Parser.ParseQuery(
 										Tokenizer.Tokenize(query),
 										parserState);
 
@@ -662,7 +662,7 @@ entice causes [walking] if [alive]
 								possibly [walking] after (shoot, []), (entice, [])
 								";
 
-						Query q = Parser.ParseQuerry(
+						Query q = Parser.ParseQuery(
 										Tokenizer.Tokenize(query),
 										parserState);
 

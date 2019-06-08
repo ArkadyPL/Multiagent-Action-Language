@@ -229,6 +229,13 @@ namespace MultiAgentLanguageGUI
                 open.ThrowException("Expected '[' at the beginning of agents list.");
             }
             bool correctSyntax = false;
+            Token close = state.PeepToken();
+            if (close == null) open.ThrowException("Expected empty list of agents '[]' or agent name.");
+            if(close.Name == "]")
+            {
+                state.PopToken();
+                return al;
+            }
             while (state.TokenList.Count > 0)
             {
                 Token t = state.PopToken();
@@ -661,7 +668,9 @@ namespace MultiAgentLanguageGUI
                     previous.ThrowException("Expected program format: (A1,G1),(A2,G2),...,(An,Gn)");
                 }
                 Token a = state.PopToken();
-                if (a == null || state.Action.ContainsKey(a.Name) == false)
+                if (a == null) open.ThrowException("Expected action");
+                if (a.Name == ")") return inst;
+                if(state.Action.ContainsKey(a.Name) == false)
                 {
                     open.ThrowException("Expected action");
                 }
@@ -698,7 +707,7 @@ namespace MultiAgentLanguageGUI
             return actions;
         }
 
-        public static Query ParseQuerry(List<Token> tokenList, ParserState story)
+        public static Query ParseQuery(List<Token> tokenList, ParserState story)
         {
             ParserState state = new ParserState(tokenList);
             state.Action = story.Action;
