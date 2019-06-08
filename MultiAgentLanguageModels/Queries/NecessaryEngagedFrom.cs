@@ -15,11 +15,6 @@ namespace MultiAgentLanguageModels.Queries
             Actions = actions;
             Condition = condition;
         }
-
-        public override bool Interpret(IEnumerable<bool> allPossibilities)
-        {
-            return allPossibilities.All(x => x);
-        }
     }
 
     public class NecessaryEngaged : NecessaryEngagedFrom

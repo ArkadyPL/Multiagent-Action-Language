@@ -65,7 +65,6 @@
     <Compile Include="Other\Edge.cs" />
     <Compile Include="Other\Instruction.cs" />
     <Compile Include="Other\Node.cs" />
-    <Compile Include="Prolog\IPrologService.cs" />
     <Compile Include="Logic\LogicElement.cs" />
     <Compile Include="Logic\LogicExpression.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

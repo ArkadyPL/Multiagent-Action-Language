@@ -14,6 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\MultiAgentLanguageGUI\MultiAgentLanguageGUI.csproj" />
     <ProjectReference Include="..\MultiAgentLanguageModels\MultiAgentLanguageModels.csproj" />
   </ItemGroup>
 
