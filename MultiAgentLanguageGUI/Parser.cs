@@ -348,8 +348,8 @@ namespace MultiAgentLanguageGUI
                 if (!state.Fluent.ContainsKey(name.Name) && !state.Noninertial.ContainsKey(name.Name))
                     name.ThrowException("Expected fluent name");
                 Fluent f = new Fluent(name.Name);
-                f.Value = false;
-                return f;
+                Not retVal = new Not(f);
+                return retVal;
             }
             else if (state.Fluent.ContainsKey(t.Name) || state.Noninertial.ContainsKey(t.Name))
             {

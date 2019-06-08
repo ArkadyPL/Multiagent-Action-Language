@@ -42,9 +42,10 @@ namespace MultiAgentLanguageGUI
                 "Fluent f2\n" +
                 "Action x\n" +
                 "Action y\n" +
-                "[f1 && f2] after (x,[a,b]),(y,[b])\n" +
+                "[~f1 && f2] after (x,[a,b]),(y,[b])\n" +
                 "\n" +
-                "y by [a,b] cinitially [f1]auses [~f1] if [f2]\n" +
+                "initially [f1]" +
+                "y by [a,b] causes [~f1] if [f2]\n" +
                 "y causes [~f1] if [f2]\n" +
                 "y by [a,b] causes [~f1]\n" +
                 "y causes [f1]\n" +
