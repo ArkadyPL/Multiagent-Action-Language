@@ -745,17 +745,17 @@ namespace MultiAgentLanguageGUI
                     {
                         t.ThrowException("Expected in after engaged.");
                     }
-                    List<MultiAgentLanguageModels.Action> actions = GetActionList(state);
+                    Instruction inst = GetInstructions(state,in_token);
                     Token from = state.PopToken();
                     if (from == null)
                     {
-                        if (first.Name == "necessary") return new NecessaryEngaged(agents, null); // TODO: put instructions here instead of "null"
-                        else return new PossiblyEngaged(agents, null); // TODO: put instructions here instead of "null"
+                        if (first.Name == "necessary") return new NecessaryEngaged(agents, inst); // TODO: put instructions here instead of "null"
+                        else return new PossiblyEngaged(agents, inst); // TODO: put instructions here instead of "null"
                     }
                     if (from.Name != "from") t.ThrowException("Expected from after action list.");
                     LogicElement cond = EntryC1(state);
-                    if (first.Name == "necessary") return new NecessaryEngagedFrom(agents, null, cond); // TODO: put instructions here instead of "null"
-                    else return new PossiblyEngagedFrom(agents, null, cond); // TODO: put instructions here instead of "null"
+                    if (first.Name == "necessary") return new NecessaryEngagedFrom(agents, inst, cond); // TODO: put instructions here instead of "null"
+                    else return new PossiblyEngagedFrom(agents, inst, cond); // TODO: put instructions here instead of "null"
                 }
                 else if(state.Fluent.ContainsKey(next.Name) || state.Noninertial.ContainsKey(next.Name)
                     || next.Name == "(" || next.Name == "~") // necessary value
