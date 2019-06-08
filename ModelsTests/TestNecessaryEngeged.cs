@@ -170,7 +170,7 @@ necessary [g2] engaged in (A1, [g1, g2, g3]),(A2, [g2, g3, g4])
 
             var res = q.Solve(expressions);
 
-            Assert.AreEqual(true, res);
+            Assert.AreEqual(false, res);
         }
 
         [Test]
@@ -201,7 +201,7 @@ necessary [g2] engaged in (A1, [g1, g2, g3]),(A2, [g2, g3, g4])
 
             var res = q.Solve(expressions);
 
-            Assert.AreEqual(true, res);
+            Assert.AreEqual(false, res);
         }
     }
 }
