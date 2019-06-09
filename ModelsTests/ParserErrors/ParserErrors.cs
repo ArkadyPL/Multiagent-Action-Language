@@ -2,6 +2,7 @@
 using MultiAgentLanguageModels.Expressions;
 using MultiAgentLanguageModels.Queries;
 using NUnit.Framework;
+using System;
 using System.Linq;
 
 
@@ -121,6 +122,35 @@ necessary [loaded] after (spin, [x])
             Assert.AreEqual(true, res);
         }
 
+        [Test]
+        public void ReleasesWithoutBrackets_NoExceptionThrown()
+        {
+            string str = @"
+Action spin
+Agent x
+Fluent loaded
+spin releases loaded
+";
+            // GIVEN
+            var tokens = Tokenizer.Tokenize(str);
+
+            Assert.DoesNotThrow(() => Parser.Parse(tokens));
+        }
+
+        [Test]
+        public void ReleasesWithBrackets_ExceptionThrown()
+        {
+            string str = @"
+Action spin
+Agent x
+Fluent loaded
+spin releases [loaded]
+";
+            // GIVEN
+            var tokens = Tokenizer.Tokenize(str);
+
+            Assert.Throws<TokenException>(() => Parser.Parse(tokens));
+        }
 
         [Test]
         public void ParseNotByTest_RequiredImpossibleIfInExpression()
