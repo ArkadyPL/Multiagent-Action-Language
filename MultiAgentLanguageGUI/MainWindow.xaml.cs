@@ -66,6 +66,29 @@ namespace MultiAgentLanguageGUI
             Parsed = false;
         }
 
+        private void TextBox_Story_SelectionChanged(object sender, RoutedEventArgs e)
+        {
+            int index = TextBox_Story.SelectionStart;
+
+            int line = 1;
+            int column = 1;
+            for(int i = 0; i < index; i ++)
+            {
+                if(TextBox_Story.Text[i] == '\n')
+                {
+                    line++;
+                    column = 1;
+                }
+                else
+                {
+                    column++;
+                }
+            }
+
+            Label_CursorLine.Content = $"Ln : {line}";
+            Label_CursorColumn.Content = $"Col : {column}";
+        }
+
         private void Button_StoryParse_Click(object sender, RoutedEventArgs e)
         {
             Output.PrintSeparator();
