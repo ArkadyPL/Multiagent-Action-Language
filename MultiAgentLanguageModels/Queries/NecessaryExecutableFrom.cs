@@ -82,7 +82,7 @@ namespace MultiAgentLanguageModels.Queries
     public class NecessaryExecutable : NecessaryExecutableFrom
     {
         public NecessaryExecutable(Instruction instructions)
-            : base(instructions, LogicExpression.Empty)
+            : base(instructions, new True())
         {
         }
         

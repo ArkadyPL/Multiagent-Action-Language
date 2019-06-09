@@ -35,7 +35,7 @@ Fluent elevatorIsWorking");
 
             //initially
             sb.AppendLine(@"
-initially [~tomekIsUpstairs && ~marekIsUpstairs && ~elevatorIsWorking]");
+initially [(~tomekIsUpstairs && ~marekIsUpstairs) && ~elevatorIsWorking]");
 
             //impossible actions
             sb.AppendLine(@"
@@ -68,8 +68,7 @@ useElevator by [marek,tomek] releases [marekIsUpstairs]
         [Test]
         public void NecessaryExecutable_Repair_UseElevatorByOne_False()
         {
-            //TODO Usunąć stan początkowy
-            var query = "necessary executable (repair, [serwisant]), (useElevator, [tomek, marek]) from [~tomekIsUpstairs && ~marekIsUpstairs && ~elevatorIsWorking]";
+            var query = "necessary executable (repair, [serwisant]), (useElevator, [tomek, marek])";
 
             Query q = Parser.ParseQuery(Tokenizer.Tokenize(query), _parserState);
             var result = q.Solve(_parserState.Story);
@@ -80,8 +79,7 @@ useElevator by [marek,tomek] releases [marekIsUpstairs]
         [Test]
         public void PossiblyExecutable_Repair_UseElevatorByOne_True()
         {
-            //TODO Usunąć stan początkowy
-            var query = "possibly executable (repair, [serwisant]), (useElevator, [tomek]) from  [~tomekIsUpstairs && ~marekIsUpstairs && ~elevatorIsWorking]";
+            var query = "possibly executable (repair, [serwisant]), (useElevator, [tomek])";
 
             Query q = Parser.ParseQuery(Tokenizer.Tokenize(query), _parserState);
             var result = q.Solve(_parserState.Story);
@@ -107,7 +105,7 @@ useElevator by [marek,tomek] releases [marekIsUpstairs]
         [Test]
         public void Possibly_BothUpstairs_After_UseElevatorAtTheSameTime_True()
         {
-            var query = "possibly [marekIsUpstairs && tomekIsUpstairs] after (useElevator, [tomek, marek]) from [~tomekIsUpstairs && ~marekIsUpstairs && elevatorIsWorking]";
+            var query = "possibly [marekIsUpstairs && tomekIsUpstairs] after (useElevator, [tomek, marek]) from [(~tomekIsUpstairs && ~marekIsUpstairs) && elevatorIsWorking]";
 
             Query q = Parser.ParseQuery(Tokenizer.Tokenize(query), _parserState);
             var result = q.Solve(_parserState.Story);
@@ -119,7 +117,7 @@ useElevator by [marek,tomek] releases [marekIsUpstairs]
         [Test]
         public void Necessary_Broken_After_useElevatorAtTheSameTime_True()
         {
-            var query = "necessary [~elevatorIsWorking] after (useElevator,[tomek,marek]) from [~tomekIsUpstairs && ~marekIsUpstairs && elevatorIsWorking]";
+            var query = "necessary [~elevatorIsWorking] after (useElevator,[tomek,marek]) from [(~tomekIsUpstairs && ~marekIsUpstairs) && elevatorIsWorking]";
 
             Query q = Parser.ParseQuery(Tokenizer.Tokenize(query), _parserState);
             var result = q.Solve(_parserState.Story);
