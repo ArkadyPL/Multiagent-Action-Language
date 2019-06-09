@@ -1,6 +1,9 @@
 ﻿using MultiAgentLanguageGUI;
+using MultiAgentLanguageModels.Expressions;
 using MultiAgentLanguageModels.Queries;
 using NUnit.Framework;
+using System.Linq;
+
 
 namespace ParserErrors
 {
@@ -116,6 +119,57 @@ necessary [loaded] after (spin, [x])
 
             // THEN
             Assert.AreEqual(true, res);
+        }
+
+
+        [Test]
+        public void ParseNotByTest_RequiredImpossibleIfInExpression()
+        {
+            var str = @"
+Action A
+Agent x1
+Agent x2
+Agent x3
+A not by [x1, x2]
+";
+
+            var tokens = Tokenizer.Tokenize(str);
+            var parserState = Parser.Parse(tokens);
+
+            var allImpossibleExpressions = parserState.Expression.Where(x => IsImpossibleExpression(x));
+
+            var impossibleByExpressions = parserState.Expression
+                .Where(x => x is ImpossibleBy)
+                .Select(x => (ImpossibleBy)x);
+
+
+            Assert.AreEqual(true, impossibleByExpressions.Any(x =>
+                x.A.Name == "A"
+                && x.G.Count == 1 && x.G.Single().Name == "x1"
+            ),"missing impossible expression");
+
+            Assert.AreEqual(true, impossibleByExpressions.Any(x =>
+                x.A.Name == "A"
+                && x.G.Count == 1 && x.G.Single().Name == "x2"
+            ), "missing impossible expression");
+
+            Assert.That(impossibleByExpressions.Count(), Is.EqualTo(2), "impossible by expressions count not equals 2");
+            Assert.That(allImpossibleExpressions.Count(), Is.EqualTo(2), "all impossible expressions count not equals 2");
+
+            Assert.That(!parserState.Expression.Any(x => IsNotExpression(x)), "is not expression present");
+        }
+
+        private bool IsImpossibleExpression(Expression expression)
+        {
+            return expression is ImpossibleBy
+                || expression is ImpossibleIf
+                || expression is ImpossibleByIf;
+        }
+
+        private bool IsNotExpression(Expression expression)
+        {
+            return expression is NotBy                
+                || expression is NotByIf;
         }
     }
 }
