@@ -4,7 +4,7 @@ using NUnit.Framework;
 using MultiAgentLanguageModels;
 using System.Collections.Generic;
 
-namespace MultiAgentLanguageModelsTests.Reasoning
+namespace Reasoning
 {
     public class PossibleStatesTests
     {

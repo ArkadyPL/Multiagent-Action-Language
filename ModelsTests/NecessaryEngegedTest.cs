@@ -3,9 +3,9 @@ using MultiAgentLanguageModels.Expressions;
 using MultiAgentLanguageModels.Queries;
 using NUnit.Framework;
 
-namespace MultiAgentLanguageModelsTests
+namespace EngagedQuery
 {
-    public class TestNecessaryEngeged
+    public class TestNecessaryEngaged
     {
 
         [Test]

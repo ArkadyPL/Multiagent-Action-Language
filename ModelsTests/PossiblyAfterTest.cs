@@ -3,7 +3,7 @@ using MultiAgentLanguageModels.Expressions;
 using MultiAgentLanguageModels.Queries;
 using NUnit.Framework;
 
-namespace MultiAgentLanguageModelsTests
+namespace AfterQuery
 {
     public class TestPossiblyAfter
     {
@@ -128,41 +128,7 @@ possibly [loaded] after (LOAD, [a]), (SHOOT, [a]) from [~loaded]
             // THEN
             Assert.AreEqual(false, res);
         }
-
-        [Test]
-        public void Test5_PARSER_ERROR()
-        {
-            string str = @"
-Agent a
-Fluent switch2
-Fluent switch1
-Fluent light
-Action TOGGLE1
-Action TOGGLE2
-noninertial light
-initially [switch1 && switch2]
-always [light <-> (switch1 <-> switch2)]
-TOGGLE1 causes [~switch1] if [switch1]
-TOGGLE1 causes [switch1] if [~switch1]
-TOGGLE2 causes [~switch2] if [switch2]
-TOGGLE2 causes [switch2] if [~switch2]
-";
-            // GIVEN
-            var tokens = Tokenizer.Tokenize(str);
-            var parserState = Parser.Parse(tokens);
-            var expressions = parserState.Story;
-
-            // WHEN
-            string query = @"
-possibly [light] after (TOGGLE1, [a]), (TOGGLE2, [a])
-";
-            Query q = Parser.ParseQuery(Tokenizer.Tokenize(query), parserState);
-            var res = q.Solve(expressions);
-
-            // THEN
-            Assert.AreEqual(true, res);
-        }
-
+        
         [Test]
         public void Test5()
         {
@@ -191,7 +157,7 @@ possibly [light] after (TOGGLE1, [a]), (TOGGLE2, [a])
 ";
             Query q = Parser.ParseQuery(Tokenizer.Tokenize(query), parserState);
             var res = q.Solve(expressions);
-
+            
             // THEN
             Assert.AreEqual(true, res);
         }

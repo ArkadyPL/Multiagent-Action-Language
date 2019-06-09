@@ -2,7 +2,7 @@
 using MultiAgentLanguageModels.Queries;
 using NUnit.Framework;
 
-namespace MultiAgentLanguageModelsTests
+namespace ExecutableQuery
 {
     public class TestNecessaryExecutable
     {

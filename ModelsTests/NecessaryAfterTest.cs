@@ -3,7 +3,7 @@ using MultiAgentLanguageModels.Expressions;
 using MultiAgentLanguageModels.Queries;
 using NUnit.Framework;
 
-namespace MultiAgentLanguageModelsTests
+namespace AfterQuery
 {
     public class TestNecessaryAfter
     {
@@ -275,5 +275,71 @@ necessary [loaded] after ()
             // THEN
             Assert.AreEqual(true, res);
         }
+
+        [Test]
+        public void Test10()
+        {
+            string str = @"
+Action fire
+Action walk
+Agent x
+Fluent loaded
+Fluent alive
+Fluent walked
+fire causes [~loaded] 
+fire causes [~alive] if [loaded] 
+walk causes [walked]
+initially [alive] 
+[~alive] after (walk, [x]), (fire, [x])
+";
+            // GIVEN
+            var tokens = Tokenizer.Tokenize(str);
+            var parserState = Parser.Parse(tokens);
+            var expressions = parserState.Story;
+
+            // WHEN
+            string query = @"
+necessary [loaded] after (walk, [x])
+";
+            Query q = Parser.ParseQuery(Tokenizer.Tokenize(query), parserState);
+            var res = q.Solve(expressions);
+
+            // THEN
+            Assert.AreEqual(true, res);
+        }
+
+        [Test]
+        public void Test11()
+        {
+            string str = @"
+Action fire
+Action spin
+Agent x
+Fluent loaded
+Fluent alive
+Fluent walked
+fire causes [~loaded] 
+fire causes [~alive] if [loaded] 
+spin releases [loaded]
+initially [alive] 
+[~alive] after (spin, [x]), (fire, [x])
+";
+            // GIVEN
+            var tokens = Tokenizer.Tokenize(str);
+            var parserState = Parser.Parse(tokens);
+            var expressions = parserState.Story;
+
+            // WHEN
+            string query = @"
+necessary [loaded] after (spin, [x])
+";
+            Query q = Parser.ParseQuery(Tokenizer.Tokenize(query), parserState);
+            var res = q.Solve(expressions);
+
+            // THEN
+            Assert.AreEqual(true, res);
+        }
+
+ 
     }
 }
