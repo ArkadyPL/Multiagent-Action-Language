@@ -42,8 +42,10 @@ namespace MultiAgentLanguageModelsTests.ForOtherTeam
             initially [~brewed]
             initially [~destroyed]");
 
-            //actions causes and realeses
+            //actions causes and releases
             sb.AppendLine(@"
+            brew by [Bercik] causes [brewed || destroyed]
+            brew by [Filemon] causes [brewed || ~brewed]
             brew by [Bercik, Filemon] causes [brewed]
             brew by [Filemon] releases [brewed]
             brew by [Filemon] causes [brewed || ~brewed]

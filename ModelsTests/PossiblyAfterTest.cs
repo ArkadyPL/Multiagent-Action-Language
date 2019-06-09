@@ -858,6 +858,47 @@ drink by [bill] causes [drunk] if [~drunk]
 
 						Assert.AreEqual(true, res);
 				}
+
+
+				[Test]
+				public void YSPRealeaseDrunkenAgents_CanChickenSurvive()
+				{
+						string story = @"
+Fluent drunk
+Fluent alive
+
+
+initially [alive]
+initially [~drunk]
+
+Agent bill
+
+Action shoot
+shoot by[bill] causes[~alive] if [~drunk]
+
+Action drink
+drink by [bill] causes [drunk || ~drunk]
+drink by [bill] releases [drunk] 
+
+";
+
+						var tokens = Tokenizer.Tokenize(story);
+						var parserState = Parser.Parse(tokens);
+						var expressions = parserState.Story;
+
+						string query = @"
+								possibly [alive] after (drink, [bill]),(shoot, [bill])
+								";
+
+						Query q = Parser.ParseQuery(
+										Tokenizer.Tokenize(query),
+										parserState);
+
+						var res = q.Solve(expressions);
+
+						Assert.AreEqual(true, res);
+				}
+
 		}
 
 }
