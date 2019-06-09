@@ -23,7 +23,8 @@ namespace Reasoning
                 new Causes("shoot", new Not(loaded)),
                 new CausesIf("shoot", new Not(alive), loaded)
             };
-            var resp = reasoning.PossibleStates(ExpressionsList);
+
+            var resp = reasoning.GenerateStructure(ExpressionsList);
 
             Assert.AreEqual(resp, resp);
         }
@@ -43,7 +44,7 @@ namespace Reasoning
                 new Causes("shoot", new Not(loaded)),
                 new CausesIf("shoot", new Not(alive), loaded)
             };
-            var resp = reasoning.Res0(ExpressionsList);
+            var resp = reasoning.GenerateStructure(ExpressionsList);
 
             Assert.AreEqual(resp, resp);
         }
@@ -63,7 +64,7 @@ namespace Reasoning
                 new Causes("shoot", new Not(loaded)),
                 new CausesIf("shoot", new Not(alive), loaded)
             };
-            var resp = reasoning.Res(ExpressionsList);
+            var resp = reasoning.GenerateStructure(ExpressionsList);
 
             Assert.AreEqual(resp, resp);
         }
@@ -81,7 +82,7 @@ namespace Reasoning
                 new ReleasesIf("buypaper", hasA, new Not(hasA)),
                 new ReleasesIf("buypaper", hasB, new Not(hasB))
             };
-            var resp = reasoning.Res(ExpressionsList);
+            var resp = reasoning.GenerateStructure(ExpressionsList);
 
             Assert.AreEqual(resp, resp);
         }

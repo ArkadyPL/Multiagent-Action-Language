@@ -132,6 +132,68 @@ necessary executable (LOAD, [a]), (SHOOT, [a]) from [~loaded]
             // THEN
             Assert.AreEqual(false, res);
         }
+
+        [Test]
+        public void Test5()
+        {
+            string str = @"
+Action fire
+Action spin
+Fluent loaded
+Fluent alive
+fire causes [~loaded] 
+fire causes [~alive] if [loaded]
+spin causes [loaded]
+initially [alive] 
+observable [alive] after (spin, []), (fire, [])
+";
+            // GIVEN
+            var tokens = Tokenizer.Tokenize(str);
+            var parserState = Parser.Parse(tokens);
+            var expressions = parserState.Story;
+
+            // WHEN
+            string query = @"
+necessary executable (fire, []), (fire, []) from [~loaded]
+";
+            Query q = Parser.ParseQuery(Tokenizer.Tokenize(query), parserState);
+            var res = q.Solve(expressions);
+
+            // THEN
+            Assert.AreEqual(true, res);
+        }
+
+        [Test]
+        public void Test6()
+        {
+            string str = @"
+Action fire
+Action spin
+Fluent loaded
+Fluent alive
+impossible fire if [~loaded]
+fire causes [~loaded] 
+fire causes [~alive]
+spin causes [loaded || ~loaded]
+spin releases [loaded]
+initially [alive] 
+[~alive] after (spin, []), (fire, [])
+";
+            // GIVEN
+            var tokens = Tokenizer.Tokenize(str);
+            var parserState = Parser.Parse(tokens);
+            var expressions = parserState.Story;
+
+            // WHEN
+            string query = @"
+necessary executable (spin, []), (fire, []) from [~loaded]
+";
+            Query q = Parser.ParseQuery(Tokenizer.Tokenize(query), parserState);
+            var res = q.Solve(expressions);
+
+            // THEN
+            Assert.AreEqual(true, res);
+        }
     }
 }
 

@@ -163,6 +163,95 @@ possibly [light] after (TOGGLE1, [a]), (TOGGLE2, [a])
         }
 
         [Test]
+        public void Test6()
+        {
+            string str = @"
+Action fire
+Action spin
+Fluent loaded
+Fluent alive
+fire causes [~loaded] 
+fire causes [~alive] if [loaded]
+spin causes [loaded]
+initially [alive] 
+observable [alive] after (spin, []), (fire, [])
+";
+            // GIVEN
+            var tokens = Tokenizer.Tokenize(str);
+            var parserState = Parser.Parse(tokens);
+            var expressions = parserState.Story;
+
+            // WHEN
+            string query = @"
+possibly [loaded] after (spin, [])
+";
+            Query q = Parser.ParseQuery(Tokenizer.Tokenize(query), parserState);
+            var res = q.Solve(expressions);
+
+            // THEN
+            Assert.AreEqual(true, res);
+        }
+
+        [Test]
+        public void Test7()
+        {
+            string str = @"
+Action fire
+Action spin
+Fluent loaded
+Fluent alive
+fire causes [~loaded] 
+fire causes [~alive] if [loaded]
+spin causes [loaded]
+initially [alive] 
+observable [~alive] after (spin, []), (fire, [])
+";
+            // GIVEN
+            var tokens = Tokenizer.Tokenize(str);
+            var parserState = Parser.Parse(tokens);
+            var expressions = parserState.Story;
+
+            // WHEN
+            string query = @"
+possibly [loaded] after (spin, [])
+";
+            Query q = Parser.ParseQuery(Tokenizer.Tokenize(query), parserState);
+            var res = q.Solve(expressions);
+
+            // THEN
+            Assert.AreEqual(true, res);
+        }
+
+        [Test]
+        public void Test8()
+        {
+            string str = @"
+Action fire
+Action spin
+Fluent loaded
+Fluent alive
+fire causes [~loaded] 
+fire causes [~alive] if [loaded]
+spin causes [loaded]
+initially [alive] 
+[~alive] after (spin, []), (fire, [])
+";
+            // GIVEN
+            var tokens = Tokenizer.Tokenize(str);
+            var parserState = Parser.Parse(tokens);
+            var expressions = parserState.Story;
+
+            // WHEN
+            string query = @"
+possibly [loaded] after (spin, [])
+";
+            Query q = Parser.ParseQuery(Tokenizer.Tokenize(query), parserState);
+            var res = q.Solve(expressions);
+
+            // THEN
+            Assert.AreEqual(true, res);
+        }
+        [Test]
         public void YSPPossiblyLoaded_AfterLoad()
         {
             string story = @"

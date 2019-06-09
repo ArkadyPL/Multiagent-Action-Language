@@ -7,12 +7,12 @@ namespace MultiAgentLanguageModels.Reasoning
 {
     public class ReasoningEngine
     {
-        public List<string> InertialFluents(ExpressionsList expressions)
+        private List<string> InertialFluents(ExpressionsList expressions)
         {
             return expressions.Fluents.Except(expressions.Noninertial.Select(x => x.Fluent.Name)).ToList();
         }
 
-        public HashSet<State> PossibleStates(ExpressionsList expressions)
+        private HashSet<State> PossibleStates(ExpressionsList expressions)
         {
             HashSet<State> result = new HashSet<State>();
             //get all fluents
@@ -41,7 +41,7 @@ namespace MultiAgentLanguageModels.Reasoning
             return result;
         }
 
-        public Dictionary<Triple, HashSet<State>> Res0(ExpressionsList expressions)
+        private Dictionary<Triple, HashSet<State>> Res0(ExpressionsList expressions)
         {
             Dictionary<Triple, HashSet<State>> result = new Dictionary<Triple, HashSet<State>>();
             //For each group of Cause statements e.g.
@@ -112,7 +112,7 @@ namespace MultiAgentLanguageModels.Reasoning
             return result;
         }
 
-        public HashSet<string> New(ExpressionsList expressions, State from, State to, AgentsList agents, Action action)
+        private HashSet<string> New(ExpressionsList expressions, State from, State to, AgentsList agents, Action action)
         {
             //find all fluents that differs
             var diff = to.Values.Where(x => !from.Values.Contains(x)).Select(x => x.Key);
@@ -128,7 +128,7 @@ namespace MultiAgentLanguageModels.Reasoning
             //maybe except should be at the end of the query?
         }
 
-        public Dictionary<Triple, HashSet<State>> Res(ExpressionsList expressions)
+        private Dictionary<Triple, HashSet<State>> Res(ExpressionsList expressions)
         {
             var results = new Dictionary<Triple, HashSet<State>>();
             var res0 = Res0(expressions);
@@ -152,7 +152,7 @@ namespace MultiAgentLanguageModels.Reasoning
             return results;
         }
 
-        public HashSet<State> InitialStates(ExpressionsList expressions)
+        private HashSet<State> InitialStates(ExpressionsList expressions)
         {
             var allStates = PossibleStates(expressions);
             HashSet<State> initialStates = new HashSet<State>();
@@ -176,9 +176,17 @@ namespace MultiAgentLanguageModels.Reasoning
                     }
                 }
             }
+            
+            return initialStates;
+        }
 
-            Lazy<Dictionary<Triple, HashSet<State>>> res = new Lazy<Dictionary<Triple, HashSet<State>>>(() => Res(expressions));
+        public Structure GenerateStructure(ExpressionsList expressions)
+        {
+            var res = Res(expressions);
+            var possibleStates = PossibleStates(expressions);
+            var initialStates = InitialStates(expressions);
 
+            var resWithAfter = new Dictionary<Triple, HashSet<State>>(res);
             #region After statements
             //now lets get to the part where we intersect 
             //initial states with after statements
@@ -187,9 +195,10 @@ namespace MultiAgentLanguageModels.Reasoning
             {
                 foreach (var after in afterExpressions)
                 {
+                    Dictionary<Triple, HashSet<State>> changesInRes = new Dictionary<Triple, HashSet<State>>();
                     HashSet<State> currentStates = new HashSet<State>();
                     //find final states
-                    foreach (var state in allStates)
+                    foreach (var state in possibleStates)
                     {
                         if (after.FinalCondition.EvaluateLogicExpression().Any(x => state.Values.HasSubset(x)))
                         {
@@ -208,13 +217,15 @@ namespace MultiAgentLanguageModels.Reasoning
                         //we have action name, agents group and final state of edge
                         foreach (var currentState in currentStates)
                         {
-                            foreach (var kv in res.Value)
+                            foreach (var kv in res)
                             {
                                 if (kv.Value.Contains(currentState)
                                     && kv.Key.Item1.Equals(action)
                                     && kv.Key.Item3.Equals(agents))
                                 {
                                     newCurrentStates.Add(kv.Key.Item2);
+                                    resWithAfter[kv.Key] = new HashSet<State>();
+                                    resWithAfter[kv.Key].Add(currentState);
                                 }
                             }
                         }
@@ -226,7 +237,9 @@ namespace MultiAgentLanguageModels.Reasoning
                 }
             }
             #endregion
-            
+
+            res = new Dictionary<Triple, HashSet<State>>(resWithAfter);
+
             #region Observable After statements
             var observableAfterExpressions = expressions.ObservableAfterExpressions;
             if (observableAfterExpressions.Count != 0)
@@ -235,7 +248,7 @@ namespace MultiAgentLanguageModels.Reasoning
                 {
                     HashSet<State> currentStates = new HashSet<State>();
                     //find final states
-                    foreach (var state in allStates)
+                    foreach (var state in possibleStates)
                     {
                         if (observableAfter.FinalCondition.EvaluateLogicExpression().Any(x => state.Values.HasSubset(x)))
                         {
@@ -254,7 +267,7 @@ namespace MultiAgentLanguageModels.Reasoning
                         //we have action name, agents group and final state of edge
                         foreach (var currentState in currentStates)
                         {
-                            foreach (var kv in res.Value)
+                            foreach (var kv in res)
                             {
                                 if (kv.Value.Contains(currentState)
                                     && kv.Key.Item1.Equals(action)
@@ -267,7 +280,7 @@ namespace MultiAgentLanguageModels.Reasoning
                         currentStates = newCurrentStates;
                     }
                     //observable after expression really does nothing, except when there are not any path - then the whole model is false -> don't have any initial nodes
-                    if(currentStates.Count == 0)
+                    if (currentStates.Count == 0)
                     {
                         initialStates = new HashSet<State>();
                     }
@@ -275,7 +288,7 @@ namespace MultiAgentLanguageModels.Reasoning
             }
             #endregion
 
-            return initialStates;
+            return new Structure(initialStates, possibleStates, res);
         }
     }
 }

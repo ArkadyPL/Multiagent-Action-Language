@@ -18,9 +18,10 @@ namespace MultiAgentLanguageModels.Queries
         public override bool Solve(ExpressionsList expressions)
         {
             var reasoningEngine = new ReasoningEngine();
-            var res = reasoningEngine.Res(expressions);
-            var initialStates = reasoningEngine.InitialStates(expressions);
-            var allStates = reasoningEngine.PossibleStates(expressions);
+            var structure = reasoningEngine.GenerateStructure(expressions);
+            var res = structure.Res;
+            var initialStates = structure.InitialStates;
+            var allStates = structure.PossibleStates;
             var piCondition = Condition.EvaluateLogicExpression();
 
             //we want that list to hold result of query for each initial state
