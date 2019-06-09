@@ -58,10 +58,12 @@ namespace MultiAgentLanguageModels.Reasoning
                     {
                         //we want to create list of cause statements that works with specific state and agent group
                         List<ByCausesIf> workingCauses = new List<ByCausesIf>();
+                        List<bool> piConditions = new List<bool>();
                         //now we iterate through the cause statements to find those
                         foreach(var cause in causesGroup)
                         {
                             var w1 = cause.Pi.EvaluateLogicExpression().Any(x => state.Values.HasSubset(x));
+                            piConditions.Add(w1);
                             var w2 = group.HasSubset(cause.G);
                             var w3 = cause.Alpha.EvaluateLogicExpression().Count != 0;
                                 //if pi condition is ok with current state
@@ -80,7 +82,8 @@ namespace MultiAgentLanguageModels.Reasoning
                                 causesGroup.Key, state, group);
                         if (workingCauses.Count == 0)
                         {
-                            result.Add(tuple, PossibleStates(expressions));
+                            if(piConditions.All(x => !x))
+                                result.Add(tuple, PossibleStates(expressions));
                             continue;
                         } 
                         //now we need to create uber-alpha condition
