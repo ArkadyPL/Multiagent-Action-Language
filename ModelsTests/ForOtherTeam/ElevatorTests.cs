@@ -53,6 +53,7 @@ useElevator by [tomek] causes [~tomekIsUpstairs] if [tomekIsUpstairs]");
             //TODO usunąć nawiasy przy fluentach po naprawieniu parsera
             //actions releases
             sb.AppendLine(@"
+repair by [serwisant] causes [elevatorIsWorking || ~elevatorIsWorking]
 repair by [serwisant] releases [elevatorIsWorking] if [~elevatorIsWorking]
 useElevator by [marek,tomek] releases [tomekIsUpstairs]
 useElevator by [marek,tomek] releases [marekIsUpstairs]
