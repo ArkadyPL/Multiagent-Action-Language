@@ -135,9 +135,9 @@ possibly [g] engaged in (buypaper, [g])
                 Tokenizer.Tokenize(query),
                 parserState);
 
-            var res = q.Solve(expressions);
+            var result = q.Solve(expressions);
 
-            Assert.AreEqual(true, res);
+            Assert.IsTrue(result);
         }
 
         [Test]
@@ -163,9 +163,40 @@ possibly [h] engaged in (buypaper, [g])
                 Tokenizer.Tokenize(query),
                 parserState);
 
-            var res = q.Solve(expressions);
+            var result = q.Solve(expressions);
 
-            Assert.Fail();
+            // TODO: update docummentation - Arek
+            Assert.IsTrue(result);
+        }
+
+        [Test]
+        public void Test_BP_withNotBy()
+        {
+            string story = @"
+Fluent hasA
+Fluent hasB
+Agent g
+Agent h
+Action buypaper
+buypaper by [g] causes [hasA || hasB]
+impossible buypaper by [h]
+";
+            var tokens = Tokenizer.Tokenize(story);
+            var parserState = Parser.Parse(tokens);
+            var expressions = parserState.Story;
+
+            string query = @"
+possibly [h] engaged in (buypaper, [g])
+";
+
+            Query q = Parser.ParseQuery(
+                Tokenizer.Tokenize(query),
+                parserState);
+
+            var result = q.Solve(expressions);
+
+            // TODO: fix - Arek
+            Assert.IsFalse(result);
         }
 
         [Test]
@@ -195,9 +226,9 @@ possibly [g] engaged in (buypaper, [g, h])
                 Tokenizer.Tokenize(query),
                 parserState);
 
-            var res = q.Solve(expressions);
+            var result = q.Solve(expressions);
 
-            Assert.AreEqual(true, res);
+            Assert.IsTrue(result);
         }
 
     }

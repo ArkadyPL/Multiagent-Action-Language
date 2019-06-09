@@ -88,15 +88,17 @@ namespace MultiAgentLanguageModels.Queries
         {
             var action = triple.Item1;
             var state = triple.Item2;
+            // TODO: this should be agent from query, not the one from instruction (see Test_BP_withNotBy). Also fix in necessaryEngaged
             var agents = triple.Item3;
-            return res.Where(t =>
+            var list = res.Where(t =>
             {
                 var resAction = t.Key.Item1;
                 var resState = t.Key.Item2;
                 var resAgents = t.Key.Item3;
                 return resAction.Equals(action) && resState.Equals(state)
                     && resAgents.Intersect(agents).Count() == agents.Count;
-            }).Any();
+            }).ToList();
+            return list.Any();
         }
     }
 
