@@ -189,5 +189,19 @@ namespace MultiAgentLanguageModels.Expressions
             return result;
 
         }
+        public List<After> AfterExpressions
+        {
+            get
+            {
+                return this.Select(x => x as After).Where(x => !(x is null)).ToList();
+            }
+        }
+        public List<ObservableAfter> ObservableAfterExpressions
+        {
+            get
+            {
+                return this.Select(x => x as ObservableAfter).Where(x => !(x is null)).ToList();
+            }
+        }
     }
 }

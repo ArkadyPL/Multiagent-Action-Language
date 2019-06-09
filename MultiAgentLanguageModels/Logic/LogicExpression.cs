@@ -71,6 +71,14 @@ namespace MultiAgentLanguageModels
             Element = element;
         }
 
+        /// <summary>
+        /// Evaluates logic expression
+        /// </summary>
+        /// <returns>Returns list of possible fluent name - fluent value combination
+        /// in a for of dictionary. E.g. evaluating [a || b] returns:
+        /// [a: True, b: False]
+        /// [a: True, b: True]
+        /// [a: False, b: True]</returns>
         public List<Dictionary<string, bool>> EvaluateLogicExpression()
         {
             if (empty)

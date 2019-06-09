@@ -155,21 +155,121 @@ namespace MultiAgentLanguageModels.Reasoning
         public HashSet<State> InitialStates(ExpressionsList expressions)
         {
             var allStates = PossibleStates(expressions);
-            if (expressions.Initially.Count == 0)
-                return allStates;
+            HashSet<State> initialStates = new HashSet<State>();
 
-            var initialConditions = expressions.Initially
+            if (expressions.Initially.Count == 0)
+            {
+                initialStates = allStates;
+            }
+            else
+            {
+                var initialConditions = expressions.Initially
                 .Select(x => x.Condition)
                 .Aggregate((a, b) => new And(a, b))
                 .EvaluateLogicExpression();
 
-            HashSet<State> initialStates = new HashSet<State>();
-            foreach(var state in allStates)
-            {
-                if(initialConditions.Any(x => state.Values.HasSubset(x))){
-                    initialStates.Add(state);
+                foreach (var state in allStates)
+                {
+                    if (initialConditions.Any(x => state.Values.HasSubset(x)))
+                    {
+                        initialStates.Add(state);
+                    }
                 }
             }
+
+            //now lets get to the part where we intersect 
+            //initial states with after statements
+            var res = Res(expressions);
+            var afterExpressions = expressions.AfterExpressions;
+
+            if (afterExpressions.Count != 0)
+            {
+                foreach (var after in afterExpressions)
+                {
+                    HashSet<State> currentStates = new HashSet<State>();
+                    //find final states
+                    foreach (var state in allStates)
+                    {
+                        if (after.FinalCondition.EvaluateLogicExpression().Any(x => state.Values.HasSubset(x)))
+                        {
+                            currentStates.Add(state);
+                        }
+                    }
+                    //we are going backward
+                    after.Instructions.Reverse();
+                    //now we iterate through instructions
+                    for (int i = 0; i < after.Instructions.Count; i++)
+                    {
+                        var action = after.Instructions[i].Item1;
+                        var agents = after.Instructions[i].Item2;
+                        HashSet<State> newCurrentStates = new HashSet<State>();
+                        //for each state in current states we want to move backward in graph
+                        //we have action name, agents group and final state of edge
+                        foreach (var currentState in currentStates)
+                        {
+                            foreach (var kv in res)
+                            {
+                                if (kv.Value.Contains(currentState)
+                                    && kv.Key.Item1 == action
+                                    && kv.Key.Item3.Equals(agents))
+                                {
+                                    newCurrentStates.Add(kv.Key.Item2);
+                                }
+                            }
+                        }
+
+                        currentStates = newCurrentStates;
+                    }
+                    //now we must get only initial states that are possible
+                    initialStates.IntersectWith(currentStates);
+                }
+            }
+
+            var observableAfterExpressions = expressions.ObservableAfterExpressions;
+
+            if (observableAfterExpressions.Count != 0)
+            {
+                foreach (var observableAfter in observableAfterExpressions)
+                {
+                    HashSet<State> currentStates = new HashSet<State>();
+                    //find final states
+                    foreach (var state in allStates)
+                    {
+                        if (observableAfter.FinalCondition.EvaluateLogicExpression().Any(x => state.Values.HasSubset(x)))
+                        {
+                            currentStates.Add(state);
+                        }
+                    }
+                    //we are going backward
+                    observableAfter.Instructions.Reverse();
+                    //now we iterate through instructions
+                    for (int i = 0; i < observableAfter.Instructions.Count; i++)
+                    {
+                        var action = observableAfter.Instructions[i].Item1;
+                        var agents = observableAfter.Instructions[i].Item2;
+                        HashSet<State> newCurrentStates = new HashSet<State>();
+                        //for each state in current states we want to move backward in graph
+                        //we have action name, agents group and final state of edge
+                        foreach (var currentState in currentStates)
+                        {
+                            foreach (var kv in res)
+                            {
+                                if (kv.Value.Contains(currentState)
+                                    && kv.Key.Item1 == action
+                                    && kv.Key.Item3.Equals(agents))
+                                {
+                                    newCurrentStates.Add(kv.Key.Item2);
+                                }
+                            }
+                        }
+
+                        currentStates = newCurrentStates;
+                    }
+                    //now we must get only initial states that are possible
+                    initialStates.IntersectWith(currentStates);
+                }
+            }
+
             return initialStates;
         }
     }
