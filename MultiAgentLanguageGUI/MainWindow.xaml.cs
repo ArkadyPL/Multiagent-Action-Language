@@ -66,6 +66,25 @@ namespace MultiAgentLanguageGUI
             Parsed = false;
         }
 
+        private void TextBox_Story_SelectionChanged(object sender, RoutedEventArgs e)
+        {
+            if(TextBox_Story.IsFocused)
+            {
+                int index = TextBox_Story.SelectionStart;
+
+                int line = TextBox_Story.GetLineIndexFromCharacterIndex(index);
+                int column = index - TextBox_Story.GetCharacterIndexFromLineIndex(line);
+
+                Label_CursorLine.Content = $"Ln : {line + 1}";
+                Label_CursorColumn.Content = $"Col : {column + 1}";
+            }
+            else
+            {
+                Label_CursorLine.Content = $"Ln : ";
+                Label_CursorColumn.Content = $"Col : ";
+            }
+        }
+
         private void Button_StoryParse_Click(object sender, RoutedEventArgs e)
         {
             Output.PrintSeparator();
@@ -100,6 +119,15 @@ namespace MultiAgentLanguageGUI
             catch(Exception ex)
             {
                 Output.Print($"an error occurred\n{ex.ToString()}");
+                if (ex is TokenException)
+                {
+                    TokenException tEx = (TokenException)ex;
+                    TextBox_Story.Focus();
+                    TextBox_Story.Select(
+                        TextBox_Story.GetCharacterIndexFromLineIndex(tEx.LineNumber - 1)
+                        + tEx.ColumnNumber - 1, tEx.TokenLength);
+                    TextBox_Story.ScrollToLine(tEx.LineNumber - 1);
+                }
             }
         }
 
@@ -183,6 +211,15 @@ namespace MultiAgentLanguageGUI
             catch (Exception ex)
             {
                 Output.Print($"an error occurred\n{ex.ToString()}");
+                if (ex is TokenException)
+                {
+                    TokenException tEx = (TokenException)ex;
+                    TextBox_Query.Focus();
+                    TextBox_Query.Select(
+                        TextBox_Query.GetCharacterIndexFromLineIndex(tEx.LineNumber - 1)
+                        + tEx.ColumnNumber - 1, tEx.TokenLength);
+                    TextBox_Query.ScrollToLine(tEx.LineNumber - 1);
+                }
             }
         }
 

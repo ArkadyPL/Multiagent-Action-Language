@@ -401,5 +401,105 @@ necessary [loaded] after (spin, [])
             // THEN
             Assert.AreEqual(true, res);
         }
+        [Test]
+        public void Test14()
+        {
+            string str = @"
+Action fire
+Action load
+Action spin
+Fluent loaded
+Fluent alive
+Fluent spinned
+fire causes [~loaded] 
+fire causes [~alive] if [loaded]
+load causes [loaded]
+spin causes [spinned || ~spinned]
+spin releases [spinned]
+initially [alive] 
+[~alive] after (load, []), (spin, []), (fire, [])
+";
+            // GIVEN
+            var tokens = Tokenizer.Tokenize(str);
+            var parserState = Parser.Parse(tokens);
+            var expressions = parserState.Story;
+
+            // WHEN
+            string query = @"
+necessary [~alive] after (load, []), (spin, []), (fire, [])
+";
+            Query q = Parser.ParseQuery(Tokenizer.Tokenize(query), parserState);
+            var res = q.Solve(expressions);
+
+            // THEN
+            Assert.AreEqual(true, res);
+        }
+        [Test]
+        public void Test15()
+        {
+            string str = @"
+Action fire
+Action spin
+Fluent alive
+Fluent spinnedA
+Fluent spinnedB
+fire causes [~alive]
+spin causes [spinnedA || spinnedB]
+spin releases [spinnedA]
+spin releases [spinnedB]
+initially [(alive && ~spinnedA) && ~spinnedB] 
+[~alive] after (spin, []), (fire, [])
+";
+            // GIVEN
+            var tokens = Tokenizer.Tokenize(str);
+            var parserState = Parser.Parse(tokens);
+            var expressions = parserState.Story;
+
+            // WHEN
+            string query = @"
+necessary [spinnedA] after (spin, [])
+";
+            Query q = Parser.ParseQuery(Tokenizer.Tokenize(query), parserState);
+            var res = q.Solve(expressions);
+
+            // THEN
+            Assert.AreEqual(false, res);
+        }
+
+        [Test]
+        public void Test16()
+        {
+            string str = @"
+Action fire
+Action load
+Action spin
+Fluent loaded
+Fluent alive
+Fluent spinnedA
+Fluent spinnedB
+fire causes [~loaded] 
+fire causes [~alive] if [loaded]
+load causes [loaded]
+spin causes [spinnedA || spinnedB]
+spin releases [spinnedA]
+spin releases [spinnedB]
+initially [alive] 
+[~alive] after (load, []), (spin, []), (fire, [])
+";
+            // GIVEN
+            var tokens = Tokenizer.Tokenize(str);
+            var parserState = Parser.Parse(tokens);
+            var expressions = parserState.Story;
+
+            // WHEN
+            string query = @"
+necessary [spinnedA || spinnedB] after (load, []), (spin, [])
+";
+            Query q = Parser.ParseQuery(Tokenizer.Tokenize(query), parserState);
+            var res = q.Solve(expressions);
+
+            // THEN
+            Assert.AreEqual(true, res);
+        }
     }
 }

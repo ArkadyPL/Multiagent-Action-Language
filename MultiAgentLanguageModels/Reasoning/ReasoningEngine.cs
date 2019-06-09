@@ -58,10 +58,12 @@ namespace MultiAgentLanguageModels.Reasoning
                     {
                         //we want to create list of cause statements that works with specific state and agent group
                         List<ByCausesIf> workingCauses = new List<ByCausesIf>();
+                        List<bool> piConditions = new List<bool>();
                         //now we iterate through the cause statements to find those
                         foreach(var cause in causesGroup)
                         {
                             var w1 = cause.Pi.EvaluateLogicExpression().Any(x => state.Values.HasSubset(x));
+                            piConditions.Add(w1);
                             var w2 = group.HasSubset(cause.G);
                             var w3 = cause.Alpha.EvaluateLogicExpression().Count != 0;
                                 //if pi condition is ok with current state
@@ -80,7 +82,8 @@ namespace MultiAgentLanguageModels.Reasoning
                                 causesGroup.Key, state, group);
                         if (workingCauses.Count == 0)
                         {
-                            result.Add(tuple, PossibleStates(expressions));
+                            if(piConditions.All(x => !x))
+                                result.Add(tuple, PossibleStates(expressions));
                             continue;
                         } 
                         //now we need to create uber-alpha condition
@@ -186,7 +189,7 @@ namespace MultiAgentLanguageModels.Reasoning
             var possibleStates = PossibleStates(expressions);
             var initialStates = InitialStates(expressions);
 
-            var resWithAfter = new Dictionary<Triple, HashSet<State>>(res);
+            var resWithAfter = new Dictionary<Triple, HashSet<State>>();
             #region After statements
             //now lets get to the part where we intersect 
             //initial states with after statements
@@ -217,16 +220,19 @@ namespace MultiAgentLanguageModels.Reasoning
                         //we have action name, agents group and final state of edge
                         foreach (var currentState in currentStates)
                         {
-                            foreach (var kv in res)
-                            {
-                                if (kv.Value.Contains(currentState)
+                            var previousStates = res.Where(kv => kv.Value.Contains(currentState)
                                     && kv.Key.Item1.Equals(action)
-                                    && kv.Key.Item3.Equals(agents))
+                                    && kv.Key.Item3.Equals(agents)).ToList();
+
+                            foreach(var kv in previousStates)
+                            {
+                                if (!resWithAfter.ContainsKey(kv.Key))
                                 {
-                                    newCurrentStates.Add(kv.Key.Item2);
+                                    var a = res[kv.Key];
                                     resWithAfter[kv.Key] = new HashSet<State>();
-                                    resWithAfter[kv.Key].Add(currentState);
                                 }
+                                resWithAfter[kv.Key].Add(currentState);
+                                newCurrentStates.Add(kv.Key.Item2);
                             }
                         }
 
@@ -235,10 +241,13 @@ namespace MultiAgentLanguageModels.Reasoning
                     //now we must get only initial states that are possible
                     initialStates.IntersectWith(currentStates);
                 }
+                foreach (var kv in resWithAfter)
+                {
+                    res[kv.Key].Clear();
+                    res[kv.Key] = kv.Value;
+                }
             }
             #endregion
-
-            res = new Dictionary<Triple, HashSet<State>>(resWithAfter);
 
             #region Observable After statements
             var observableAfterExpressions = expressions.ObservableAfterExpressions;

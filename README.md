@@ -36,49 +36,49 @@ To do:
 - niedeterminizm - releases itp nie działa
 
 
-Przykład niedziałającego modelu:
-a by [x] causes [f]
-a by [y] causes [g]
-initially [~f && ~g]
-Query:
-necessary (f && g) after  (a, [x]), (b, [y])
+Przykład niedziałającego modelu: <br />
+a by [x] causes [f] <br />
+a by [y] causes [g] <br />
+initially [~f && ~g] <br />
+Query: <br />
+necessary (f && g) after  (a, [x]), (b, [y]) <br />
 Should be: true
 
 
-Przykład niedziałającego modelu:
-a causes [f]
-a causes [g]
-initially [~f && ~g]
-Query:
-necessary (f && g) after  (a, [x]), (b, [y])
+Przykład niedziałającego modelu: <br />
+a causes [f] <br />
+a causes [g] <br />
+initially [~f && ~g] <br />
+Query: <br />
+necessary (f && g) after  (a, [x]), (b, [y]) <br />
 Should be: true
 
 
-Przykład działającego modelu:
-a by [x] causes [f]
-b by [x] causes [g]
-initially [~f && ~g]
-Query:
-necessary (f && g) after  (a, [x]), (b, [x])
+Przykład działającego modelu: <br />
+a by [x] causes [f] <br />
+b by [x] causes [g] <br />
+initially [~f && ~g] <br />
+Query: <br />
+necessary (f && g) after  (a, [x]), (b, [x]) <br />
 Should be: true
 
 
-Przykład niedziałającego modelu:
-fire causes [~loaded]
-fire causes [~alive] if [loaded]
-initially [alive]
-[~alive] after (fire, [x]) % tu powinno być bez agenta
-Query:
-necessary <coś> after [] % to powinno być możliwe do sprawdzenia
+Przykład niedziałającego modelu: <br />
+fire causes [~loaded] <br />
+fire causes [~alive] if [loaded] <br />
+initially [alive] <br />
+[~alive] after (fire, [x]) % tu powinno być bez agenta <br />
+Query: <br />
+necessary <coś> after [] % to powinno być możliwe do sprawdzenia <br />
 Should be: true
 
 
-Przykład niedziałającego modelu:
-cos causes [ble]
-fire causes [~loaded]
-fire causes [~alive] if [loaded]
-initially [alive]
-[~alive] after (cos, [x])m (fire, [x])
-Query:
-necessary (loaded) after (cos, [x])
+Przykład niedziałającego modelu: <br />
+cos causes [ble] <br />
+fire causes [~loaded] <br />
+fire causes [~alive] if [loaded] <br />
+initially [alive] <br />
+[~alive] after (cos, [x])m (fire, [x]) <br />
+Query: <br />
+necessary (loaded) after (cos, [x]) <br />
 Should be: true

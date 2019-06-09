@@ -186,7 +186,7 @@ initially [alive]
 
             // WHEN
             string query = @"
-necessary executable (spin, []), (fire, []) from [~loaded]
+necessary executable (spin, []), (fire, []) from [~loaded && alive]
 ";
             Query q = Parser.ParseQuery(Tokenizer.Tokenize(query), parserState);
             var res = q.Solve(expressions);

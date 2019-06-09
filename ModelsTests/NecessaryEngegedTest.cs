@@ -161,7 +161,7 @@ necessary [g2] engaged in (A1, [g1, g2, g3]),(A2, [g2, g3, g4])
             var expressions = parserState.Story;
 
             string query = @"
-        necessary [g] engaged in (buypaper,[h])
+        necessary [g] engaged in (buypaper, [g, h])
         ";
 
             Query q = Parser.ParseQuery(
@@ -173,34 +173,5 @@ necessary [g2] engaged in (A1, [g1, g2, g3]),(A2, [g2, g3, g4])
             Assert.AreEqual(false, res);
         }
 
-        [Test]
-        public void Test3()
-        {
-            string story = @"
-        Fluent hasA
-        Fluent hasB
-        Agent c
-        Agent d
-        Action sing
-        Action fly
-        sing by [d] causes [hasA]
-        fly by [d] causes [hasB]
-        ";
-            var tokens = Tokenizer.Tokenize(story);
-            var parserState = Parser.Parse(tokens);
-            var expressions = new ExpressionsList();
-            expressions.AddRange(parserState.Expression);
-            expressions.AddRange(parserState.Noninertial.Values);
-
-            string query = @"
-        necessary [d] engaged in (fly,[d])
-        ";
-
-            Query q = Parser.ParseQuery(Tokenizer.Tokenize(query), parserState);
-
-            var res = q.Solve(expressions);
-
-            Assert.AreEqual(true, res);
-        }
     }
 }
