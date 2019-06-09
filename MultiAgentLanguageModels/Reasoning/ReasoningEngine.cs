@@ -12,7 +12,7 @@ namespace MultiAgentLanguageModels.Reasoning
             return expressions.Fluents.Except(expressions.Noninertial.Select(x => x.Fluent.Name)).ToList();
         }
 
-        private HashSet<State> PossibleStates(ExpressionsList expressions)
+        public HashSet<State> PossibleStates(ExpressionsList expressions)
         {
             HashSet<State> result = new HashSet<State>();
             //get all fluents
