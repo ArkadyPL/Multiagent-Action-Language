@@ -641,6 +641,21 @@ necessary [spinnedA || spinnedB] after (load, []), (spin, [])
             Assert.AreEqual(true, TestQuery(str, query));
         }
 
+        [Test]
+        public void Test25()
+        {
+            string str = @"
+                Agent Hank
+                Action does
+                Fluent h
+                does by [Hank] causes [h || ~h]
+                does by [Hank] releases [h]
+                ";
+            string query = @"
+            necessary [h] after (does,[Hank])
+            ";
+            Assert.AreEqual(false, TestQuery(str, query));
+        }
         public bool TestQuery(string str, string query)
         {
             // GIVEN
