@@ -527,10 +527,10 @@ necessary [spinnedA || spinnedB] after (load, []), (spin, [])
                 Fluent cooked
                 cooking causes [cooked]
                 washing causes [washed]
-                [cooked] after (cooking,[])
+                [cooked && washed] after (cooking,[]), (washing,[])
                 ";
             string query = @"
-            necessary [clean] after (washing, [])
+            necessary [washed] after (washing, [])
             ";
             Assert.AreEqual(true, TestQuery(str, query));
         }
