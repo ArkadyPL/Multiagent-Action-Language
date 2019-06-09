@@ -78,7 +78,7 @@ cos causes [ble] <br />
 fire causes [~loaded] <br />
 fire causes [~alive] if [loaded] <br />
 initially [alive] <br />
-[~alive] after (cos, [x])m (fire, [x]) <br />
+[~alive] after (cos, [x]) (fire, [x]) <br />
 Query: <br />
 necessary (loaded) after (cos, [x]) <br />
 Should be: true
