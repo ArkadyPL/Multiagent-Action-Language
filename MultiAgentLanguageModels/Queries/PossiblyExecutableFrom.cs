@@ -80,7 +80,7 @@ namespace MultiAgentLanguageModels.Queries
     public class PossiblyExecutable : PossiblyExecutableFrom
     {
         public PossiblyExecutable(Instruction instructions)
-            : base(instructions, LogicExpression.Empty)
+            : base(instructions, new True())
         {
         }
     }
