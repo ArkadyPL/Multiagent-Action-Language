@@ -98,7 +98,14 @@ namespace MultiAgentLanguageModels.Reasoning
                             }
                         }
                         //add triple and set to dictionary
-                        result.Add(tuple, setOfFinalStates);
+                        if (result.ContainsKey(tuple))
+                        {
+                            setOfFinalStates.ToList().ForEach(x => result[tuple].Add(x));
+                        }
+                        else
+                        {
+                            result.Add(tuple, setOfFinalStates);
+                        }
                     }
                 }
             }
