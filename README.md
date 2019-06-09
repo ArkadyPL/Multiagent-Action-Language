@@ -2,9 +2,9 @@
 To do:
 
 ### C# GUI ###
-- [ ] BŁĄD w Test3_PARSER_ERROR brak parsowania dla *impossible by*
+- [x] BŁĄD w Test3_PARSER_ERROR brak parsowania dla *impossible by*
 - [ ] Podmiana *not by if* na odpowiednik *impossible by if*
-- [ ] Parser na wyrażenie *not by if*
+- [x] Parser na wyrażenie *not by if*
 - [ ] Pusta lista agentów
 - [ ] Dodać *initially [alpha]* jako *[alpha] after ()* (chodzi o puste wykonanie programu)
 
@@ -78,7 +78,7 @@ cos causes [ble] <br />
 fire causes [~loaded] <br />
 fire causes [~alive] if [loaded] <br />
 initially [alive] <br />
-[~alive] after (cos, [x])m (fire, [x]) <br />
+[~alive] after (cos, [x]) (fire, [x]) <br />
 Query: <br />
 necessary (loaded) after (cos, [x]) <br />
 Should be: true

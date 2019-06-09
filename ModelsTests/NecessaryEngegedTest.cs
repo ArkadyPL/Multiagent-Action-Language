@@ -27,9 +27,7 @@ A2 by [g3, g4] causes [R2]
 ";
             var tokens = Tokenizer.Tokenize(story);
             var parserState = Parser.Parse(tokens);
-            var expressions = new ExpressionsList();
-            expressions.AddRange(parserState.Expression);
-            expressions.AddRange(parserState.Noninertial.Values);
+            var expressions = parserState.Story;
 
             string query = @"
 necessary [g2] engaged in (A1, [g1, g2, g3, g4]),(A2, [g2, g3, g4])
@@ -62,9 +60,7 @@ A2 by [g2, g3, g4] causes [R2]
 ";
             var tokens = Tokenizer.Tokenize(story);
             var parserState = Parser.Parse(tokens);
-            var expressions = new ExpressionsList();
-            expressions.AddRange(parserState.Expression);
-            expressions.AddRange(parserState.Noninertial.Values);
+            var expressions = parserState.Story;
 
             string query = @"
 necessary [g2] engaged in (A1, [g1, g2, g3]),(A2, [g2, g3, g4])
@@ -97,9 +93,7 @@ A2 by [g1, g4] causes [R2]
 ";
             var tokens = Tokenizer.Tokenize(story);
             var parserState = Parser.Parse(tokens);
-            var expressions = new ExpressionsList();
-            expressions.AddRange(parserState.Expression);
-            expressions.AddRange(parserState.Noninertial.Values);
+            var expressions = parserState.Story;
 
             string query = @"
 necessary [g2] engaged in (A1, [g1, g2, g3]),(A2, [g2, g3, g4])
@@ -124,9 +118,7 @@ necessary [g2] engaged in (A1, [g1, g2, g3]),(A2, [g2, g3, g4])
         ";
             var tokens = Tokenizer.Tokenize(story);
             var parserState = Parser.Parse(tokens);
-            var expressions = new ExpressionsList();
-            expressions.AddRange(parserState.Expression);
-            expressions.AddRange(parserState.Noninertial.Values);
+            var expressions = parserState.Story;
 
             string query = @"
         necessary [g] engaged in (buypaper, [g])

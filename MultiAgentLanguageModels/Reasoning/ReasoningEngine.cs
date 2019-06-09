@@ -189,7 +189,7 @@ namespace MultiAgentLanguageModels.Reasoning
             var possibleStates = PossibleStates(expressions);
             var initialStates = InitialStates(expressions);
 
-            var resWithAfter = new Dictionary<Triple, HashSet<State>>(res);
+            var resWithAfter = new Dictionary<Triple, HashSet<State>>();
             #region After statements
             //now lets get to the part where we intersect 
             //initial states with after statements
@@ -220,21 +220,19 @@ namespace MultiAgentLanguageModels.Reasoning
                         //we have action name, agents group and final state of edge
                         foreach (var currentState in currentStates)
                         {
-                            
-                            foreach (var kv in res)
-                            {
-                                //resWithAfter[kv.Key] = new HashSet<State>();
-                                if (kv.Value.Contains(currentState)
+                            var previousStates = res.Where(kv => kv.Value.Contains(currentState)
                                     && kv.Key.Item1.Equals(action)
-                                    && kv.Key.Item3.Equals(agents))
+                                    && kv.Key.Item3.Equals(agents)).ToList();
+
+                            foreach(var kv in previousStates)
+                            {
+                                if (!resWithAfter.ContainsKey(kv.Key))
                                 {
-                                    newCurrentStates.Add(kv.Key.Item2);
-                                    //resWithAfter[kv.Key].Add(currentState);
+                                    var a = res[kv.Key];
+                                    resWithAfter[kv.Key] = new HashSet<State>();
                                 }
-                                else
-                                {
-                                    resWithAfter[kv.Key].Remove(currentState);
-                                }
+                                resWithAfter[kv.Key].Add(currentState);
+                                newCurrentStates.Add(kv.Key.Item2);
                             }
                         }
 
@@ -243,10 +241,13 @@ namespace MultiAgentLanguageModels.Reasoning
                     //now we must get only initial states that are possible
                     initialStates.IntersectWith(currentStates);
                 }
+                foreach (var kv in resWithAfter)
+                {
+                    res[kv.Key].Clear();
+                    res[kv.Key] = kv.Value;
+                }
             }
             #endregion
-
-            res = new Dictionary<Triple, HashSet<State>>(resWithAfter);
 
             #region Observable After statements
             var observableAfterExpressions = expressions.ObservableAfterExpressions;

@@ -19,9 +19,7 @@ buypaper by [g] causes [hasA || hasB]
 ";
             var tokens = Tokenizer.Tokenize(story);
             var parserState = Parser.Parse(tokens);
-            var expressions = new ExpressionsList();
-            expressions.AddRange(parserState.Expression);
-            expressions.AddRange(parserState.Noninertial.Values);
+            var expressions = parserState.Story;
 
             string query = @"
 necessary [hasA] after (buypaper, [g])
@@ -48,9 +46,7 @@ buypaper by [g] causes [hasA || hasB]
 ";
             var tokens = Tokenizer.Tokenize(story);
             var parserState = Parser.Parse(tokens);
-            var expressions = new ExpressionsList();
-            expressions.AddRange(parserState.Expression);
-            expressions.AddRange(parserState.Noninertial.Values);
+            var expressions = parserState.Story;
 
             string query = @"
 necessary [hasA || hasB] after (buypaper, [g])
@@ -80,9 +76,7 @@ buypaper by [g] releases [hasB]
 ";
             var tokens = Tokenizer.Tokenize(story);
             var parserState = Parser.Parse(tokens);
-            var expressions = new ExpressionsList();
-            expressions.AddRange(parserState.Expression);
-            expressions.AddRange(parserState.Noninertial.Values);
+            var expressions = parserState.Story;
 
             string query = @"
 necessary [hasA] after (buypaper, [g])
@@ -112,9 +106,7 @@ buypaper by [g] releases [hasB]
 ";
             var tokens = Tokenizer.Tokenize(story);
             var parserState = Parser.Parse(tokens);
-            var expressions = new ExpressionsList();
-            expressions.AddRange(parserState.Expression);
-            expressions.AddRange(parserState.Noninertial.Values);
+            var expressions = parserState.Story;
 
             string query = @"
 necessary [hasA || hasB] after (buypaper, [g])
@@ -320,7 +312,7 @@ Fluent alive
 Fluent walked
 fire causes [~loaded] 
 fire causes [~alive] if [loaded] 
-spin releases [loaded]
+spin releases loaded
 initially [alive] 
 [~alive] after (spin, [x]), (fire, [x])
 ";
@@ -351,7 +343,7 @@ Fluent alive
 Fluent walked
 fire causes [~loaded] 
 fire causes [~alive] if [loaded] 
-spin releases [loaded]
+spin releases loaded
 spin causes [loaded || ~loaded]
 initially [alive] 
 observable [~alive] after (spin, []), (fire, [])
@@ -415,7 +407,7 @@ fire causes [~loaded]
 fire causes [~alive] if [loaded]
 load causes [loaded]
 spin causes [spinned || ~spinned]
-spin releases [spinned]
+spin releases spinned
 initially [alive] 
 [~alive] after (load, []), (spin, []), (fire, [])
 ";
@@ -445,8 +437,8 @@ Fluent spinnedA
 Fluent spinnedB
 fire causes [~alive]
 spin causes [spinnedA || spinnedB]
-spin releases [spinnedA]
-spin releases [spinnedB]
+spin releases spinnedA
+spin releases spinnedB
 initially [(alive && ~spinnedA) && ~spinnedB] 
 [~alive] after (spin, []), (fire, [])
 ";
@@ -481,8 +473,8 @@ fire causes [~loaded]
 fire causes [~alive] if [loaded]
 load causes [loaded]
 spin causes [spinnedA || spinnedB]
-spin releases [spinnedA]
-spin releases [spinnedB]
+spin releases spinnedA
+spin releases spinnedB
 initially [alive] 
 [~alive] after (load, []), (spin, []), (fire, [])
 ";

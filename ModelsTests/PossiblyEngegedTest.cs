@@ -141,6 +141,34 @@ possibly [g] engaged in (buypaper, [g])
         }
 
         [Test]
+        public void Test_BP()
+        {
+            string story = @"
+Fluent hasA
+Fluent hasB
+Agent g
+Agent h
+Action buypaper
+buypaper by [g] causes [hasA || hasB]
+";
+            var tokens = Tokenizer.Tokenize(story);
+            var parserState = Parser.Parse(tokens);
+            var expressions = parserState.Story;
+
+            string query = @"
+possibly [h] engaged in (buypaper, [g])
+";
+
+            Query q = Parser.ParseQuery(
+                Tokenizer.Tokenize(query),
+                parserState);
+
+            var res = q.Solve(expressions);
+
+            Assert.Fail();
+        }
+
+        [Test]
         public void Test2()
         {
             string story = @"

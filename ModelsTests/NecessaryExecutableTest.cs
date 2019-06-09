@@ -50,7 +50,7 @@ Action LOAD
 Action SHOOT
 initially [~loaded]
 initially [alive]
-LOAD releases [loaded]
+LOAD releases loaded
 SHOOT causes [~loaded] if [loaded]
 SHOOT causes [~alive] if [loaded]
 ";
@@ -175,7 +175,7 @@ impossible fire if [~loaded]
 fire causes [~loaded] 
 fire causes [~alive]
 spin causes [loaded || ~loaded]
-spin releases [loaded]
+spin releases loaded
 initially [alive] 
 [~alive] after (spin, []), (fire, [])
 ";
@@ -186,13 +186,13 @@ initially [alive]
 
             // WHEN
             string query = @"
-necessary executable (spin, []), (fire, []) from [~loaded]
+necessary executable (spin, []), (fire, []) from [~loaded && alive]
 ";
             Query q = Parser.ParseQuery(Tokenizer.Tokenize(query), parserState);
             var res = q.Solve(expressions);
 
             // THEN
-            Assert.AreEqual(false, res);
+            Assert.AreEqual(true, res);
         }
     }
 }
