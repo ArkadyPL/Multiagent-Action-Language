@@ -340,6 +340,36 @@ necessary [loaded] after (spin, [x])
             Assert.AreEqual(true, res);
         }
 
- 
+        [Test]
+        public void Test12()
+        {
+            string str = @"
+Action fire
+Action spin
+Fluent loaded
+Fluent alive
+Fluent walked
+fire causes [~loaded] 
+fire causes [~alive] if [loaded] 
+spin releases [loaded]
+spin causes [loaded || ~loaded]
+initially [alive] 
+observable [~alive] after (spin, []), (fire, [])
+";
+            // GIVEN
+            var tokens = Tokenizer.Tokenize(str);
+            var parserState = Parser.Parse(tokens);
+            var expressions = parserState.Story;
+
+            // WHEN
+            string query = @"
+necessary [loaded] after (spin, [])
+";
+            Query q = Parser.ParseQuery(Tokenizer.Tokenize(query), parserState);
+            var res = q.Solve(expressions);
+
+            // THEN
+            Assert.AreEqual(false, res);
+        }
     }
 }

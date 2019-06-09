@@ -55,7 +55,7 @@ namespace MultiAgentLanguageModels
 
         public static LogicExpression Empty {
             get {
-                if (_empty == null)
+                if (_empty is null)
                     _empty = new LogicExpression();
                 return _empty;
             }
@@ -125,7 +125,7 @@ namespace MultiAgentLanguageModels
     {
         public static List<string> ToListOfStrings(this List<List<Tuple<string, bool>>> tuples)
         {
-            if(tuples == null)
+            if(tuples is null)
             {
                 return new List<string>() { "[]" };
             }

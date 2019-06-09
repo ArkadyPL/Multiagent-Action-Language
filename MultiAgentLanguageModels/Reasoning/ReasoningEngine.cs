@@ -120,7 +120,7 @@ namespace MultiAgentLanguageModels.Reasoning
             diff = diff.Except(expressions.Noninertial.Select(x => x.Fluent.Name));
             //add fluents from release statements
             diff = diff.Concat(expressions.Releases.Where(
-                x => x.Action.Name == action.Name && 
+                x => x.Action.Equals(action) && 
                 x.Agents.HasSubset(agents) &&
                 x.Condition.EvaluateLogicExpression().Any(e => from.Values.HasSubset(e))).Select(x => x.Fluent.Name));
 
@@ -177,11 +177,12 @@ namespace MultiAgentLanguageModels.Reasoning
                 }
             }
 
+            Lazy<Dictionary<Triple, HashSet<State>>> res = new Lazy<Dictionary<Triple, HashSet<State>>>(() => Res(expressions));
+
+            #region After statements
             //now lets get to the part where we intersect 
             //initial states with after statements
-            var res = Res(expressions);
             var afterExpressions = expressions.AfterExpressions;
-
             if (afterExpressions.Count != 0)
             {
                 foreach (var after in afterExpressions)
@@ -207,10 +208,10 @@ namespace MultiAgentLanguageModels.Reasoning
                         //we have action name, agents group and final state of edge
                         foreach (var currentState in currentStates)
                         {
-                            foreach (var kv in res)
+                            foreach (var kv in res.Value)
                             {
                                 if (kv.Value.Contains(currentState)
-                                    && kv.Key.Item1 == action
+                                    && kv.Key.Item1.Equals(action)
                                     && kv.Key.Item3.Equals(agents))
                                 {
                                     newCurrentStates.Add(kv.Key.Item2);
@@ -224,9 +225,10 @@ namespace MultiAgentLanguageModels.Reasoning
                     initialStates.IntersectWith(currentStates);
                 }
             }
-
+            #endregion
+            
+            #region Observable After statements
             var observableAfterExpressions = expressions.ObservableAfterExpressions;
-
             if (observableAfterExpressions.Count != 0)
             {
                 foreach (var observableAfter in observableAfterExpressions)
@@ -252,23 +254,26 @@ namespace MultiAgentLanguageModels.Reasoning
                         //we have action name, agents group and final state of edge
                         foreach (var currentState in currentStates)
                         {
-                            foreach (var kv in res)
+                            foreach (var kv in res.Value)
                             {
                                 if (kv.Value.Contains(currentState)
-                                    && kv.Key.Item1 == action
+                                    && kv.Key.Item1.Equals(action)
                                     && kv.Key.Item3.Equals(agents))
                                 {
                                     newCurrentStates.Add(kv.Key.Item2);
                                 }
                             }
                         }
-
                         currentStates = newCurrentStates;
                     }
-                    //now we must get only initial states that are possible
-                    initialStates.IntersectWith(currentStates);
+                    //observable after expression really does nothing, except when there are not any path - then the whole model is false -> don't have any initial nodes
+                    if(currentStates.Count == 0)
+                    {
+                        initialStates = new HashSet<State>();
+                    }
                 }
             }
+            #endregion
 
             return initialStates;
         }

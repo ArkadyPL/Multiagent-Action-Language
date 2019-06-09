@@ -160,7 +160,7 @@ buyOtherPaper by [h] causes [hasB]
             var expressions = parserState.Story;
 
             string query = @"
-possibly [g] engaged in buypaper
+possibly [g] engaged in (buypaper, [g, h])
 ";
 
             Query q = Parser.ParseQuery(
