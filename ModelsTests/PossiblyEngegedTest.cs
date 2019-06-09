@@ -153,9 +153,7 @@ buypaper by [g] causes [hasA || hasB]
 ";
             var tokens = Tokenizer.Tokenize(story);
             var parserState = Parser.Parse(tokens);
-            var expressions = new ExpressionsList();
-            expressions.AddRange(parserState.Expression);
-            expressions.AddRange(parserState.Noninertial.Values);
+            var expressions = parserState.Story;
 
             string query = @"
 possibly [h] engaged in (buypaper, [g])

@@ -22,9 +22,7 @@ buypaper by [g] releases [hasB]
 ";
             var tokens = Tokenizer.Tokenize(story);
             var parserState = Parser.Parse(tokens);
-            var expressions = new ExpressionsList();
-            expressions.AddRange(parserState.Expression);
-            expressions.AddRange(parserState.Noninertial.Values);
+            var expressions = parserState.Story;
 
             string query = @"
 possibly [hasA] after (buypaper, [g])
@@ -52,9 +50,7 @@ buypaper by [g] causes [hasA || hasB]
 ";
             var tokens = Tokenizer.Tokenize(story);
             var parserState = Parser.Parse(tokens);
-            var expressions = new ExpressionsList();
-            expressions.AddRange(parserState.Expression);
-            expressions.AddRange(parserState.Noninertial.Values);
+            var expressions = parserState.Story;
 
             string query = @"
 possibly [hasA] after (buypaper, [g])
@@ -81,9 +77,7 @@ buypaper by [g] causes [hasA || hasB]
 ";
             var tokens = Tokenizer.Tokenize(story);
             var parserState = Parser.Parse(tokens);
-            var expressions = new ExpressionsList();
-            expressions.AddRange(parserState.Expression);
-            expressions.AddRange(parserState.Noninertial.Values);
+            var expressions = parserState.Story;
 
             string query = @"
 possibly [hasA || hasB] after (buypaper, [g])
@@ -268,9 +262,7 @@ load by [g] causes [loaded]
 ";
             var tokens = Tokenizer.Tokenize(story);
             var parserState = Parser.Parse(tokens);
-            var expressions = new ExpressionsList();
-            expressions.AddRange(parserState.Expression);
-            expressions.AddRange(parserState.Noninertial.Values);
+            var expressions = parserState.Story;
 
             string query = @"
 								possibly [loaded] after (load, [g])
@@ -302,9 +294,7 @@ load by [g] causes [loaded]
 ";
             var tokens = Tokenizer.Tokenize(story);
             var parserState = Parser.Parse(tokens);
-            var expressions = new ExpressionsList();
-            expressions.AddRange(parserState.Expression);
-            expressions.AddRange(parserState.Noninertial.Values);
+            var expressions = parserState.Story;
 
             var query4 = @"
 								possibly [loaded] after (load, [g]),(load, [g]),(load, [g])
@@ -336,9 +326,7 @@ load by [g] causes [loaded]
 ";
             var tokens = Tokenizer.Tokenize(story);
             var parserState = Parser.Parse(tokens);
-            var expressions = new ExpressionsList();
-            expressions.AddRange(parserState.Expression);
-            expressions.AddRange(parserState.Noninertial.Values);
+            var expressions = parserState.Story;
 
             var query5 = @"
 								possibly [loaded] after (load, [g]),(load, [g]),(load, [g])
@@ -368,9 +356,7 @@ load by [g] causes [loaded]
 ";
             var tokens = Tokenizer.Tokenize(story);
             var parserState = Parser.Parse(tokens);
-            var expressions = new ExpressionsList();
-            expressions.AddRange(parserState.Expression);
-            expressions.AddRange(parserState.Noninertial.Values);
+            var expressions = parserState.Story;
 
             var query6 = @"
 								possibly [loaded] after (load, [g]),(shoot, [g]),(load, [g])
@@ -401,9 +387,7 @@ load by [g] causes [loaded]
 ";
             var tokens = Tokenizer.Tokenize(story);
             var parserState = Parser.Parse(tokens);
-            var expressions = new ExpressionsList();
-            expressions.AddRange(parserState.Expression);
-            expressions.AddRange(parserState.Noninertial.Values);
+            var expressions = parserState.Story;
 
             var query7 = @"
             possibly [loaded]  after ()
@@ -433,9 +417,7 @@ load by [g] causes [loaded]
 ";
             var tokens = Tokenizer.Tokenize(story);
             var parserState = Parser.Parse(tokens);
-            var expressions = new ExpressionsList();
-            expressions.AddRange(parserState.Expression);
-            expressions.AddRange(parserState.Noninertial.Values);
+            var expressions = parserState.Story;
 
             var query8 = @"
 possibly [loaded] after (load, [g]),(shoot, [g])
@@ -465,9 +447,7 @@ load by [g] causes [loaded]
 ";
             var tokens = Tokenizer.Tokenize(story);
             var parserState = Parser.Parse(tokens);
-            var expressions = new ExpressionsList();
-            expressions.AddRange(parserState.Expression);
-            expressions.AddRange(parserState.Noninertial.Values);
+            var expressions = parserState.Story;
 
             var query9 = @"
 possibly [loaded] after (load, [g]),(load, [g]),(shoot, [g])
@@ -530,9 +510,7 @@ load by [g] causes [loaded]
 ";
             var tokens = Tokenizer.Tokenize(story);
             var parserState = Parser.Parse(tokens);
-            var expressions = new ExpressionsList();
-            expressions.AddRange(parserState.Expression);
-            expressions.AddRange(parserState.Noninertial.Values);
+            var expressions = parserState.Story;
 
             string query = @"
 								possibly [~alive] after (load, [g])
@@ -562,9 +540,7 @@ load by [g] causes [loaded]
 ";
             var tokens = Tokenizer.Tokenize(story);
             var parserState = Parser.Parse(tokens);
-            var expressions = new ExpressionsList();
-            expressions.AddRange(parserState.Expression);
-            expressions.AddRange(parserState.Noninertial.Values);
+            var expressions = parserState.Story;
 
             string query = @"
 possibly [alive] after (load, [g])
@@ -595,9 +571,7 @@ load by [g] causes [loaded]
 ";
             var tokens = Tokenizer.Tokenize(story);
             var parserState = Parser.Parse(tokens);
-            var expressions = new ExpressionsList();
-            expressions.AddRange(parserState.Expression);
-            expressions.AddRange(parserState.Noninertial.Values);
+            var expressions = parserState.Story;
 
             string query = @"
 possibly [~alive] after (shoot, [g])
@@ -627,9 +601,7 @@ load by [g] causes [loaded]
 ";
             var tokens = Tokenizer.Tokenize(story);
             var parserState = Parser.Parse(tokens);
-            var expressions = new ExpressionsList();
-            expressions.AddRange(parserState.Expression);
-            expressions.AddRange(parserState.Noninertial.Values);
+            var expressions = parserState.Story;
 
             string query = @"
 possibly [alive] after (shoot, [g])
@@ -662,9 +634,7 @@ load by [g] causes [loaded]
 ";
             var tokens = Tokenizer.Tokenize(story);
             var parserState = Parser.Parse(tokens);
-            var expressions = new ExpressionsList();
-            expressions.AddRange(parserState.Expression);
-            expressions.AddRange(parserState.Noninertial.Values);
+            var expressions = parserState.Story;
 
             string query = @"
 								possibly [~alive] after (shoot, [g])
@@ -696,9 +666,7 @@ load by [g] causes [loaded]
 ";
             var tokens = Tokenizer.Tokenize(story);
             var parserState = Parser.Parse(tokens);
-            var expressions = new ExpressionsList();
-            expressions.AddRange(parserState.Expression);
-            expressions.AddRange(parserState.Noninertial.Values);
+            var expressions = parserState.Story;
 
             string query = @"
 								possibly [~alive] after (shoot, [g])
@@ -729,9 +697,7 @@ load by [g] causes [loaded]
 ";
             var tokens = Tokenizer.Tokenize(story);
             var parserState = Parser.Parse(tokens);
-            var expressions = new ExpressionsList();
-            expressions.AddRange(parserState.Expression);
-            expressions.AddRange(parserState.Noninertial.Values);
+            var expressions = parserState.Story;
 
             string query = @"
 								possibly [alive] after (shoot, [g])
@@ -769,9 +735,7 @@ entice by [g] causes [walking] if [alive]
 ";
             var tokens = Tokenizer.Tokenize(story);
             var parserState = Parser.Parse(tokens);
-            var expressions = new ExpressionsList();
-            expressions.AddRange(parserState.Expression);
-            expressions.AddRange(parserState.Noninertial.Values);
+            var expressions = parserState.Story;
 
             string query = @"
 								possibly [walking] after (shoot, [g]), (entice, [g])
@@ -808,9 +772,7 @@ entice causes [walking] if [alive]
 ";
             var tokens = Tokenizer.Tokenize(story);
             var parserState = Parser.Parse(tokens);
-            var expressions = new ExpressionsList();
-            expressions.AddRange(parserState.Expression);
-            expressions.AddRange(parserState.Noninertial.Values);
+            var expressions = parserState.Story;
 
             string query = @"
 								possibly [walking] after (shoot, []), (entice, [])
@@ -841,9 +803,7 @@ shoot causes [~alive] if [loaded]
 ";
             var tokens = Tokenizer.Tokenize(story);
             var parserState = Parser.Parse(tokens);
-            var expressions = new ExpressionsList();
-            expressions.AddRange(parserState.Expression);
-            expressions.AddRange(parserState.Noninertial.Values);
+            var expressions = parserState.Story;
 
             string query = @"
 								possibly [alive] after (shoot, [])
@@ -881,14 +841,12 @@ drink by [bill] causes [drunk] if [~drunk]
 
 
 ";
-						
-						var tokens = Tokenizer.Tokenize(story);
-						var parserState = Parser.Parse(tokens);
-						var expressions = new ExpressionsList();
-						expressions.AddRange(parserState.Expression);
-						expressions.AddRange(parserState.Noninertial.Values);
 
-						string query = @"
+            var tokens = Tokenizer.Tokenize(story);
+            var parserState = Parser.Parse(tokens);
+            var expressions = parserState.Story;
+
+            string query = @"
 								possibly [alive] after (drink, [bill]),(shoot, [bill])
 								";
 
