@@ -14,6 +14,20 @@ namespace MultiAgentLanguageGUI
         Keyword
     }
 
+    public class TokenException : Exception
+    {
+        public int LineNumber { get; private set; }
+        public int ColumnNumber { get; private set; }
+        public int TokenLength { get; private set; }
+
+        public TokenException(string message, int lineNumber, int columnNumber, int tokenLength) : base(message)
+        {
+            LineNumber = lineNumber;
+            ColumnNumber = columnNumber;
+            TokenLength = tokenLength;
+        }
+    }
+
     public class Token : ICloneable
     {
         public TokenType Type { get; set; }
@@ -36,7 +50,9 @@ namespace MultiAgentLanguageGUI
 
         public void ThrowException(string content)
         {
-            throw new Exception($"Exception thrown at token created at line {LineNumber}, column {ColumnNumber}:\n{content}\nToken content: {Name}");
+            throw new TokenException(
+                $"Exception thrown at token created at line {LineNumber}, column {ColumnNumber}:\n{content}\nToken content: {Name}",
+                LineNumber, ColumnNumber, Name.Length);
         }
 
         public object Clone()
