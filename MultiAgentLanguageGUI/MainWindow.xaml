@@ -52,7 +52,7 @@
                            Content="Column"
                            Width="64px"
                            VerticalAlignment="Center"/>
-                    <Button x:Name="Button_Help" DockPanel.Dock="Right" Width="100" Click="Button_Help_Click">Help</Button>
+                    <Button x:Name="Button_Help" DockPanel.Dock="Right" Width="100" Click="Button_Help_Click" FontSize="10">Help</Button>
                 </DockPanel>
                 <DockPanel Grid.Row="2" LastChildFill="False">
                     <Button x:Name="Button_StoryParse" DockPanel.Dock="Right" Width="200" Click="Button_StoryParse_Click">Parse</Button>
