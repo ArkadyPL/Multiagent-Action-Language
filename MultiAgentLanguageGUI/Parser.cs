@@ -729,7 +729,7 @@ namespace MultiAgentLanguageGUI
             state.Fluent = story.Fluent;
             if(tokenList.Count == 0)
             {
-                throw new Exception("Empty querry");
+                throw new Exception("Empty query");
             }
 
             Token first = state.PopToken();

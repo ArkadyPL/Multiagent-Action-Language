@@ -1,0 +1,38 @@
+﻿<Window x:Class="MultiAgentLanguageGUI.HelpWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MultiAgentLanguageGUI"
+        mc:Ignorable="d"
+        Title="Help" Height="450" Width="640" MinHeight="100" MinWidth="640">
+    <Window.Resources>
+        <Style TargetType="TextBox">
+            <Setter Property="FontFamily" Value="Courier New"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled"/>
+            <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
+            <Setter Property="AcceptsReturn" Value="True"/>
+        </Style>
+        <Style TargetType="GroupBox">
+            <Setter Property="Margin" Value="5,5,5,5"/>
+            <Setter Property="Padding" Value="8,8,8,8"/>
+        </Style>
+        <Style TargetType="Button">
+            <Setter Property="Margin" Value="8,4,8,4"/>
+        </Style>
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="30"/>
+        </Grid.RowDefinitions>
+        <DockPanel Grid.Row="0" LastChildFill="True">
+            <TextBox x:Name="TextBox_Help"
+                     IsReadOnly="True" TextWrapping="Wrap" />
+        </DockPanel>
+        <DockPanel Grid.Row="1" LastChildFill="True">
+            <Button x:Name="Button_Okay" DockPanel.Dock="Right" Width="200" Click="Button_Okay_Click">Close</Button>
+        </DockPanel>
+    </Grid>
+</Window>

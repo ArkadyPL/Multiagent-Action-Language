@@ -25,11 +25,11 @@
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="3*" MinHeight="200" />
+            <RowDefinition Height="6*" MinHeight="200" />
             <RowDefinition Height="5" />
-            <RowDefinition Height="1*" MinHeight="92" />
+            <RowDefinition Height="2*" MinHeight="92" />
             <RowDefinition Height="5" />
-            <RowDefinition Height="3*" MinHeight="200" />
+            <RowDefinition Height="3*" MinHeight="100" />
         </Grid.RowDefinitions>
         <GroupBox Header="Story">
             <Grid>
@@ -52,6 +52,7 @@
                            Content="Column"
                            Width="64px"
                            VerticalAlignment="Center"/>
+                    <Button x:Name="Button_Help" DockPanel.Dock="Right" Width="100" Click="Button_Help_Click">Help</Button>
                 </DockPanel>
                 <DockPanel Grid.Row="2" LastChildFill="False">
                     <Button x:Name="Button_StoryParse" DockPanel.Dock="Right" Width="200" Click="Button_StoryParse_Click">Parse</Button>

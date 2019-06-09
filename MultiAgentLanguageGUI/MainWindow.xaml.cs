@@ -15,6 +15,7 @@ namespace MultiAgentLanguageGUI
     public partial class MainWindow : Window
     {
         private bool _parsed;
+        private HelpWindow _helpWindow;
         ParserState state;
         public bool Parsed {
             get => _parsed;
@@ -32,6 +33,7 @@ namespace MultiAgentLanguageGUI
         public MainWindow()
         {
             InitializeComponent();
+            _helpWindow = null;
             state = new ParserState(null);
             Output.Target = TextBox_Output;
 
@@ -82,6 +84,18 @@ namespace MultiAgentLanguageGUI
             {
                 Label_CursorLine.Content = $"Ln : ";
                 Label_CursorColumn.Content = $"Col : ";
+            }
+        }
+
+        private void Button_Help_Click(object sender, RoutedEventArgs e)
+        {
+            if(_helpWindow == null)
+            {
+                HelpWindow window = new HelpWindow();
+                window.Owner = this;
+                window.Closed += (a, b) => _helpWindow = null;
+                window.Show();
+                _helpWindow = window;
             }
         }
 
