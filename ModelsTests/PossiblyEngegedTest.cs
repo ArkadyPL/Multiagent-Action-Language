@@ -172,35 +172,5 @@ possibly [g] engaged in (buypaper, [g, h])
             Assert.AreEqual(true, res);
         }
 
-        [Test]
-        public void Test3()
-        {
-            string story = @"
-Fluent hasA
-Fluent hasB
-Agent c
-Agent d
-Action sing
-Action fly
-sing by [d] causes [hasA]
-sing by [c] causes [hasA]
-fly by [d] causes [hasB]
-";
-            var tokens = Tokenizer.Tokenize(story);
-            var parserState = Parser.Parse(tokens);
-            var expressions = new ExpressionsList();
-            expressions.AddRange(parserState.Expression);
-            expressions.AddRange(parserState.Noninertial.Values);
-
-            string query = @"
-possibly [d] engaged in fly, sing
-";
-
-            Query q = Parser.ParseQuery(Tokenizer.Tokenize(query), parserState);
-
-            var res = q.Solve(expressions);
-
-            Assert.AreEqual(true, res);
-        }
     }
 }
