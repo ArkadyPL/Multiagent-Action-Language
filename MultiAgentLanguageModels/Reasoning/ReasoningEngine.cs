@@ -217,15 +217,20 @@ namespace MultiAgentLanguageModels.Reasoning
                         //we have action name, agents group and final state of edge
                         foreach (var currentState in currentStates)
                         {
+                            
                             foreach (var kv in res)
                             {
+                                //resWithAfter[kv.Key] = new HashSet<State>();
                                 if (kv.Value.Contains(currentState)
                                     && kv.Key.Item1.Equals(action)
                                     && kv.Key.Item3.Equals(agents))
                                 {
                                     newCurrentStates.Add(kv.Key.Item2);
-                                    resWithAfter[kv.Key] = new HashSet<State>();
-                                    resWithAfter[kv.Key].Add(currentState);
+                                    //resWithAfter[kv.Key].Add(currentState);
+                                }
+                                else
+                                {
+                                    resWithAfter[kv.Key].Remove(currentState);
                                 }
                             }
                         }

@@ -192,7 +192,7 @@ necessary executable (spin, []), (fire, []) from [~loaded]
             var res = q.Solve(expressions);
 
             // THEN
-            Assert.AreEqual(true, res);
+            Assert.AreEqual(false, res);
         }
     }
 }
