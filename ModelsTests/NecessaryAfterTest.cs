@@ -426,6 +426,7 @@ necessary [~alive] after (load, []), (spin, []), (fire, [])
             // THEN
             Assert.AreEqual(true, res);
         }
+
         [Test]
         public void Test15()
         {
@@ -492,6 +493,166 @@ necessary [spinnedA || spinnedB] after (load, []), (spin, [])
 
             // THEN
             Assert.AreEqual(true, res);
+        }
+
+        [Test]
+        public void Test17()
+        {
+            string str = @"
+                Action washing
+                Action cooking
+                Action tyding
+                Fluent washed
+                Fluent cooked
+                Fluent tied
+                Fluent clean
+                cooking causes [cooked]
+                washing causes [washed]
+                tyding causes [tied]
+                [clean] after (cooking,[]),(tyding,[])
+                ";
+            string query = @"
+            necessary [clean] after (washing, []),(cooking, []),(tyding, [])
+            ";           
+            Assert.AreEqual(true, TestQuery(str, query));
+        }
+
+        [Test]
+        public void Test18()
+        {
+            string str = @"
+                Action washing
+                Action cooking
+                Fluent washed
+                Fluent cooked
+                cooking causes [cooked]
+                washing causes [washed]
+                [cooked] after (cooking,[])
+                ";
+            string query = @"
+            necessary [clean] after (washing, [])
+            ";
+            Assert.AreEqual(true, TestQuery(str, query));
+        }
+
+        [Test]
+        public void Test19()
+        {
+            string str = @"
+                Agent Tom
+                Agent John
+                Action work
+                Fluent a
+                Fluent b
+                work causes [b]
+                [a] after (work,[John,Tom])
+                ";
+            string query = @"
+            necessary [a] after (work,[John,Tom])
+            ";
+            Assert.AreEqual(true, TestQuery(str, query));
+        }
+
+        [Test]
+        public void Test20()
+        {
+            string str = @"
+                Agent Magda
+                Agent Irena
+                Agent Alice
+                Agent Anna
+                Action eat
+                Action talk
+                Fluent z
+                Fluent d
+                Fluent e
+                [d && e] after (talk,[Irena,Alice])
+                [d] after (eat,[Magda,Anna])
+                ";
+            string query = @"
+            necessary [d && e] after (eat,[Magda,Anna]),(talk,[Irena,Alice])
+            ";
+            Assert.AreEqual(true, TestQuery(str, query));
+        }
+
+        [Test]
+        public void Test21()
+        {
+            string str = @"
+                Agent Milena
+                Action does
+                Fluent f
+                always [f]
+                [~f] after (does,[Milena])
+                ";
+            string query = @"
+            necessary [f] after (does,[Milena])
+            ";
+            Assert.AreEqual(true, TestQuery(str, query));
+        }
+
+        [Test]
+        public void Test22()
+        {
+            string str = @"
+                Agent Iwona
+                Action make
+                Fluent g
+                [~g] after (make,[Iwona])
+                make by [Iwona] causes [g]
+                ";
+            string query = @"
+            necessary [~g] after (make,[Iwona])
+            ";
+            Assert.AreEqual(true, TestQuery(str, query));
+        }
+
+        [Test]
+        public void Test23()
+        {
+            string str = @"
+                Agent Ula
+                Action swim
+                Fluent h
+                Fluent i
+                always [h]
+                swim by [Ula] causes [i] if [h]
+                ";
+            string query = @"
+            necessary [i] after (swim,[Ula])
+            ";
+            Assert.AreEqual(true, TestQuery(str, query));
+        }
+
+        [Test]
+        public void Test24()
+        {
+            string str = @"
+                Agent Ula
+                Action swim
+                Fluent h
+                Fluent i
+                swim by [Ula] causes [i]
+                swim by [Ula] causes [h]
+                ";
+            string query = @"
+            necessary [h] after (swim,[Ula])
+            ";
+            Assert.AreEqual(true, TestQuery(str, query));
+        }
+
+        public bool TestQuery(string str, string query)
+        {
+            // GIVEN
+            var tokens = Tokenizer.Tokenize(str);
+            var parserState = Parser.Parse(tokens);
+            var expressions = parserState.Story;
+
+            Query q = Parser.ParseQuery(Tokenizer.Tokenize(query), parserState);
+            var res = q.Solve(expressions);
+
+            // THEN
+            return res;
         }
     }
 }
