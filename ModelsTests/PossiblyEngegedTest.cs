@@ -193,14 +193,14 @@ fly by [d] causes [hasB]
             expressions.AddRange(parserState.Noninertial.Values);
 
             string query = @"
-possibly [d] engaged in fly, sing
+possibly [d] engaged in (fly,[c]), (sing,[c])
 ";
 
             Query q = Parser.ParseQuery(Tokenizer.Tokenize(query), parserState);
 
             var res = q.Solve(expressions);
 
-            Assert.AreEqual(true, res);
+            Assert.Fail(); //TODO
         }
     }
 }

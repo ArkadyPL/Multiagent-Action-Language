@@ -211,13 +211,13 @@ namespace MultiAgentLanguageGUI
             {
                 firstToken.ThrowException("No noninertial fluent name");
             }
-            if (state.NameAvailable(n,n.Name))
+            if (state.Fluent.ContainsKey(n.Name))
             {
                 state.AddNoninertial(n.Name);
             }
             else
             {
-                firstToken.ThrowException("Attempt to use an already used name");
+                firstToken.ThrowException("Attempting to use non declared fluent in noninertial");
             }
         }
         public static AgentsList GetAgentList(ParserState state)
@@ -554,18 +554,20 @@ namespace MultiAgentLanguageGUI
                     MultiAgentLanguageModels.Action act1 =
                         new MultiAgentLanguageModels.Action(state.TokenList[state.TokenList.Count - 1].Name);
                     state.TokenList.RemoveAt(state.TokenList.Count - 1);
-                    LogicElement eff1 = EntryC1(state);
-                    if ((eff1 is Fluent) == false) firstToken.ThrowException("Expected fluent after release.");
+                    Token eff1 = state.PopToken();
+                    if (eff1 == null)
+                        firstToken.ThrowException("Expected fluent after release.");
+                    else if (!state.Fluent.ContainsKey(eff1.Name)) firstToken.ThrowException("Attempting to use undeclared fluent.");
                     Token if_expr = state.PeepToken();
                     if (if_expr != null && if_expr.Name == "if")
                     {
                         state.PopToken();
                         LogicElement con = EntryC1(state);
-                        state.Expression.Add(new ReleasesIf(act1, (Fluent)eff1, con));
+                        state.Expression.Add(new ReleasesIf(act1, state.Fluent[eff1.Name], con));
                     }
                     else
                     {
-                        state.Expression.Add(new Releases(act1, (Fluent)eff1));
+                        state.Expression.Add(new Releases(act1, state.Fluent[eff1.Name]));
                     }
                     break;
                 case "if":
@@ -583,15 +585,15 @@ namespace MultiAgentLanguageGUI
                     {
                         agentsList = GetAgentList(state);
                         Token cond_st = state.PeepToken();
-                        if (cond_st.Name == "if")
+                        if (cond_st == null || cond_st.Name != "if")
+                        {
+                            state.Expression.Add(new ImpossibleBy(ac, agentsList));
+                        }
+                        else
                         {
                             state.PopToken();
                             LogicElement c = EntryC1(state);
                             state.Expression.Add(new ImpossibleByIf(ac, agentsList, c));
-                        }
-                        else
-                        {
-                            state.Expression.Add(new ImpossibleBy(ac, agentsList));
                         }
                     }
                     else if (key.Name == "if")

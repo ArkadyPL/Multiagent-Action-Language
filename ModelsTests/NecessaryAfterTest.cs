@@ -320,7 +320,7 @@ Fluent alive
 Fluent walked
 fire causes [~loaded] 
 fire causes [~alive] if [loaded] 
-spin releases [loaded]
+spin releases loaded
 initially [alive] 
 [~alive] after (spin, [x]), (fire, [x])
 ";
@@ -351,7 +351,7 @@ Fluent alive
 Fluent walked
 fire causes [~loaded] 
 fire causes [~alive] if [loaded] 
-spin releases [loaded]
+spin releases loaded
 spin causes [loaded || ~loaded]
 initially [alive] 
 observable [~alive] after (spin, []), (fire, [])

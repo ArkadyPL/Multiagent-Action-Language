@@ -135,6 +135,7 @@ possibly [loaded] after (LOAD, [a]), (SHOOT, [a]) from [~loaded]
             string str = @"
 Agent a
 Fluent switch2
+Fluent light
 Fluent switch1
 Action TOGGLE1
 Action TOGGLE2
