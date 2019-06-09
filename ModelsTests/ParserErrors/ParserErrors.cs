@@ -123,13 +123,13 @@ necessary [loaded] after (spin, [x])
         }
 
         [Test]
-        public void ReleasesWithoutBrackets_NoExceptionThrown()
+        public void ReleasesWithAgentsWithoutBrackets_NoExceptionThrown()
         {
             string str = @"
 Action spin
 Agent x
 Fluent loaded
-spin releases loaded
+spin by [x] releases loaded
 ";
             // GIVEN
             var tokens = Tokenizer.Tokenize(str);
@@ -138,13 +138,13 @@ spin releases loaded
         }
 
         [Test]
-        public void ReleasesWithBrackets_ExceptionThrown()
+        public void ReleasesWithAgentsWithBrackets_ExceptionThrown()
         {
             string str = @"
 Action spin
 Agent x
 Fluent loaded
-spin releases [loaded]
+spin by [x] releases [loaded]
 ";
             // GIVEN
             var tokens = Tokenizer.Tokenize(str);
