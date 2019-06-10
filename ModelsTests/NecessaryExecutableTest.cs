@@ -4,7 +4,7 @@ using NUnit.Framework;
 
 namespace ExecutableQuery
 {
-    public class TestNecessaryExecutable
+    public class NecessaryExecutableTest
     {
         [Test]
         public void Test1()

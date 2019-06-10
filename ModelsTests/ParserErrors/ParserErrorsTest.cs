@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace ParserErrors
 {
-    public class ParserErrors
+    public class ParserErrorsTest
     {
         /// <summary>
         /// noninertial fluent should be additionally declared as "Fluent light"

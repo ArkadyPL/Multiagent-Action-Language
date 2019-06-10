@@ -5,7 +5,7 @@ using NUnit.Framework;
 
 namespace EngagedQuery
 {
-    public class TestNecessaryEngaged
+    public class NecessaryEngagedTest
     {
 
         [Test]

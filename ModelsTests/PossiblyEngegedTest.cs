@@ -5,7 +5,7 @@ using NUnit.Framework;
 
 namespace EngagedQuery
 {
-    public class TestPossiblyEngaged
+    public class PossiblyEngagedTest
     {
 
         [Test]

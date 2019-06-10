@@ -5,7 +5,7 @@ using NUnit.Framework;
 
 namespace AfterQuery
 {
-    public class TestPossiblyAfter
+    public class PossiblyAfterTest
     {
         [Test]
         public void Test1()

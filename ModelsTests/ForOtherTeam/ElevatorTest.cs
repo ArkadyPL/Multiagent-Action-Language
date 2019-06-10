@@ -12,7 +12,7 @@ namespace MultiAgentLanguageModelsTests.ForOtherTeam
     /// Winda jest jednoosobowa. Jeżeli obaj spróbują skorzystać z niej jednocześnie to ją zepsują i mogą nie dojechać do celu.
     /// </summary>
     [TestFixture(Category = "ForOtherTeam")]
-    public class ElevatorTests
+    public class ElevatorTest
     {
         private ParserState _parserState;
 

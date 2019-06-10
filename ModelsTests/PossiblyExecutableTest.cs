@@ -4,7 +4,7 @@ using NUnit.Framework;
 
 namespace ExecutableQuery
 {
-    class TestPossiblyExecutable
+    class PossiblyExecutableTest
     {
         string YaleShootingProblemStory = @"
 Agent a

@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace Reasoning
 {
-    public class PossibleStatesTests
+    public class PossibleStatesTest
     {
         [Test]
         public void TestPossibleStates()
