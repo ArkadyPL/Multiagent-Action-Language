@@ -624,7 +624,7 @@ namespace MultiAgentLanguageGUI
                     }
                     AgentsList agents = GetAgentList(state);
                     Token if_st = state.PeepToken();
-                    if (if_st.Name == "if")
+                    if (if_st != null && if_st.Name == "if")
                     {
                         state.PopToken();
                         condition = EntryC1(state);
