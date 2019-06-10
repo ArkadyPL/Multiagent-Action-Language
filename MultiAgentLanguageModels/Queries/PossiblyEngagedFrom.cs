@@ -7,13 +7,13 @@ namespace MultiAgentLanguageModels.Queries
 {
     public class PossiblyEngagedFrom : Query
     {
-        public AgentsList Agents { get; }
+        public AgentsList QueriedAgents { get; }
         public Instruction Instructions { get; }
         public LogicExpression Condition { get; }
 
         public PossiblyEngagedFrom(AgentsList agents, Instruction instructions, LogicExpression condition)
         {
-            Agents = agents;
+            QueriedAgents = agents;
             Instructions = instructions;
             Condition = condition;
         }
@@ -51,19 +51,21 @@ namespace MultiAgentLanguageModels.Queries
                         }
                     }
                 }
-                var possiblyEngagesAgents = false;
                 //now we iterate through instructions
                 for (int i = 0; i < Instructions.Count; i++)
                 {
                     var action = Instructions[i].Item1;
                     var agents = Instructions[i].Item2;
-                    
+                    QueriedAgents.ForEach(queriedAgent =>
+                    {
+                        if(!agents.Contains(queriedAgent)) agents.Add(queriedAgent);
+                    });
+
                     HashSet<State> newCurrentStates = new HashSet<State>();
                     //for each state in current states we want to move forward in graph
                     foreach (var currentState in currentStates)
                     {
                         var triple = new Triple(action, currentState, agents);
-
                         //if we can find good edge in graph 
                         //from currentState, specific action and agents group then
                         if (res.ContainsKey(triple))
@@ -71,34 +73,13 @@ namespace MultiAgentLanguageModels.Queries
                             //add all next states to the newCurrentStates
                             res[triple].ToList().ForEach(s => newCurrentStates.Add(s));
                         }
-
-                        if (CheckExistsActionWithAgents(res, triple)) {
-                            possiblyEngagesAgents = true;
-                        }
                     }
-                    // do it again for new action and agents group
+                    //do it again for new action and agents group
                     currentStates = newCurrentStates;
                 }
-                resultsForEachInitiallState.Add(currentStates.Count != 0 && possiblyEngagesAgents);
+                resultsForEachInitiallState.Add(currentStates.Count != 0);
             }
-            return resultsForEachInitiallState.Any(x => x);
-        }
-
-        private bool CheckExistsActionWithAgents(Dictionary<Triple, HashSet<State>> res, Triple triple)
-        {
-            var action = triple.Item1;
-            var state = triple.Item2;
-            // TODO: this should be agent from query, not the one from instruction (see Test_BP_withNotBy). Also fix in necessaryEngaged
-            var agents = triple.Item3;
-            var list = res.Where(t =>
-            {
-                var resAction = t.Key.Item1;
-                var resState = t.Key.Item2;
-                var resAgents = t.Key.Item3;
-                return resAction.Equals(action) && resState.Equals(state)
-                    && resAgents.Intersect(agents).Count() == agents.Count;
-            }).ToList();
-            return list.Any();
+            return resultsForEachInitiallState.All(x => x);
         }
     }
 
