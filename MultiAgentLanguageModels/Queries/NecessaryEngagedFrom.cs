@@ -7,13 +7,13 @@ namespace MultiAgentLanguageModels.Queries
 {
     public class NecessaryEngagedFrom : Query
     {
-        public AgentsList Agents { get; }
+        public AgentsList QueriedAgents { get; }
         public Instruction Instructions { get; }
         public LogicExpression Condition { get; }
 
         public NecessaryEngagedFrom(AgentsList agents, Instruction instructions, LogicExpression condition)
         {
-            Agents = agents;
+            QueriedAgents = agents;
             Instructions = instructions;
             Condition = condition;
         }
@@ -57,6 +57,10 @@ namespace MultiAgentLanguageModels.Queries
                 {
                     var action = Instructions[i].Item1;
                     var agents = Instructions[i].Item2;
+                    QueriedAgents.ForEach(queriedAgent =>
+                    {
+                        if (!agents.Contains(queriedAgent)) agents.Add(queriedAgent);
+                    });
 
                     HashSet<State> newCurrentStates = new HashSet<State>();
                     var engagesAgentsInEachState = true;
