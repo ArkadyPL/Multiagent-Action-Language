@@ -624,15 +624,7 @@ namespace MultiAgentLanguageGUI
                     }
                     AgentsList agents = GetAgentList(state);
                     Token if_st = state.PeepToken();
-                    if (if_st == null)
-                    {
-                        foreach(Agent a in agents)
-                        {
-                            state.Expression.Add(new ImpossibleBy(actt, new AgentsList() { a }));
-                        }
-                        //state.Expression.Add(new NotBy(actt, agents));
-                    }
-                    else if (if_st.Name == "if")
+                    if (if_st.Name == "if")
                     {
                         state.PopToken();
                         condition = EntryC1(state);
@@ -641,7 +633,13 @@ namespace MultiAgentLanguageGUI
                             state.Expression.Add(new ImpossibleByIf(actt, new AgentsList() { a }, condition));
                             Output.Print($"{actt.Name} not by {a.Name} under cond {condition.ToString()}");
                         }
-                        //state.Expression.Add(new NotByIf(actt, agents, condition));
+                    }
+                    else
+                    {
+                        foreach (Agent a in agents)
+                        {
+                            state.Expression.Add(new ImpossibleBy(actt, new AgentsList() { a }));
+                        }
                     }
                     break;
                 case "after":
