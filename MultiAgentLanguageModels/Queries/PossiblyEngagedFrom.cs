@@ -27,20 +27,20 @@ namespace MultiAgentLanguageModels.Queries
             var allStates = structure.PossibleStates;
             var piCondition = Condition.EvaluateLogicExpression();
 
-            //we want that list to hold result of query for each initial state
-            //could be done prettier but it's easier to read
+            // We want that list to hold result of query for each initial state.
+            // Could be done prettier but it's easier to read.
             List<bool> resultsForEachInitiallState = new List<bool>();
 
-            //for each initiall state
+            // for each initial state
             foreach (var initialState in initialStates)
             {
                 HashSet<State> currentStates = new HashSet<State>();
-                //if condition is always true then our current state is initial state
+                // if condition is always true then our current state is initial state
                 if (Condition.Element is True)
                 {
                     currentStates.Add(initialState);
                 }
-                //else we have to find all states that are ok
+                // else we have to find all states that are ok
                 else
                 {
                     foreach (var state in allStates)
@@ -51,7 +51,7 @@ namespace MultiAgentLanguageModels.Queries
                         }
                     }
                 }
-                //now we iterate through instructions
+                // now we iterate through instructions
                 for (int i = 0; i < Instructions.Count; i++)
                 {
                     var action = Instructions[i].Item1;
@@ -62,19 +62,19 @@ namespace MultiAgentLanguageModels.Queries
                     });
 
                     HashSet<State> newCurrentStates = new HashSet<State>();
-                    //for each state in current states we want to move forward in graph
+                    // for each state in current states we want to move forward in graph
                     foreach (var currentState in currentStates)
                     {
                         var triple = new Triple(action, currentState, agents);
-                        //if we can find good edge in graph 
-                        //from currentState, specific action and agents group then
+                        // if we can find good edge in graph 
+                        // from currentState, specific action and agents group then
                         if (res.ContainsKey(triple))
                         {
-                            //add all next states to the newCurrentStates
+                            // add all next states to the newCurrentStates
                             res[triple].ToList().ForEach(s => newCurrentStates.Add(s));
                         }
                     }
-                    //do it again for new action and agents group
+                    // do it again for new action and agents group
                     currentStates = newCurrentStates;
                 }
                 resultsForEachInitiallState.Add(currentStates.Count != 0);

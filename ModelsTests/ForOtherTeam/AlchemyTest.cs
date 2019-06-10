@@ -61,7 +61,7 @@ namespace MultiAgentLanguageModelsTests.ForOtherTeam
 
         #region Executable
 
-      
+
         #endregion
 
         #region After
@@ -114,7 +114,7 @@ namespace MultiAgentLanguageModelsTests.ForOtherTeam
         #region Engaged
 
         [Test]
-        public void PossibleEngagedFilemonInBrew()
+        public void PossiblyEngagedFilemonInBrew()
         {
             var query = "possibly [Filemon] engaged in (brew, [])";
 
@@ -125,9 +125,20 @@ namespace MultiAgentLanguageModelsTests.ForOtherTeam
         }
 
         [Test]
-        public void PossibleEngagedBercikInBrew()
+        public void PossiblyEngagedBercikInBrew()
         {
             var query = "possibly [Bercik] engaged in (brew, [])";
+
+            Query q = Parser.ParseQuery(Tokenizer.Tokenize(query), _parserState);
+            var result = q.Solve(_parserState.Story);
+
+            Assert.True(result);
+        }
+
+        [Test]
+        public void PossiblyEngagedFilemonAndBercikInBrew()
+        {
+            var query = "possibly [Filemon, Bercik] engaged in (brew, [Filemon, Bercik])";
 
             Query q = Parser.ParseQuery(Tokenizer.Tokenize(query), _parserState);
             var result = q.Solve(_parserState.Story);

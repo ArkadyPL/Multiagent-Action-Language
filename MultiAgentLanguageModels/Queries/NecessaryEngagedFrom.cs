@@ -102,15 +102,15 @@ namespace MultiAgentLanguageModels.Queries
                 var resState = t.Key.Item2;
                 return resAction.Equals(action) && resState.Equals(state);
             }).Count();
-            var result = res.Where(t =>
+            var amountOfActionsExecutedByAnyOfQueriedAgents = res.Where(t =>
             {
                 var resAction = t.Key.Item1;
                 var resState = t.Key.Item2;
                 var resAgents = t.Key.Item3;
-                return resAction.Equals(action) && resState.Equals(state)
-                    && resAgents.Intersect(agents).Count() == agents.Count;
-            });
-            return result.Count() == amountOfActions;
+                var actionEngagesAnyOfAgents = resAgents.Any(agent => QueriedAgents.Contains(agent));
+                return resAction.Equals(action) && resState.Equals(state) && actionEngagesAnyOfAgents;
+            }).Count();
+            return amountOfActionsExecutedByAnyOfQueriedAgents == amountOfActions;
         }
     }
 
