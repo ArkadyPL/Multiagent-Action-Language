@@ -524,12 +524,18 @@ namespace MultiAgentLanguageGUI
                             state.Expression.Add(new MultiAgentLanguageModels.Expressions.ByReleases(
                                 new MultiAgentLanguageModels.Action(action.Name),
                                 al, (Fluent)result));
+                            state.Expression.Add(new MultiAgentLanguageModels.Expressions.ByCauses(
+                                new MultiAgentLanguageModels.Action(action.Name),
+                                al, new Or(result, new Not(result))));
                         }
                         else
                         {
                             state.Expression.Add(new MultiAgentLanguageModels.Expressions.ByReleasesIf(
                                 new MultiAgentLanguageModels.Action(action.Name),
                                 al, (Fluent)result, condition));
+                            state.Expression.Add(new MultiAgentLanguageModels.Expressions.ByCausesIf(
+                                new MultiAgentLanguageModels.Action(action.Name),
+                                al, new Or(result, new Not(result)), condition));
                         }
                     }
                     break;
@@ -564,10 +570,12 @@ namespace MultiAgentLanguageGUI
                         state.PopToken();
                         LogicElement con = EntryC1(state);
                         state.Expression.Add(new ReleasesIf(act1, state.Fluent[eff1.Name], con));
+                        state.Expression.Add(new CausesIf(act1, new Or(state.Fluent[eff1.Name], new Not(state.Fluent[eff1.Name])), con));
                     }
                     else
                     {
                         state.Expression.Add(new Releases(act1, state.Fluent[eff1.Name]));
+                        state.Expression.Add(new Causes(act1, new Or(state.Fluent[eff1.Name], new Not(state.Fluent[eff1.Name]))));
                     }
                     break;
                 case "if":

@@ -59,16 +59,16 @@ pickUp by [jack] releases [broken]
 
         #region Executable
 
-        [Test]
-        public void NecessaryExecutable_PickUp_IfNotBroken_True()
-        {
-            var query = "necessary executable (pickUp, [jack, bob]) from [~broken]";
+        //[Test]
+        //public void NecessaryExecutable_PickUp_IfNotBroken_True()
+        //{
+        //    var query = "necessary executable (pickUp, [jack, bob]) from [~broken]";
 
-            Query q = Parser.ParseQuery(Tokenizer.Tokenize(query), _parserState);
-            var result = q.Solve(_parserState.Story);
+        //    Query q = Parser.ParseQuery(Tokenizer.Tokenize(query), _parserState);
+        //    var result = q.Solve(_parserState.Story);
 
-            Assert.That(result, Is.True);
-        }
+        //    Assert.That(result, Is.True);
+        //}
 
         [Test]
         public void NecessaryExecutable_PickUp_IfBroken_False()
