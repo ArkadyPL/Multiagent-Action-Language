@@ -157,6 +157,17 @@ namespace MultiAgentLanguageModelsTests.ForOtherTeam
             Assert.False(result);
         }
 
+        [Test]
+        public void NecessaryEngagedFilemonAndBercikInBrew()
+        {
+            var query = "necessary [Filemon, Bercik] engaged in (brew, [Filemon, Bercik])";
+
+            Query q = Parser.ParseQuery(Tokenizer.Tokenize(query), _parserState);
+            var result = q.Solve(_parserState.Story);
+
+            Assert.True(result);
+        }
+
         #endregion
     }
 }
