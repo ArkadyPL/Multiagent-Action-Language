@@ -48,8 +48,9 @@ namespace MultiAgentLanguageModels.Reasoning
             //A causes alpha if pi
             //A causes beta
             //we want to group them together, so that we can examine them wrt to state and agents group
-            foreach (var causesGroup in expressions.Causes.GroupBy(x => x.A))
+            foreach (var action in expressions.Actions)
             {
+                var causesGroup = expressions.Causes.Where(x => x.A.Equals(action));
                 //for each state in possible states
                 foreach (var state in PossibleStates(expressions))
                 {
@@ -79,13 +80,13 @@ namespace MultiAgentLanguageModels.Reasoning
                         }
                         //create our A x sigma x G triple
                         Triple tuple = new Triple(
-                                causesGroup.Key, state, group);
+                                action, state, group);
                         if (workingCauses.Count == 0)
                         {
                             if(piConditions.All(x => !x))
                                 result.Add(tuple, PossibleStates(expressions));
                             continue;
-                        } 
+                        }
                         //now we need to create uber-alpha condition
                         var uberAlpha = workingCauses.Select(x => x.Alpha).Aggregate((a, b) => new And(a, b));
                         //final states should be compliant with our uberAlpha
@@ -123,8 +124,8 @@ namespace MultiAgentLanguageModels.Reasoning
             diff = diff.Except(expressions.Noninertial.Select(x => x.Fluent.Name));
             //add fluents from release statements
             diff = diff.Concat(expressions.Releases.Where(
-                x => x.Action.Equals(action) && 
-                x.Agents.HasSubset(agents) &&
+                x => x.Action.Equals(action) &&
+                agents.HasSubset(x.Agents) &&
                 x.Condition.EvaluateLogicExpression().Any(e => from.Values.HasSubset(e))).Select(x => x.Fluent.Name));
 
             return new HashSet<string>(diff);
@@ -142,6 +143,10 @@ namespace MultiAgentLanguageModels.Reasoning
                 var action = key.Item1;
                 var agents = key.Item3;
                 var newBasedOnRes0 = res0[key].Select(x => New(expressions, state, x, agents, action)).ToList();
+                foreach(var te in res0[key])
+                {
+                    var t = New(expressions, state, te, agents, action);
+                }
                 if (newBasedOnRes0.Count != 0)
                 {
                     //should be minimal with respect to set inclusions.
@@ -151,7 +156,7 @@ namespace MultiAgentLanguageModels.Reasoning
                     results.Add(key, new HashSet<State>(res));
                 }
             }
-            
+
             return results;
         }
 
@@ -179,7 +184,7 @@ namespace MultiAgentLanguageModels.Reasoning
                     }
                 }
             }
-            
+
             return initialStates;
         }
 
@@ -191,7 +196,7 @@ namespace MultiAgentLanguageModels.Reasoning
 
             var resWithAfter = new Dictionary<Triple, HashSet<State>>();
             #region After statements
-            //now lets get to the part where we intersect 
+            //now lets get to the part where we intersect
             //initial states with after statements
             var afterExpressions = expressions.AfterExpressions;
             if (afterExpressions.Count != 0)

@@ -12,7 +12,7 @@ namespace MultiAgentLanguageModelsTests.ForOtherTeam
     /// </summary>
     [TestFixture(Category = "ForOtherTeam")]
     public class PickUpTest
-    {        
+    {
         private ParserState _parserState;
 
 
@@ -52,7 +52,7 @@ pickUp by [jack] causes [broken || ~broken]
 pickUp by [jack] releases [broken]
 ");
 
-            string story = sb.ToString();            
+            string story = sb.ToString();
             var tokens = Tokenizer.Tokenize(story);
             _parserState = Parser.Parse(tokens);
         }

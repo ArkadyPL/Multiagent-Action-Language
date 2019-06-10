@@ -51,6 +51,7 @@ Action SHOOT
 initially [~loaded]
 initially [alive]
 LOAD releases loaded
+impossible SHOOT if [~loaded]
 SHOOT causes [~loaded] if [loaded]
 SHOOT causes [~alive] if [loaded]
 ";
