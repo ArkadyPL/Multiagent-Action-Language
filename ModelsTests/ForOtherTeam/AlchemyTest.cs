@@ -116,12 +116,12 @@ namespace MultiAgentLanguageModelsTests.ForOtherTeam
         [Test]
         public void PossibleEngagedFilemonInBrew()
         {
-            var query = "possibly [Filemon] engaged in (brew,[])";
+            var query = "possibly [Filemon] engaged in (brew, [])";
 
             Query q = Parser.ParseQuery(Tokenizer.Tokenize(query), _parserState);
             var result = q.Solve(_parserState.Story);
 
-            Assert.That(result, Is.False);
+            Assert.True(result);
         }
 
         [Test]
@@ -132,7 +132,29 @@ namespace MultiAgentLanguageModelsTests.ForOtherTeam
             Query q = Parser.ParseQuery(Tokenizer.Tokenize(query), _parserState);
             var result = q.Solve(_parserState.Story);
 
-            Assert.That(result, Is.False);
+            Assert.True(result);
+        }
+
+        [Test]
+        public void NecessaryEngagedFilemonInBrew()
+        {
+            var query = "necessary [Filemon] engaged in (brew, [])";
+
+            Query q = Parser.ParseQuery(Tokenizer.Tokenize(query), _parserState);
+            var result = q.Solve(_parserState.Story);
+
+            Assert.False(result);
+        }
+
+        [Test]
+        public void NecessaryEngagedBercikInBrew()
+        {
+            var query = "necessary [Bercik] engaged in (brew, [])";
+
+            Query q = Parser.ParseQuery(Tokenizer.Tokenize(query), _parserState);
+            var result = q.Solve(_parserState.Story);
+
+            Assert.False(result);
         }
 
         #endregion
