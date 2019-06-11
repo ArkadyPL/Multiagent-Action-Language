@@ -3,7 +3,7 @@ using MultiAgentLanguageModels.Queries;
 using NUnit.Framework;
 using System.Text;
 
-namespace MultiAgentLanguageModelsTests.ForOtherTeam
+namespace ForOtherTeam
 {
     /// <summary>
     /// Tomek i Marek znajdują się na parterze budynku i chcą się dostać na wysokie piętro.

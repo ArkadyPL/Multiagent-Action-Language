@@ -3,7 +3,7 @@ using MultiAgentLanguageModels.Queries;
 using NUnit.Framework;
 using System.Text;
 
-namespace MultiAgentLanguageModelsTests.ForOtherTeam
+namespace ForOtherTeam
 {
     /// <summary>
     /// Bercik i Filemon to dwaj poczatkujacy alchemicy.

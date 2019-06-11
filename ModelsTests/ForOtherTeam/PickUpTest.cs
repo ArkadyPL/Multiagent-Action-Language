@@ -3,7 +3,7 @@ using MultiAgentLanguageModels.Queries;
 using NUnit.Framework;
 using System.Text;
 
-namespace MultiAgentLanguageModelsTests.ForOtherTeam
+namespace ForOtherTeam
 {
     /// <summary>
     /// Jest bardzo ciężka rzecz, którą należy podnieść i odłożyć na półkę. Jack i Bob są silnymi mężczyznami, ale w pojedynkę nie są w stanie

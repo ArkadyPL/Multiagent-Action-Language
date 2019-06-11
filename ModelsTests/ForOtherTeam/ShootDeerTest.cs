@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace MultiAgentLanguageModelsTests.ForOtherTeam
+namespace ForOtherTeam
 {
 		/// <summary>
 		/// Jack i Bob poszli na polowanie na jelenie.
