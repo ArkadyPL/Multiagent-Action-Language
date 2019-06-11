@@ -194,6 +194,62 @@ necessary executable (spin, []), (fire, []) from [~loaded && alive]
             // THEN
             Assert.AreEqual(true, res);
         }
+
+
+        [Test]
+        public void Test7()
+        {
+            string str = @"
+            Agent Monica
+            Action eat
+            Fluent hungry
+ 
+            initially [hungry] 
+            eat causes [~hungry] if [hungry]
+            ";
+
+            string query = @"
+            necessary executable (eat, [Monica]) from [~hungry]";
+
+            Assert.AreEqual(true, TestQuery(str, query));
+        }
+
+        [Test]
+        public void Test8()
+        {
+            string str = @"
+            Agent Monica
+            Action eat
+            Action buy
+            Fluent hungry
+            Fluent has_food
+ 
+            initially [~has_food && hungry]
+        
+            buy causes [has_food]
+            eat causes [~hungry] if [has_food]
+            ";
+
+            string query = @"
+            necessary executable (buy, [Monica]),(eat, [Monica]) from [~has_food && hungry]";
+
+            Assert.AreEqual(true, TestQuery(str, query));
+        }
+
+        public bool TestQuery(string str, string query)
+        {
+            // GIVEN
+            var tokens = Tokenizer.Tokenize(str);
+            var parserState = Parser.Parse(tokens);
+            var expressions = parserState.Story;
+
+            Query q = Parser.ParseQuery(Tokenizer.Tokenize(query), parserState);
+            var res = q.Solve(expressions);
+
+            // THEN
+            return res;
+        }
     }
 }
+
 
