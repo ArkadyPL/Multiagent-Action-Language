@@ -103,5 +103,59 @@ possibly executable (SHOOT, [b]) from [~loaded]
             // THEN
             Assert.AreEqual(false, res);
         }
+
+        [Test]
+        public void Test4()
+        {
+            string str = @"
+            Agent Monica
+            Action eat
+            Action buy
+            Fluent hungry
+            Fluent has_food
+            
+            initially [~has_food && hungry]
+            buy releases has_food
+            eat causes [~hungry] if [has_food]
+            ";
+
+            string query = @"
+            possibly executable(buy, [Monica]),(eat, [Monica]) from[~has_food && hungry]";
+
+
+            Assert.AreEqual(true, TestQuery(str, query));
+        }
+
+        [Test]
+        public void Test5()
+        {
+            string str = @"
+            Agent Tomek
+            Action sing
+            Fluent is_neighbour_angry
+            
+            initially [~is_neighbour_angry]
+            sing by [Tomek] releases [is_neighbour_angry]
+            ";
+
+            string query = @"
+            possibly executable(sing, [Tomek]) from []";
+
+            Assert.AreEqual(true, TestQuery(str, query));
+        }
+
+        public bool TestQuery(string str, string query)
+        {
+            // GIVEN
+            var tokens = Tokenizer.Tokenize(str);
+            var parserState = Parser.Parse(tokens);
+            var expressions = parserState.Story;
+
+            Query q = Parser.ParseQuery(Tokenizer.Tokenize(query), parserState);
+            var res = q.Solve(expressions);
+
+            // THEN
+            return res;
+        }
     }
 }
