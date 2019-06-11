@@ -139,7 +139,7 @@ possibly executable (SHOOT, [b]) from [~loaded]
             ";
 
             string query = @"
-            possibly executable(sing, [Tomek]) from []";
+            possibly executable(sing, [Tomek])";
 
             Assert.AreEqual(true, TestQuery(str, query));
         }
