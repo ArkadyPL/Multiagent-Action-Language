@@ -145,14 +145,14 @@ pickUp by [jack] releases broken
         }
 
         [Test]
-        public void NecessaryEngaged_JackAndBob_In_PickUp_False()
+        public void NecessaryEngaged_JackAndBob_In_PickUp_True()
         {
             var query = "necessary [jack, bob] engaged in (pickUp, [jack, bob])";
 
             Query q = Parser.ParseQuery(Tokenizer.Tokenize(query), _parserState);
             var result = q.Solve(_parserState.Story);
 
-            Assert.That(result, Is.False);
+            Assert.True(result);
         }
 
         #endregion

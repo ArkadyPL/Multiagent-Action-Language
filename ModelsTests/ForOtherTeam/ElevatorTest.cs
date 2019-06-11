@@ -140,16 +140,15 @@ useElevator by [marek,tomek] releases marekIsUpstairs
             Assert.That(result, Is.True);
         }
 
-
         [Test]
-        public void PossiblyEngaged_Tomek_In_Repair_False()
+        public void PossiblyEngaged_Tomek_In_Repair_True()
         {
             var query = "necessary [tomek] engaged in (repair, [tomek])";
 
             Query q = Parser.ParseQuery(Tokenizer.Tokenize(query), _parserState);
             var result = q.Solve(_parserState.Story);
 
-            Assert.That(result, Is.False);
+            Assert.True(result);
         }
 
         #endregion

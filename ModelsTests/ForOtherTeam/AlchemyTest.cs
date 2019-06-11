@@ -154,7 +154,7 @@ namespace ForOtherTeam
             Query q = Parser.ParseQuery(Tokenizer.Tokenize(query), _parserState);
             var result = q.Solve(_parserState.Story);
 
-            Assert.False(result);
+            Assert.True(result);
         }
 
         [Test]
@@ -165,7 +165,7 @@ namespace ForOtherTeam
             Query q = Parser.ParseQuery(Tokenizer.Tokenize(query), _parserState);
             var result = q.Solve(_parserState.Story);
 
-            Assert.False(result);
+            Assert.True(result);
         }
 
         [Test]

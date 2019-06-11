@@ -102,7 +102,7 @@ necessary [g2] engaged in (A1, [g1, g2, g3]),(A2, [g2, g3, g4])
 
             var result = q.Solve(expressions);
 
-            Assert.IsFalse(result);
+            Assert.IsTrue(result);
         }
 
         [Test]
@@ -190,6 +190,67 @@ necessary [h] engaged in (buypaper, [g])
             var result = q.Solve(expressions);
 
             Assert.IsFalse(result);
+        }
+
+        [Test]
+        public void Test_BP_withNotBy()
+        {
+            string story = @"
+Fluent hasA
+Fluent hasB
+Agent g
+Agent h
+Action buypaper
+buypaper by [g, h] causes [hasA || hasB]
+impossible buypaper by [h]
+";
+            var tokens = Tokenizer.Tokenize(story);
+            var parserState = Parser.Parse(tokens);
+            var expressions = parserState.Story;
+
+            string query = @"
+necessary [h] engaged in (buypaper, [g, h])
+";
+
+            Query q = Parser.ParseQuery(
+                Tokenizer.Tokenize(query),
+                parserState);
+
+            var result = q.Solve(expressions);
+
+            Assert.IsTrue(result);
+        }
+
+        [Test]
+        public void Test_3()
+        {
+            string story = @"
+Fluent a
+Fluent b
+Agent g
+Agent h
+Action A1
+Action A2
+
+initially [~b]
+A1 by [g, h] releases a if [~b]
+A2 by [h] causes [b] if [a]
+";
+            var tokens = Tokenizer.Tokenize(story);
+            var parserState = Parser.Parse(tokens);
+            var expressions = parserState.Story;
+
+            string query = @"
+necessary [h] engaged in (A1, [g, h]), (A2, [h]) from [~b && a]
+";
+
+            Query q = Parser.ParseQuery(
+                Tokenizer.Tokenize(query),
+                parserState);
+
+            var result = q.Solve(expressions);
+
+            Assert.IsTrue(result);
         }
 
     }

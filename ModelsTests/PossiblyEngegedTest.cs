@@ -165,7 +165,6 @@ possibly [h] engaged in (buypaper, [g])
 
             var result = q.Solve(expressions);
 
-            // TODO: update docummentation - Arek
             Assert.IsTrue(result);
         }
 
@@ -195,7 +194,6 @@ possibly [h] engaged in (buypaper, [g])
 
             var result = q.Solve(expressions);
 
-            // TODO: fix - Arek
             Assert.IsFalse(result);
         }
 

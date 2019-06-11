@@ -31,7 +31,7 @@ namespace MultiAgentLanguageModels.Queries
             //could be done prettier but it's easier to read
             List<bool> resultsForEachInitiallState = new List<bool>();
 
-            //for each initial state
+            //for each initiall state
             foreach (var initialState in initialStates)
             {
                 HashSet<State> currentStates = new HashSet<State>();
@@ -51,24 +51,18 @@ namespace MultiAgentLanguageModels.Queries
                         }
                     }
                 }
-                var necessarilyEngagesAgents = new List<bool>();
                 //now we iterate through instructions
                 for (int i = 0; i < Instructions.Count; i++)
                 {
                     var action = Instructions[i].Item1;
                     var agents = Instructions[i].Item2;
-                    QueriedAgents.ForEach(queriedAgent =>
-                    {
-                        if (!agents.Contains(queriedAgent)) agents.Add(queriedAgent);
-                    });
+                    QueriedAgents.ForEach(queriedAgent => agents.Remove(queriedAgent));
 
                     HashSet<State> newCurrentStates = new HashSet<State>();
-                    var engagesAgentsInEachState = true;
                     //for each state in current states we want to move forward in graph
                     foreach (var currentState in currentStates)
                     {
                         var triple = new Triple(action, currentState, agents);
-
                         //if we can find good edge in graph 
                         //from currentState, specific action and agents group then
                         if (res.ContainsKey(triple))
@@ -76,41 +70,17 @@ namespace MultiAgentLanguageModels.Queries
                             //add all next states to the newCurrentStates
                             res[triple].ToList().ForEach(s => newCurrentStates.Add(s));
                         }
-
-                        if (!CheckAllActionsEngageAgents(res, triple))
+                        else
                         {
-                            engagesAgentsInEachState = false;
+                            resultsForEachInitiallState.Add(false);
                         }
                     }
-                    necessarilyEngagesAgents.Add(engagesAgentsInEachState);
-                    // do it again for new action and agents group
+                    //do it again for new action and agents group
                     currentStates = newCurrentStates;
                 }
-                resultsForEachInitiallState.Add(currentStates.Count != 0 && necessarilyEngagesAgents.Any(x => x));
+                resultsForEachInitiallState.Add(currentStates.Count != 0);
             }
-            return resultsForEachInitiallState.All(x => x);
-        }
-
-        private bool CheckAllActionsEngageAgents(Dictionary<Triple, HashSet<State>> res, Triple triple)
-        {
-            var action = triple.Item1;
-            var state = triple.Item2;
-            var agents = triple.Item3;
-            var amountOfActions = res.Where(t =>
-            {
-                var resAction = t.Key.Item1;
-                var resState = t.Key.Item2;
-                return resAction.Equals(action) && resState.Equals(state);
-            }).Count();
-            var amountOfActionsExecutedByAnyOfQueriedAgents = res.Where(t =>
-            {
-                var resAction = t.Key.Item1;
-                var resState = t.Key.Item2;
-                var resAgents = t.Key.Item3;
-                var actionEngagesAnyOfAgents = resAgents.Any(agent => QueriedAgents.Contains(agent));
-                return resAction.Equals(action) && resState.Equals(state) && actionEngagesAnyOfAgents;
-            }).Count();
-            return amountOfActionsExecutedByAnyOfQueriedAgents == amountOfActions;
+            return resultsForEachInitiallState.All(x => !x);
         }
     }
 
