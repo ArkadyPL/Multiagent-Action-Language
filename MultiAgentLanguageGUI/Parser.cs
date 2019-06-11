@@ -485,11 +485,26 @@ namespace MultiAgentLanguageGUI
                     }
                     Token t = state.PopToken();
                     if (t == null) firstToken.ThrowException("Expected 'causes' or 'releases'.");
-                    if (t.Name != "causes" && t.Name != "releases")
+
+                    LogicElement result = null;
+                    if (t.Name == "releases")
+                    {
+                        Token fT = state.PopToken();
+                        if (fT == null)
+                            firstToken.ThrowException("Expected fluent after release.");
+                        else if (!state.Fluent.ContainsKey(fT.Name)) firstToken.ThrowException("Attempting to use undeclared fluent.");
+                        result = state.Fluent[fT.Name];
+                    }
+                    else
+                    if (t.Name == "causes")
+                    {
+                        result = EntryC1(state);
+                    }
+                    else
                     {
                         t.ThrowException("Expected 'causes' or 'releases'.");
                     }
-                    LogicElement result = EntryC1(state);
+
                     if (t.Name == "releases" && (result is Fluent) == false)
                     {
                         t.ThrowException("Expected fluent after release.");

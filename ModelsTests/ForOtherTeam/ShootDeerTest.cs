@@ -63,15 +63,15 @@ impossible shoot if [drunkJack && drunkBob]");
 
 
 						drink by [bob] causes [drunkBob || ~drunkBob]
-						drink by [bob] releases [drunkBob]
+						drink by [bob] releases drunkBob
 						drink by [jack] causes [drunkJack || ~drunkJack]
-						drink by [jack] releases [drunkJack]
+						drink by [jack] releases drunkJack
 						drink by [jack, bob] causes [drunkJack && drunkBob]
 
 						shoot by [jack] causes [~alive] if [~drunkJack && loaded]
 
 						shoot by [bob] causes [~alive || alive] if [~drunkBob && loaded]
-						shoot by [bob] releases [alive] if [~drunkBob && loaded]
+						shoot by [bob] releases alive if [~drunkBob && loaded]
 
 						shoot by [bob, jack] causes [~alive] if [loaded]");
 

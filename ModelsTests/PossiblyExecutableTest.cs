@@ -135,7 +135,7 @@ possibly executable (SHOOT, [b]) from [~loaded]
             Fluent is_neighbour_angry
             
             initially [~is_neighbour_angry]
-            sing by [Tomek] releases [is_neighbour_angry]
+            sing by [Tomek] releases is_neighbour_angry
             ";
 
             string query = @"

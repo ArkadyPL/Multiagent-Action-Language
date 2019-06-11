@@ -17,8 +17,8 @@ Agent g
 Action buypaper
 buypaper by [g] causes [hasA || hasB]
 initially [hasB]
-buypaper by [g] releases [hasA]
-buypaper by [g] releases [hasB]
+buypaper by [g] releases hasA
+buypaper by [g] releases hasB
 ";
             var tokens = Tokenizer.Tokenize(story);
             var parserState = Parser.Parse(tokens);
@@ -878,7 +878,7 @@ shoot by[bill] causes[~alive] if [~drunk]
 
 Action drink
 drink by [bill] causes [drunk || ~drunk]
-drink by [bill] releases [drunk] 
+drink by [bill] releases drunk
 
 ";
 

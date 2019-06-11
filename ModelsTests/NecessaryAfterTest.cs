@@ -71,8 +71,8 @@ Agent g
 Action buypaper
 buypaper by [g] causes [hasA || hasB]
 initially [hasB]
-buypaper by [g] releases [hasA]
-buypaper by [g] releases [hasB]
+buypaper by [g] releases hasA
+buypaper by [g] releases hasB
 ";
             var tokens = Tokenizer.Tokenize(story);
             var parserState = Parser.Parse(tokens);
@@ -101,8 +101,8 @@ Agent g
 Action buypaper
 buypaper by [g] causes [hasA || hasB]
 initially [hasB]
-buypaper by [g] releases [hasA]
-buypaper by [g] releases [hasB]
+buypaper by [g] releases hasA
+buypaper by [g] releases hasB
 ";
             var tokens = Tokenizer.Tokenize(story);
             var parserState = Parser.Parse(tokens);
@@ -649,7 +649,7 @@ necessary [spinnedA || spinnedB] after (load, []), (spin, [])
                 Action does
                 Fluent h
                 does by [Hank] causes [h || ~h]
-                does by [Hank] releases [h]
+                does by [Hank] releases h
                 ";
             string query = @"
             necessary [h] after (does,[Hank])

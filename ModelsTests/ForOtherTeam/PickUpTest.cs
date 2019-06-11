@@ -47,9 +47,9 @@ pickUp by [bob] causes [~onShelf]");
             //actions releases
             sb.AppendLine(@"
 pickUp by [bob] causes [broken || ~broken]
-pickUp by [bob] releases [broken]
+pickUp by [bob] releases broken
 pickUp by [jack] causes [broken || ~broken]
-pickUp by [jack] releases [broken]
+pickUp by [jack] releases broken
 ");
 
             string story = sb.ToString();

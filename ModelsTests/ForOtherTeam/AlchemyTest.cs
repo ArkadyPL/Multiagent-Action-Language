@@ -47,11 +47,11 @@ namespace MultiAgentLanguageModelsTests.ForOtherTeam
             brew by [Bercik] causes [brewed || destroyed]
             brew by [Filemon] causes [brewed || ~brewed]
             brew by [Bercik, Filemon] causes [brewed]
-            brew by [Filemon] releases [brewed]
+            brew by [Filemon] releases brewed
             brew by [Filemon] causes [brewed || ~brewed]
-            brew by [Bercik] releases [brewed]
+            brew by [Bercik] releases brewed
             brew by [Bercik] causes [brewed || ~brewed]
-            brew by [Bercik] releases [destroyed]
+            brew by [Bercik] releases destroyed
             brew by [Bercik] causes [destroyed || ~destroyed]");
 
             string story = sb.ToString();
