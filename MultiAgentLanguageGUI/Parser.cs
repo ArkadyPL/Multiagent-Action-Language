@@ -524,12 +524,18 @@ namespace MultiAgentLanguageGUI
                             state.Expression.Add(new MultiAgentLanguageModels.Expressions.ByReleases(
                                 new MultiAgentLanguageModels.Action(action.Name),
                                 al, (Fluent)result));
+                            state.Expression.Add(new MultiAgentLanguageModels.Expressions.ByCauses(
+                                new MultiAgentLanguageModels.Action(action.Name),
+                                al, new Or(result, new Not(result))));
                         }
                         else
                         {
                             state.Expression.Add(new MultiAgentLanguageModels.Expressions.ByReleasesIf(
                                 new MultiAgentLanguageModels.Action(action.Name),
                                 al, (Fluent)result, condition));
+                            state.Expression.Add(new MultiAgentLanguageModels.Expressions.ByCausesIf(
+                                new MultiAgentLanguageModels.Action(action.Name),
+                                al, new Or(result, new Not(result)), condition));
                         }
                     }
                     break;
@@ -564,10 +570,12 @@ namespace MultiAgentLanguageGUI
                         state.PopToken();
                         LogicElement con = EntryC1(state);
                         state.Expression.Add(new ReleasesIf(act1, state.Fluent[eff1.Name], con));
+                        state.Expression.Add(new CausesIf(act1, new Or(state.Fluent[eff1.Name], new Not(state.Fluent[eff1.Name])), con));
                     }
                     else
                     {
                         state.Expression.Add(new Releases(act1, state.Fluent[eff1.Name]));
+                        state.Expression.Add(new Causes(act1, new Or(state.Fluent[eff1.Name], new Not(state.Fluent[eff1.Name]))));
                     }
                     break;
                 case "if":
@@ -624,15 +632,7 @@ namespace MultiAgentLanguageGUI
                     }
                     AgentsList agents = GetAgentList(state);
                     Token if_st = state.PeepToken();
-                    if (if_st == null)
-                    {
-                        foreach(Agent a in agents)
-                        {
-                            state.Expression.Add(new ImpossibleBy(actt, new AgentsList() { a }));
-                        }
-                        //state.Expression.Add(new NotBy(actt, agents));
-                    }
-                    else if (if_st.Name == "if")
+                    if (if_st != null && if_st.Name == "if")
                     {
                         state.PopToken();
                         condition = EntryC1(state);
@@ -641,7 +641,13 @@ namespace MultiAgentLanguageGUI
                             state.Expression.Add(new ImpossibleByIf(actt, new AgentsList() { a }, condition));
                             Output.Print($"{actt.Name} not by {a.Name} under cond {condition.ToString()}");
                         }
-                        //state.Expression.Add(new NotByIf(actt, agents, condition));
+                    }
+                    else
+                    {
+                        foreach (Agent a in agents)
+                        {
+                            state.Expression.Add(new ImpossibleBy(actt, new AgentsList() { a }));
+                        }
                     }
                     break;
                 case "after":
@@ -729,7 +735,7 @@ namespace MultiAgentLanguageGUI
             state.Fluent = story.Fluent;
             if(tokenList.Count == 0)
             {
-                throw new Exception("Empty querry");
+                throw new Exception("Empty query");
             }
 
             Token first = state.PopToken();

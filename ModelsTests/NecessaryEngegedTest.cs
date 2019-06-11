@@ -5,11 +5,11 @@ using NUnit.Framework;
 
 namespace EngagedQuery
 {
-    public class TestNecessaryEngaged
+    public class NecessaryEngagedTest
     {
 
         [Test]
-        public void Test0_Unexecutable()
+        public void Test0_Useless()
         {
             string story = @"
 Fluent R1
@@ -35,10 +35,9 @@ necessary [g2] engaged in (A1, [g1, g2, g3, g4]),(A2, [g2, g3, g4])
 
             Query q = Parser.ParseQuery(Tokenizer.Tokenize(query), parserState);
 
-            var res = q.Solve(expressions);
+            var result = q.Solve(expressions);
 
-            // TODO: Check hypothesis: should be true because it is always necessary when not possible
-            Assert.AreEqual(true, res);
+            Assert.IsFalse(result);
         }
 
         [Test]
@@ -68,9 +67,9 @@ necessary [g2] engaged in (A1, [g1, g2, g3]),(A2, [g2, g3, g4])
 
             Query q = Parser.ParseQuery(Tokenizer.Tokenize(query), parserState);
 
-            var res = q.Solve(expressions);
+            var result = q.Solve(expressions);
 
-            Assert.AreEqual(true, res);
+            Assert.IsTrue(result);
         }
 
         [Test]
@@ -101,9 +100,9 @@ necessary [g2] engaged in (A1, [g1, g2, g3]),(A2, [g2, g3, g4])
 
             Query q = Parser.ParseQuery(Tokenizer.Tokenize(query), parserState);
 
-            var res = q.Solve(expressions);
+            var result = q.Solve(expressions);
 
-            Assert.AreEqual(false, res);
+            Assert.IsFalse(result);
         }
 
         [Test]
@@ -128,9 +127,9 @@ necessary [g2] engaged in (A1, [g1, g2, g3]),(A2, [g2, g3, g4])
                 Tokenizer.Tokenize(query),
                 parserState);
 
-            var res = q.Solve(expressions);
+            var result = q.Solve(expressions);
 
-            Assert.AreEqual(true, res);
+            Assert.IsTrue(result);
         }
 
         [Test]
@@ -160,9 +159,37 @@ necessary [g2] engaged in (A1, [g1, g2, g3]),(A2, [g2, g3, g4])
                 Tokenizer.Tokenize(query),
                 parserState);
 
-            var res = q.Solve(expressions);
+            var result = q.Solve(expressions);
 
-            Assert.AreEqual(false, res);
+            Assert.IsFalse(result);
+        }
+
+        [Test]
+        public void Test_BP()
+        {
+            string story = @"
+Fluent hasA
+Fluent hasB
+Agent g
+Agent h
+Action buypaper
+buypaper by [g] causes [hasA || hasB]
+";
+            var tokens = Tokenizer.Tokenize(story);
+            var parserState = Parser.Parse(tokens);
+            var expressions = parserState.Story;
+
+            string query = @"
+necessary [h] engaged in (buypaper, [g])
+";
+
+            Query q = Parser.ParseQuery(
+                Tokenizer.Tokenize(query),
+                parserState);
+
+            var result = q.Solve(expressions);
+
+            Assert.IsFalse(result);
         }
 
     }

@@ -146,7 +146,7 @@ namespace MultiAgentLanguageModels.Expressions
             {
                 agents = new AgentsList(Agent.ToList());
             }
-            
+
             foreach (Expression ex in this)
             {
                 if (ex as ByCausesIf != null)

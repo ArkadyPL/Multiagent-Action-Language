@@ -1,0 +1,63 @@
+-- Story --
+A story is required to have declarations and expressions.
+Statements included in sections -- Declarations -- and -- Expressions -- should be separated by at least one whitespace character, such as a space or a new line.
+
+-- Declarations --
+Fluent fluentName
+Agent agentName
+Action actionName
+noninertial noninertialFluentName
+
+-- Logical expressions --
+Logical expressions should be written inside square brackets [] and may contain fluents, noninertial fluents and operators.
+Supported operators:
+~ - negation
+&& - conjunction
+|| - disjunction
+<-> - biconditional
+-> - implication
+() - parentheses
+
+-- Agent lists --
+As logical expressions, agent lists should be written inside square brackets []. Names of agents should be separated by a comma , in case of a list longer than one agent. In case of empty agent lists, empty square brackets should be used.
+Example:
+Agent agent1
+Agent agent2
+Agent lists:
+[]
+[agent1]
+[agent2]
+[agent1, agent2]
+
+-- Programs --
+Programs should be written as in following pattern:
+(actionName, [agent list]), (actionName, [agent list]), ..., (actionName, [agent list])
+Empty programs should be written as a single ().
+
+-- Expressions --
+initially [logical expression]
+always [logical expression]
+actionName causes [logical expression]
+actionName causes [logical expression] if [logical expression]
+actionName by [agent list] causes [logical expression]
+actionName by [agent list] causes [logical expression] if [logical expression]
+actionName releases fluentName
+actionName by [agent list] releases fluentName
+[logical expression] after [program]
+possibly [logical expression] after [program]
+observable [logical expression] after [program]
+impossible actionName if [logical expression]
+impossible actionName by [agent list]
+impossible actionName by [agent list] if [logical expression]
+actionName not by [agent list]
+actionName not by [agent list] if [logical expression]
+
+-- Queries --
+necessary [logical expression] after [program]
+necessary [logical expression] after [program] from [logical expression]
+necessary [agent list] engaged in [program]
+necessary executable [program] from [logical expression]
+possibly [logical expression] after [program]
+possibly [logical expression] after [program] from [logical expression]
+possibly [agent list] engaged in [program]
+possibly executable [program] from [logical expression]

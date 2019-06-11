@@ -4,7 +4,7 @@ using NUnit.Framework;
 
 namespace ExecutableQuery
 {
-    public class TestNecessaryExecutable
+    public class NecessaryExecutableTest
     {
         [Test]
         public void Test1()
@@ -51,6 +51,7 @@ Action SHOOT
 initially [~loaded]
 initially [alive]
 LOAD releases loaded
+impossible SHOOT if [~loaded]
 SHOOT causes [~loaded] if [loaded]
 SHOOT causes [~alive] if [loaded]
 ";

@@ -61,7 +61,7 @@ namespace MultiAgentLanguageModelsTests.ForOtherTeam
 
         #region Executable
 
-      
+
         #endregion
 
         #region After
@@ -114,25 +114,69 @@ namespace MultiAgentLanguageModelsTests.ForOtherTeam
         #region Engaged
 
         [Test]
-        public void PossibleEngagedFilemonInBrew()
+        public void PossiblyEngagedFilemonInBrew()
         {
-            var query = "possibly [Filemon] engaged in (brew,[])";
+            var query = "possibly [Filemon] engaged in (brew, [])";
 
             Query q = Parser.ParseQuery(Tokenizer.Tokenize(query), _parserState);
             var result = q.Solve(_parserState.Story);
 
-            Assert.That(result, Is.False);
+            Assert.True(result);
         }
 
         [Test]
-        public void PossibleEngagedBercikInBrew()
+        public void PossiblyEngagedBercikInBrew()
         {
             var query = "possibly [Bercik] engaged in (brew, [])";
 
             Query q = Parser.ParseQuery(Tokenizer.Tokenize(query), _parserState);
             var result = q.Solve(_parserState.Story);
 
-            Assert.That(result, Is.False);
+            Assert.True(result);
+        }
+
+        [Test]
+        public void PossiblyEngagedFilemonAndBercikInBrew()
+        {
+            var query = "possibly [Filemon, Bercik] engaged in (brew, [Filemon, Bercik])";
+
+            Query q = Parser.ParseQuery(Tokenizer.Tokenize(query), _parserState);
+            var result = q.Solve(_parserState.Story);
+
+            Assert.True(result);
+        }
+
+        [Test]
+        public void NecessaryEngagedFilemonInBrew()
+        {
+            var query = "necessary [Filemon] engaged in (brew, [])";
+
+            Query q = Parser.ParseQuery(Tokenizer.Tokenize(query), _parserState);
+            var result = q.Solve(_parserState.Story);
+
+            Assert.False(result);
+        }
+
+        [Test]
+        public void NecessaryEngagedBercikInBrew()
+        {
+            var query = "necessary [Bercik] engaged in (brew, [])";
+
+            Query q = Parser.ParseQuery(Tokenizer.Tokenize(query), _parserState);
+            var result = q.Solve(_parserState.Story);
+
+            Assert.False(result);
+        }
+
+        [Test]
+        public void NecessaryEngagedFilemonAndBercikInBrew()
+        {
+            var query = "necessary [Filemon, Bercik] engaged in (brew, [Filemon, Bercik])";
+
+            Query q = Parser.ParseQuery(Tokenizer.Tokenize(query), _parserState);
+            var result = q.Solve(_parserState.Story);
+
+            Assert.True(result);
         }
 
         #endregion

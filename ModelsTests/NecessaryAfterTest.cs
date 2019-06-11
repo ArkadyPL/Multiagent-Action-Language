@@ -5,7 +5,7 @@ using NUnit.Framework;
 
 namespace AfterQuery
 {
-    public class TestNecessaryAfter
+    public class NecessaryAfterTest
     {
         [Test]
         public void Test1()

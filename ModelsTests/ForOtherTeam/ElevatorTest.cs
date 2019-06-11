@@ -6,14 +6,14 @@ using System.Text;
 namespace MultiAgentLanguageModelsTests.ForOtherTeam
 {
     /// <summary>
-    /// Tomek i Marek znajdują się na parterze budynku i chcą się dostać na wysokie piętro. 
+    /// Tomek i Marek znajdują się na parterze budynku i chcą się dostać na wysokie piętro.
     /// Jedynym sposobem aby to zrobić jest winda, pod warunkiem, że działa.
-    /// Jeżeli winda nie działa, to przyjeżdża serwisant i może (ale nie musi) ją naprawić. 
-    /// Winda jest jednoosobowa. Jeżeli obaj spróbują skorzystać z niej jednocześnie to ją zepsują i mogą nie dojechać do celu.    
+    /// Jeżeli winda nie działa, to przyjeżdża serwisant i może (ale nie musi) ją naprawić.
+    /// Winda jest jednoosobowa. Jeżeli obaj spróbują skorzystać z niej jednocześnie to ją zepsują i mogą nie dojechać do celu.
     /// </summary>
     [TestFixture(Category = "ForOtherTeam")]
-    public class ElevatorTests
-    {        
+    public class ElevatorTest
+    {
         private ParserState _parserState;
 
 
@@ -53,13 +53,12 @@ useElevator by [tomek] causes [~tomekIsUpstairs] if [tomekIsUpstairs]");
             //TODO usunąć nawiasy przy fluentach po naprawieniu parsera
             //actions releases
             sb.AppendLine(@"
-repair by [serwisant] causes [elevatorIsWorking || ~elevatorIsWorking]
 repair by [serwisant] releases [elevatorIsWorking] if [~elevatorIsWorking]
 useElevator by [marek,tomek] releases [tomekIsUpstairs]
 useElevator by [marek,tomek] releases [marekIsUpstairs]
 ");
 
-            string story = sb.ToString();            
+            string story = sb.ToString();
             var tokens = Tokenizer.Tokenize(story);
             _parserState = Parser.Parse(tokens);
         }
