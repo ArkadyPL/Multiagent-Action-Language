@@ -38,29 +38,15 @@ namespace MultiAgentLanguageGUI
             Output.Target = TextBox_Output;
 
             TextBox_Story.Text =
-                "Agent a\n" +
-                "Agent b\n" +
-                "Agent c\n" +
-                "Fluent f1\n" +
-                "Fluent f2\n" +
-                "Action x\n" +
-                "Action y\n" +
-                "[~f1 && f2] after (x,[a,b]),(y,[b])\n" +
-                "\n" +
-                "initially [f1]" +
-                "y by [a,b] causes [~f1] if [f2]\n" +
-                "y causes [~f1] if [f2]\n" +
-                "y by [a,b] causes [~f1]\n" +
-                "y causes [f1]\n" +
-                "x by [a,b] releases [~f1] if [f2]\n" +
-                "x releases [~f1] if [f2]\n" +
-                "x by [a,b] releases [~f1]\n" +
-                "x causes [f1]\n" +
-                "impossible x by [a] if [f1 && f2]\n" +
-                "impossible x if [f1 && f2]\n" +
-                "always [f1 || f2]\n" +
-                "noninertial f3\n" +
-                "observable [f3] after (x,[a,b]),(y,[b])";
+                @"Agent g1
+Agent g2
+Fluent f
+Fluent g
+Action a
+Action b
+a causes [f] 
+b causes [g] 
+initially [~f && ~g]";
         }
 
         private void TextBox_Story_TextChanged(object sender, TextChangedEventArgs e)
