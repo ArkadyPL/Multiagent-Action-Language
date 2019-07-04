@@ -1,6 +1,0 @@
-possibly [Filemon] engaged in brew
-possibly [Bercik] engaged in brew
-possibly [brewed] after (brew,[Bercik, Filemon]) from [~brewed && ~destroyed]
-possibly [brewed] after (brew,[Bercik]) from [~brewed && ~destroyed]
-possibly [destroyed] after (brew,[Bercik]) from [~brewed && ~destroyed]
-possibly [brewed] after (brew,[Filemon]) from [~brewed && ~destroyed]

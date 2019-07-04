@@ -1,8 +1,0 @@
-necessary executable (lift, [a,b]) from [alive]
-necessary executable (protect,[a]) from [up && alive]
-necessary executable (protect,[b]) from [up && alive]
-necessary up after (lift,[a,b]) from [alive]
-necessary protected after (protect,[a]) from [up]
-necessary protected after (protect,[b]) from [up]
-possibly [a] engaged in protect from [up]
-possibly [b] engaged in protect from [up]

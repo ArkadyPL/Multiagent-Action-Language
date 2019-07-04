@@ -1,1 +1,0 @@
-:- consult('logic.pl'), consult('tests/necessary_engaged/model.pl').

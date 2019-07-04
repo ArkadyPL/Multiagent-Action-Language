@@ -79,9 +79,6 @@
     <Compile Include="Reasoning\Triple.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="logic.pl">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
